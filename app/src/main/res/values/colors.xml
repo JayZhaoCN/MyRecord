@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!--copied from mifit3-->
+    <color name="gray">#33000000</color>
+    <color name="gray40">#66FFFFFF</color>
+    <color name="grayWithe100">#FFF8F8F8</color>
+    <color name="grayWithe">#ebebeb</color>
+    <color name="white100">#FFFFFFFF</color>
+    <color name="white90">#E6FFFFFF</color>
+    <color name="white80">#CCFFFFFF</color>
+    <color name="white70">#B3FFFFFF</color>
+    <color name="white60">#99FFFFFF</color>
+    <color name="white40">#66FFFFFF</color>
+    <color name="white30">#4DFFFFFF</color>
+    <color name="white15">#26FFFFFF</color>
+    <color name="white05">#0DFFFFFF</color>
+    <color name="white02">#05FFFFFF</color>
+    <color name="black15">#26000000</color>
+    <color name="black10">#1A000000</color>
+    <color name="black20">#33000000</color>
+    <color name="black30">#4D000000</color>
+    <color name="black35">#59000000</color>
+    <color name="black60">#99000000</color>
+    <color name="black50">#80000000</color>
+    <color name="black70">#B3000000</color>
+    <color name="black80">#CC000000</color>
+    <color name="black40">#66000000</color>
+    <color name="black40un">#30000000</color>
+    <color name="origin100">#FFFF7200</color>
+    <color name="black100">#000000</color>
+
+    <color name="black_70">#b2000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_50">#7f000000</color>
+    <color name="pumpkin_orange">#ff8000</color>
+    <color name="dark_grey_90">#e52a2c2e</color>
+    <color name="pale_grey">#eeeff0</color>
+    <color name="pale_grey_two">#f6f7f8</color>
+    <color name="pale_grey_three">#f3f6f9</color>
+    <color name="deep_lavender">#6b55af</color>
+    <color name="deep_lilac">#8573ca</color>
+    <color name="pale_purple">#a99fdd</color>
+    <color name="dark_sky_blue">#4499dd</color>
+    <color name="dark_sky_blue_three">#4191E1</color>
+    <color name="dark_sky_blue_two">#4098df</color>
+    <color name="turquoise_blue">#01bece</color>
+    <color name="golden">#f6be00</color>
+    <color name="green_teal">#08b878</color>
+    <color name="pumpkin_orange_two">#ff7700</color>
+    <color name="mango">#ffaa39</color>
+    <color name="pumpkin_orange_three">#fa8a1a</color>
+    <color name="coral">#ff604c</color>
+    <color name="black_80">#cc000000</color>
+    <color name="white_70">#b2ffffff</color>
+    <color name="black">#000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="white">#ffffff</color>
+    <color name="white_60">#99ffffff</color>
+    <color name="stp_blue">#4191e1</color>
+    <color name="stp_divide">#333c444c</color>
+    <color name="stp_bg_month">#46a0e9</color>
+    <color name="stp_bg_month_best">#329ae1</color>
+    <color name="bf3_list_health">#06b666</color>
+    <color name="bf3_list_attention">#ff9c2c</color>
+    <color name="bf3_list_not_stand">#ff6655</color>
+    <color name="slp3_compare">#6655bb</color>
+    <color name="image_pressed">#40000000</color>
+    <color name="static_bar_tv_color">#999999</color>
+    <!--copied from mifit3-->
+
+    <color name="divider_line_color">#DCDCDC</color>
+
+</resources>
