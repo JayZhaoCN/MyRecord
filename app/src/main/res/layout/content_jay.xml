@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_menu_manage"/>
+                    android:src="@drawable/ic_account"/>
 
                 <TextView
                     android:id="@+id/account_tv"
@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_menu_manage"/>
+                    android:src="@drawable/ic_subject"/>
 
                 <TextView
                     android:id="@+id/type_tv"
@@ -221,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_menu_manage"/>
+                    android:src="@drawable/ic_date_range"/>
 
                 <TextView
                     android:id="@+id/date_tv"
@@ -250,7 +250,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_menu_manage"/>
+                    android:src="@drawable/ic_av_timer"/>
 
                 <TextView
                     android:id="@+id/time_tv"
