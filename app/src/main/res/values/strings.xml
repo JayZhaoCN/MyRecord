@@ -14,4 +14,24 @@
     <string name="today">今日</string>
     <string name="statistics">统计</string>
     <string name="save">保存</string>
+    <string name="title_activity_calculator">CalculatorActivity</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="division">/</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="multi">*</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="subtraction">-</string>
+    <string name="dot">.</string>
+    <string name="zero">0</string>
+    <string name="equal">=</string>
+    <string name="add">+</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="confirm">确定</string>
 </resources>

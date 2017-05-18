@@ -1,5 +1,6 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,6 +40,9 @@ public class JayActivity extends AppCompatActivity
         initToolbarAndDrawer();
         initUI();
         loadRecords();
+        //ArithmeticHelper.getSuffix("1.122123-6.1212*0.1212412/0.1212");
+        //ArithmeticHelper.getElements("1.34+11*7.9/0.0123");
+        Log.i("JayTest", ArithmeticHelper.calculate("0.12212+9.012*10.12213") + "");
     }
 
     private void initUI() {
@@ -65,6 +71,8 @@ public class JayActivity extends AppCompatActivity
         findViewById(R.id.item_1).setOnClickListener(this);
         findViewById(R.id.item_2).setOnClickListener(this);
         findViewById(R.id.item_3).setOnClickListener(this);
+
+        findViewById(R.id.calculator_img).setOnClickListener(this);
     }
 
     private void loadRecords() {
@@ -98,7 +106,9 @@ public class JayActivity extends AppCompatActivity
                 break;
             case R.id.item_3:
                 break;
-
+            case R.id.calculator_img:
+                startActivity(new Intent(this, CalculatorActivity.class));
+                break;
             default:
                 break;
         }
@@ -180,6 +190,7 @@ public class JayActivity extends AppCompatActivity
 
     private void initToolbarAndDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("账本");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
