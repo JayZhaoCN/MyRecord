@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,15 @@ public class JayActivity extends AppCompatActivity
         recordList.setLayoutManager(new LinearLayoutManager(this));
         recordList.setAdapter(new RecordAdapter());
         recordList.setNestedScrollingEnabled(false);
+
+        final PopLayout popLayout = (PopLayout) findViewById(R.id.pop_Layout);
+        popLayout.setTips(0, "侧滑");
+        popLayout.setTips(1, "回答");
+        popLayout.setTips(2, "提问");
+
+        findViewById(R.id.item_1).setOnClickListener(this);
+        findViewById(R.id.item_2).setOnClickListener(this);
+        findViewById(R.id.item_3).setOnClickListener(this);
     }
 
     private void loadRecords() {
@@ -81,6 +91,14 @@ public class JayActivity extends AppCompatActivity
                 break;
             case R.id.time_container:
                 break;
+            case R.id.item_1:
+                Log.i("JayTest", "item 1 clicked");
+                break;
+            case R.id.item_2:
+                break;
+            case R.id.item_3:
+                break;
+
             default:
                 break;
         }

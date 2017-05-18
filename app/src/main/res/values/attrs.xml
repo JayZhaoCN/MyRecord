@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PopLayout">
+        <attr name="animation_type"  format="enum">
+            <enum name="pop" value="0"/>
+            <enum name="scale" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CircleShadowView">
+        <attr name="circle_color" format="color"/>
+        <attr name="icon" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CrossBottomView">
+        <attr name="background_color" format="color"/>
+        <attr name="cross_color" format="color"/>
+    </declare-styleable>
+
+</resources>

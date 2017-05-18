@@ -73,5 +73,8 @@
     <!--copied from mifit3-->
 
     <color name="divider_line_color">#DCDCDC</color>
+    <color name="ripple_color">#1F000000</color>
+    <color name="half_black_dark">#606060</color>
+    <color name="light_white">#11FFFFFF</color>
 
 </resources>
