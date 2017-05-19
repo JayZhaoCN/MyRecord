@@ -22,10 +22,8 @@ import android.widget.TextView;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
-import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class JayActivity extends AppCompatActivity

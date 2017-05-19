@@ -10,7 +10,7 @@ import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class Category {
-    @Id
+    @Id(autoincrement = true)
     private Long id;
     private String category;
     @Generated(hash = 1173379396)
