@@ -20,10 +20,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.JayDaoManager;
+import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
+import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -31,7 +34,7 @@ public class JayActivity extends AppCompatActivity
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
 
-    private ArrayList<RecordItem> mTodayRecords = new ArrayList<>();
+    private List<Record> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,6 @@ public class JayActivity extends AppCompatActivity
         initToolbarAndDrawer();
         initUI();
         loadRecords();
-        //ArithmeticHelper.getSuffix("1.122123-6.1212*0.1212412/0.1212");
-        //ArithmeticHelper.getElements("1.34+11*7.9/0.0123");
-        Log.i("JayTest", ArithmeticHelper.calculate("0.12212+9.012*10.12213") + "");
     }
 
     private void initUI() {
@@ -76,10 +76,19 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void loadRecords() {
-        //TODO load from database
-        for (int i=0; i<20; i++) {
-            mTodayRecords.add(new RecordItem(true, "无备注", "工资", new Date().getTime()));
+
+        RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
+        List<Record> list = recordDao.loadAll();
+        if (list.isEmpty()) {
+
+            for (int i = 0; i < 15; i++) {
+                recordDao.insertOrReplace(
+                        new Record(System.currentTimeMillis(), true,
+                                "无备注", "餐饮", System.currentTimeMillis()));
+            }
         }
+
+        mList = recordDao.loadAll();
     }
 
     @Override
@@ -116,7 +125,7 @@ public class JayActivity extends AppCompatActivity
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(!isChecked) {
+        if (!isChecked) {
             return;
         }
         switch (buttonView.getId()) {
@@ -214,14 +223,14 @@ public class JayActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(RecordViewHolder holder, int position) {
             holder.titleTV.setText("支出:5");
-            holder.remarkTv.setText("无备注");
-            holder.typeTv.setText("餐饮");
-            holder.timeTv.setText("2017年5月18日 10:06");
+            holder.remarkTv.setText(mList.get(position).getRemark());
+            holder.typeTv.setText(mList.get(position).getCategory());
+            holder.timeTv.setText(TimeFormatter.getInstance().format(mList.get(position).getRecordTime()));
         }
 
         @Override
         public int getItemCount() {
-            return mTodayRecords.size();
+            return mList.size();
         }
 
         class RecordViewHolder extends RecyclerView.ViewHolder {
@@ -234,22 +243,6 @@ public class JayActivity extends AppCompatActivity
                 typeTv = (TextView) itemView.findViewById(R.id.type_tv);
                 timeTv = (TextView) itemView.findViewById(R.id.time_tv);
             }
-        }
-    }
-
-    class RecordItem {
-        public boolean income;
-        public String remark;
-        public String category;
-        public long time;
-        public String timeFormatted;
-
-        public RecordItem(boolean income, String remark, String category, long time) {
-            this.time = time;
-            this.timeFormatted = TimeFormatter.getInstance().format(time);
-            this.remark = remark;
-            this.income = income;
-            this.category = category;
         }
     }
 }

@@ -1,0 +1,22 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+
+**/**/build/
+**/**/bin/
+**/**/gen/
+**/**/proguard/
+**/**/obj/
+
+#ignore IntelliJ IDEA file
+.idea/
+*.iml
+out/
+
+gradle.properties
+*android-app.keystore
+
