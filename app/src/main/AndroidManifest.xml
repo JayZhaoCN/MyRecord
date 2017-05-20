@@ -26,6 +26,11 @@
             android:label="@string/title_activity_calculator"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".ManagerCategoryActivity"
+            android:label="@string/title_activity_manager_category"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

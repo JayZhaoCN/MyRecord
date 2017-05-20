@@ -182,7 +182,7 @@
                     android:src="@drawable/ic_subject"/>
 
                 <TextView
-                    android:id="@+id/type_tv"
+                    android:id="@+id/category_tv"
                     style="@style/MainTextStyle"
                     android:layout_centerInParent="true"
                     android:text="@string/catering"/>

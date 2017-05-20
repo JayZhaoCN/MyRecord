@@ -31,6 +31,7 @@ public class JayActivity extends AppCompatActivity
 
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
+    private TextView mCategoryTv;
 
     private List<Record> mList;
 
@@ -44,6 +45,8 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void initUI() {
+        mCategoryTv = (TextView) findViewById(R.id.category_tv);
+
         mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
         mExpendBtn = (CheckBox) findViewById(R.id.expend_btn);
         mIncomeBtn.setOnClickListener(this);
@@ -101,6 +104,14 @@ public class JayActivity extends AppCompatActivity
             case R.id.account_container:
                 break;
             case R.id.type_container:
+                CategoryDialog dialog = new CategoryDialog();
+                dialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
+                    @Override
+                    public void onSelect(String category) {
+                        mCategoryTv.setText(category);
+                    }
+                });
+                dialog.show(getFragmentManager(), "categoryDialog");
                 break;
             case R.id.date_container:
                 break;
