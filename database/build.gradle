@@ -34,7 +34,7 @@ dependencies {
 
 
 greendao {
-    schemaVersion 1
+    schemaVersion 2
     daoPackage 'com.hfut.zhaojiabao.myrecord.greendao'
     targetGenDir 'src/main/java'
 }

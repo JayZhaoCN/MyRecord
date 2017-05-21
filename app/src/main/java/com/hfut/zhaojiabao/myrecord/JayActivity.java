@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +38,15 @@ public class JayActivity extends AppCompatActivity
     private TextView mCategoryTv;
     private TextView mDateTv;
     private TextView mTimeTv;
+    private EditText mSumEdit;
+    private EditText mRemarkEdit;
 
     private List<Record> mList;
+
+    private String mAccount;
+    private String mCategory;
+    private String mTime;
+    private String mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,8 @@ public class JayActivity extends AppCompatActivity
         mCategoryTv = (TextView) findViewById(R.id.category_tv);
         mDateTv = (TextView) findViewById(R.id.date_tv);
         mTimeTv = (TextView) findViewById(R.id.time_tv);
+        mSumEdit = (EditText) findViewById(R.id.sum_edit);
+        mRemarkEdit = (EditText) findViewById(R.id.remark_edit);
 
         mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
         mExpendBtn = (CheckBox) findViewById(R.id.expend_btn);
@@ -65,6 +75,7 @@ public class JayActivity extends AppCompatActivity
         findViewById(R.id.type_container).setOnClickListener(this);
         findViewById(R.id.date_container).setOnClickListener(this);
         findViewById(R.id.time_container).setOnClickListener(this);
+        findViewById(R.id.save_btn).setOnClickListener(this);
 
         RecyclerView recordList = (RecyclerView) findViewById(R.id.today_record);
         recordList.setLayoutManager(new LinearLayoutManager(this));
@@ -84,18 +95,7 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void loadRecords() {
-
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
-        List<Record> list = recordDao.loadAll();
-        if (list.isEmpty()) {
-
-            for (int i = 0; i < 15; i++) {
-                recordDao.insertOrReplace(
-                        new Record(System.currentTimeMillis(), true,
-                                "无备注", "餐饮", System.currentTimeMillis()));
-            }
-        }
-
         mList = recordDao.loadAll();
     }
 
@@ -151,9 +151,30 @@ public class JayActivity extends AppCompatActivity
             case R.id.calculator_img:
                 startActivity(new Intent(this, CalculatorActivity.class));
                 break;
+            case R.id.save_btn:
+                save();
+                break;
             default:
                 break;
         }
+    }
+
+    private void save() {
+        boolean income = mIncomeBtn.isChecked();
+        float sumFloat = 0;
+        String sum = mSumEdit.getText().toString();
+        try {
+            sumFloat = Float.valueOf(sum);
+        } catch (Exception e) {
+            Toast.makeText(this, "金额有误！", Toast.LENGTH_SHORT).show();
+        }
+
+        String category = mCategoryTv.getText().toString();
+        String remark = mRemarkEdit.getText().toString();
+        String consumeTime = mDateTv.getText().toString() + " " + mTimeTv.getText().toString();
+
+        RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
+        recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, consumeTime, sumFloat));
     }
 
     @Override
