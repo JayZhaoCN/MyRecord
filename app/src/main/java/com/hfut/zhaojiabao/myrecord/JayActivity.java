@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
+import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class JayActivity extends AppCompatActivity
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
     private TextView mCategoryTv;
+    private TextView mDateTv;
+    private TextView mTimeTv;
 
     private List<Record> mList;
 
@@ -46,6 +50,8 @@ public class JayActivity extends AppCompatActivity
 
     private void initUI() {
         mCategoryTv = (TextView) findViewById(R.id.category_tv);
+        mDateTv = (TextView) findViewById(R.id.date_tv);
+        mTimeTv = (TextView) findViewById(R.id.time_tv);
 
         mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
         mExpendBtn = (CheckBox) findViewById(R.id.expend_btn);
@@ -104,18 +110,34 @@ public class JayActivity extends AppCompatActivity
             case R.id.account_container:
                 break;
             case R.id.type_container:
-                final CategoryDialog dialog = new CategoryDialog();
-                dialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
+                final CategoryDialog categoryDialog = new CategoryDialog();
+                categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
                     @Override
                     public void onSelect(String category) {
                         mCategoryTv.setText(category);
                     }
                 });
-                dialog.show(getFragmentManager(), "categoryDialog");
+                categoryDialog.show(getFragmentManager(), "categoryDialog");
                 break;
             case R.id.date_container:
+                PickDateDialog pickDateDialog = new PickDateDialog();
+                pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
+                    @Override
+                    public void onDatePick(String year, String month, String day) {
+                        mDateTv.setText(year + "-" + month + "-" + day);
+                    }
+                });
+                pickDateDialog.show(getFragmentManager(), "pickDateDialog");
                 break;
             case R.id.time_container:
+                PickTimeDialog pickTimeDialog = new PickTimeDialog();
+                pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
+                    @Override
+                    public void onTimePick(String hour, String minute) {
+                        mTimeTv.setText(hour + ":" + minute);
+                    }
+                });
+                pickTimeDialog.show(getFragmentManager(), "pickTimeDialog");
                 break;
             case R.id.item_1:
                 Log.i("JayTest", "item 1 clicked");
