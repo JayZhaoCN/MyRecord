@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
@@ -108,6 +109,7 @@ public class JayActivity extends AppCompatActivity
                 mIncomeBtn.setChecked(!mExpendBtn.isChecked());
                 break;
             case R.id.account_container:
+                Toast.makeText(this, "目前只支持默认账户，更多功能开发中~", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.type_container:
                 final CategoryDialog categoryDialog = new CategoryDialog();
