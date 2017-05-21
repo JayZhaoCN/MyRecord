@@ -42,6 +42,7 @@ public class CategoryDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), ManagerCategoryActivity.class));
+                dismiss();
             }
         });
 

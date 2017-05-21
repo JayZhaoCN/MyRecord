@@ -104,7 +104,7 @@ public class JayActivity extends AppCompatActivity
             case R.id.account_container:
                 break;
             case R.id.type_container:
-                CategoryDialog dialog = new CategoryDialog();
+                final CategoryDialog dialog = new CategoryDialog();
                 dialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
                     @Override
                     public void onSelect(String category) {

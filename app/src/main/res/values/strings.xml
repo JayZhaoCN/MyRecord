@@ -46,4 +46,6 @@
         <item>其他</item>
     </string-array>
     <string name="title_activity_manager_category">ManagerCategoryActivity</string>
+    <string name="add_category">添加类别</string>
+    <string name="input_new_category">请输入新类别</string>
 </resources>
