@@ -1,6 +1,8 @@
 package com.hfut.zhaojiabao.myrecord.dialogs;
 
+import android.annotation.TargetApi;
 import android.app.DialogFragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TimePicker;
 
+import com.hfut.zhaojiabao.myrecord.BuildConfig;
 import com.hfut.zhaojiabao.myrecord.R;
 
 /**
@@ -36,6 +39,10 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
 
     private void initTimePicker(View v) {
         TimePicker timePicker = (TimePicker) v.findViewById(R.id.time_picker);
+
+        mHour = String.valueOf(timePicker.getCurrentHour());
+        mMinute = String.valueOf(timePicker.getCurrentMinute());
+
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
