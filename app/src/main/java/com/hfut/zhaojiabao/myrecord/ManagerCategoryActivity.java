@@ -5,12 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
@@ -27,7 +27,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("管理类别");
+        toolbar.setTitle(R.string.manage_catrgory);
         setSupportActionBar(toolbar);
 
         findViewById(R.id.edit_img).setOnClickListener(new View.OnClickListener() {
@@ -60,6 +60,9 @@ public class ManagerCategoryActivity extends AppCompatActivity {
         mCategories = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
     }
 
+    private boolean checkCanDelete() {
+        return JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll().size() > 1;
+    }
 
     private class ManageCategoryAdapter extends RecyclerView.Adapter<ManageCategoryAdapter.ManageViewHolder> {
 
@@ -75,7 +78,10 @@ public class ManagerCategoryActivity extends AppCompatActivity {
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("JayTest", "item delete: " + mCategories.get(position));
+                    if(!checkCanDelete()) {
+                        Toast.makeText(ManagerCategoryActivity.this, R.string.at_least_one, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
                     updateCategories();
                     notifyDataSetChanged();

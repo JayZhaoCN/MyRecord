@@ -54,6 +54,8 @@ public class JayActivity extends AppCompatActivity
 
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+    private String mDefaultCategory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,9 @@ public class JayActivity extends AppCompatActivity
 
     private void initUI() {
         mCategoryTv = (TextView) findViewById(R.id.category_tv);
+
+        mCategoryTv.setText(mDefaultCategory = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll().get(0).getCategory());
+
         mDateTv = (TextView) findViewById(R.id.date_tv);
         mTimeTv = (TextView) findViewById(R.id.time_tv);
         mSumEdit = (EditText) findViewById(R.id.sum_edit);
@@ -133,7 +138,7 @@ public class JayActivity extends AppCompatActivity
                 mIncomeBtn.setChecked(!mExpendBtn.isChecked());
                 break;
             case R.id.account_container:
-                Toast.makeText(this, "目前只支持默认账户，更多功能开发中~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.account_tips), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.type_container:
                 final CategoryDialog categoryDialog = new CategoryDialog();
@@ -190,12 +195,12 @@ public class JayActivity extends AppCompatActivity
 
     private void save() {
         boolean income = mIncomeBtn.isChecked();
-        float sumFloat = 0;
+        float sumFloat;
         String sum = mSumEdit.getText().toString();
         try {
             sumFloat = Float.valueOf(sum);
         } catch (Exception e) {
-            Toast.makeText(this, "金额有误！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.number_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -209,13 +214,21 @@ public class JayActivity extends AppCompatActivity
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
         //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
-        Toast.makeText(this, "新的一条记录已经生成了~", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.new_record), Toast.LENGTH_SHORT).show();
 
         loadRecords();
         if(mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
         mSumEdit.setText("");
+        initTime();
+        mCategoryTv.setText(mDefaultCategory);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCategoryTv.setText(JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll().get(0).getCategory());
     }
 
     @Override
@@ -294,7 +307,7 @@ public class JayActivity extends AppCompatActivity
 
     private void initToolbarAndDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("账本");
+        toolbar.setTitle(getString(R.string.record));
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -319,13 +332,11 @@ public class JayActivity extends AppCompatActivity
         public void onBindViewHolder(RecordViewHolder holder, int position) {
             Record record = mList.get(position);
 
-            String str = record.getIncome() ? "收入: " : "支出: ";
-
             float sum = record.getSum();
             java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
             nf.setGroupingUsed(false);
 
-            holder.titleTV.setText(str + nf.format(sum));
+            holder.titleTV.setText(getString(record.getIncome() ? R.string.income_str : R.string.expend_str, nf.format(sum)));
             holder.remarkTv.setText(mList.get(position).getRemark());
             holder.typeTv.setText(mList.get(position).getCategory());
             holder.timeTv.setText(TimeFormatter.getInstance().format(mList.get(position).getConsumeTime()));
