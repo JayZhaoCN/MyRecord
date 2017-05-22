@@ -28,7 +28,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
         public final static Property Income = new Property(1, Boolean.class, "income", false, "INCOME");
         public final static Property Remark = new Property(2, String.class, "remark", false, "REMARK");
         public final static Property Category = new Property(3, String.class, "category", false, "CATEGORY");
-        public final static Property CosumeTime = new Property(4, String.class, "cosumeTime", false, "COSUME_TIME");
+        public final static Property ConsumeTime = new Property(4, Long.class, "consumeTime", false, "CONSUME_TIME");
         public final static Property Sum = new Property(5, Float.class, "sum", false, "SUM");
     }
 
@@ -49,7 +49,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
                 "\"INCOME\" INTEGER," + // 1: income
                 "\"REMARK\" TEXT," + // 2: remark
                 "\"CATEGORY\" TEXT," + // 3: category
-                "\"COSUME_TIME\" TEXT," + // 4: cosumeTime
+                "\"CONSUME_TIME\" INTEGER," + // 4: consumeTime
                 "\"SUM\" REAL);"); // 5: sum
     }
 
@@ -83,9 +83,9 @@ public class RecordDao extends AbstractDao<Record, Long> {
             stmt.bindString(4, category);
         }
  
-        String cosumeTime = entity.getCosumeTime();
-        if (cosumeTime != null) {
-            stmt.bindString(5, cosumeTime);
+        Long consumeTime = entity.getConsumeTime();
+        if (consumeTime != null) {
+            stmt.bindLong(5, consumeTime);
         }
  
         Float sum = entity.getSum();
@@ -118,9 +118,9 @@ public class RecordDao extends AbstractDao<Record, Long> {
             stmt.bindString(4, category);
         }
  
-        String cosumeTime = entity.getCosumeTime();
-        if (cosumeTime != null) {
-            stmt.bindString(5, cosumeTime);
+        Long consumeTime = entity.getConsumeTime();
+        if (consumeTime != null) {
+            stmt.bindLong(5, consumeTime);
         }
  
         Float sum = entity.getSum();
@@ -141,7 +141,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getShort(offset + 1) != 0, // income
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // remark
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // category
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // cosumeTime
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // consumeTime
             cursor.isNull(offset + 5) ? null : cursor.getFloat(offset + 5) // sum
         );
         return entity;
@@ -153,7 +153,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
         entity.setIncome(cursor.isNull(offset + 1) ? null : cursor.getShort(offset + 1) != 0);
         entity.setRemark(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCategory(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setCosumeTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setConsumeTime(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
         entity.setSum(cursor.isNull(offset + 5) ? null : cursor.getFloat(offset + 5));
      }
     

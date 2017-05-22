@@ -19,7 +19,7 @@ import java.util.Calendar;
 public class PickDateDialog extends DialogFragment implements View.OnClickListener {
 
     private OnDatePickListener mListener;
-    private String mYear, mMonth, mDay;
+    private int mYear, mMonth, mDay;
 
     @Nullable
     @Override
@@ -34,26 +34,19 @@ public class PickDateDialog extends DialogFragment implements View.OnClickListen
     }
 
     private void initDatePicker(View v) {
-        int year;
-        int month;
-        int day;
 
         Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH) + 1;
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        mYear = String.valueOf(year).substring(2);
-        mMonth = String.valueOf(month);
-        mDay = String.valueOf(day);
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         final DatePicker datePicker = (DatePicker) v.findViewById(R.id.date_picker);
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
+        datePicker.init(mYear, mMonth, mDay, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mYear = String.valueOf(year).substring(2);
-                mMonth = String.valueOf(monthOfYear);
-                mDay = String.valueOf(dayOfMonth);
+                mYear = year;
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
             }
         });
     }
@@ -80,6 +73,6 @@ public class PickDateDialog extends DialogFragment implements View.OnClickListen
     }
 
     public interface OnDatePickListener {
-        void onDatePick(String year, String month, String day);
+        void onDatePick(int year, int month, int day);
     }
 }

@@ -28,6 +28,9 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class JayActivity extends AppCompatActivity
@@ -47,6 +50,9 @@ public class JayActivity extends AppCompatActivity
     private String mCategory;
     private String mTime;
     private String mDate;
+    private RecordAdapter mAdapter;
+
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +60,19 @@ public class JayActivity extends AppCompatActivity
         setContentView(R.layout.activity_jay);
         initToolbarAndDrawer();
         initUI();
+        initTime();
         loadRecords();
+    }
+
+    private void initTime() {
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        mMinute = calendar.get(Calendar.MINUTE);
+        mDateTv.setText(String.valueOf(mYear).substring(2) + "-" + (mMonth + 1) + "-" + mDay);
+        mTimeTv.setText(mHour + ":" + mMinute);
     }
 
     private void initUI() {
@@ -79,7 +97,7 @@ public class JayActivity extends AppCompatActivity
 
         RecyclerView recordList = (RecyclerView) findViewById(R.id.today_record);
         recordList.setLayoutManager(new LinearLayoutManager(this));
-        recordList.setAdapter(new RecordAdapter());
+        recordList.setAdapter(mAdapter = new RecordAdapter());
         recordList.setNestedScrollingEnabled(false);
 
         final PopLayout popLayout = (PopLayout) findViewById(R.id.pop_Layout);
@@ -97,6 +115,12 @@ public class JayActivity extends AppCompatActivity
     private void loadRecords() {
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         mList = recordDao.loadAll();
+        Collections.sort(mList, new Comparator<Record>() {
+            @Override
+            public int compare(Record o1, Record o2) {
+                return o2.getRecordTime().compareTo(o1.getRecordTime());
+            }
+        });
     }
 
     @Override
@@ -125,8 +149,11 @@ public class JayActivity extends AppCompatActivity
                 PickDateDialog pickDateDialog = new PickDateDialog();
                 pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
                     @Override
-                    public void onDatePick(String year, String month, String day) {
-                        mDateTv.setText(year + "-" + month + "-" + day);
+                    public void onDatePick(int year, int month, int day) {
+                        mDateTv.setText(String.valueOf(year).substring(2) + "-" + (month + 1) + "-" + day);
+                        mYear = year;
+                        mMonth = month;
+                        mDay = day;
                     }
                 });
                 pickDateDialog.show(getFragmentManager(), "pickDateDialog");
@@ -135,8 +162,10 @@ public class JayActivity extends AppCompatActivity
                 PickTimeDialog pickTimeDialog = new PickTimeDialog();
                 pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
                     @Override
-                    public void onTimePick(String hour, String minute) {
+                    public void onTimePick(int hour, int minute) {
                         mTimeTv.setText(hour + ":" + minute);
+                        mHour = hour;
+                        mMinute = minute;
                     }
                 });
                 pickTimeDialog.show(getFragmentManager(), "pickTimeDialog");
@@ -167,14 +196,26 @@ public class JayActivity extends AppCompatActivity
             sumFloat = Float.valueOf(sum);
         } catch (Exception e) {
             Toast.makeText(this, "金额有误！", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         String category = mCategoryTv.getText().toString();
         String remark = mRemarkEdit.getText().toString();
-        String consumeTime = mDateTv.getText().toString() + " " + mTimeTv.getText().toString();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay, mHour, mMinute);
+        long time = calendar.getTimeInMillis();
 
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
-        recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, consumeTime, sumFloat));
+        recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
+        //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
+        Toast.makeText(this, "新的一条记录已经生成了~", Toast.LENGTH_SHORT).show();
+
+        loadRecords();
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        mSumEdit.setText("");
     }
 
     @Override
@@ -276,10 +317,18 @@ public class JayActivity extends AppCompatActivity
 
         @Override
         public void onBindViewHolder(RecordViewHolder holder, int position) {
-            holder.titleTV.setText("支出:5");
+            Record record = mList.get(position);
+
+            String str = record.getIncome() ? "收入: " : "支出: ";
+
+            float sum = record.getSum();
+            java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+            nf.setGroupingUsed(false);
+
+            holder.titleTV.setText(str + nf.format(sum));
             holder.remarkTv.setText(mList.get(position).getRemark());
             holder.typeTv.setText(mList.get(position).getCategory());
-            holder.timeTv.setText(TimeFormatter.getInstance().format(mList.get(position).getRecordTime()));
+            holder.timeTv.setText(TimeFormatter.getInstance().format(mList.get(position).getConsumeTime()));
         }
 
         @Override

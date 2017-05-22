@@ -15,16 +15,16 @@ public class Record {
     private Boolean income;
     private String remark;
     private String category;
-    private String cosumeTime;
+    private Long consumeTime;
     private Float sum;
-    @Generated(hash = 2018706187)
+    @Generated(hash = 2057325381)
     public Record(Long recordTime, Boolean income, String remark, String category,
-            String cosumeTime, Float sum) {
+            Long consumeTime, Float sum) {
         this.recordTime = recordTime;
         this.income = income;
         this.remark = remark;
         this.category = category;
-        this.cosumeTime = cosumeTime;
+        this.consumeTime = consumeTime;
         this.sum = sum;
     }
     @Generated(hash = 477726293)
@@ -54,11 +54,11 @@ public class Record {
     public void setCategory(String category) {
         this.category = category;
     }
-    public String getCosumeTime() {
-        return this.cosumeTime;
+    public Long getConsumeTime() {
+        return this.consumeTime;
     }
-    public void setCosumeTime(String cosumeTime) {
-        this.cosumeTime = cosumeTime;
+    public void setConsumeTime(Long consumeTime) {
+        this.consumeTime = consumeTime;
     }
     public Float getSum() {
         return this.sum;

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TimePicker;
 
-import com.hfut.zhaojiabao.myrecord.BuildConfig;
 import com.hfut.zhaojiabao.myrecord.R;
 
 /**
@@ -19,8 +18,7 @@ import com.hfut.zhaojiabao.myrecord.R;
 
 public class PickTimeDialog extends DialogFragment implements View.OnClickListener {
 
-    private String mHour;
-    private String mMinute;
+    private int mHour, mMinute;
 
     private OnTimePickListener mListener;
 
@@ -40,14 +38,14 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
     private void initTimePicker(View v) {
         TimePicker timePicker = (TimePicker) v.findViewById(R.id.time_picker);
 
-        mHour = String.valueOf(timePicker.getCurrentHour());
-        mMinute = String.valueOf(timePicker.getCurrentMinute());
+        mHour = timePicker.getCurrentHour();
+        mMinute = timePicker.getCurrentMinute();
 
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                mHour = String.valueOf(hourOfDay);
-                mMinute = String.valueOf(minute);
+                mHour = hourOfDay;
+                mMinute = minute;
             }
         });
 
@@ -73,6 +71,6 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
     }
 
     public interface OnTimePickListener {
-        void onTimePick(String hour, String minute);
+        void onTimePick(int hour, int minute);
     }
 }
