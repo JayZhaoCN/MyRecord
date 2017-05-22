@@ -27,6 +27,7 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
+import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -138,7 +139,7 @@ public class JayActivity extends AppCompatActivity
                 mIncomeBtn.setChecked(!mExpendBtn.isChecked());
                 break;
             case R.id.account_container:
-                Toast.makeText(this, getString(R.string.account_tips), Toast.LENGTH_SHORT).show();
+                ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
                 break;
             case R.id.type_container:
                 final CategoryDialog categoryDialog = new CategoryDialog();
@@ -200,7 +201,7 @@ public class JayActivity extends AppCompatActivity
         try {
             sumFloat = Float.valueOf(sum);
         } catch (Exception e) {
-            Toast.makeText(this, getString(R.string.number_error), Toast.LENGTH_SHORT).show();
+            ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.number_error), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -214,7 +215,7 @@ public class JayActivity extends AppCompatActivity
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
         //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
-        Toast.makeText(this, getString(R.string.new_record), Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.new_record), Toast.LENGTH_SHORT);
 
         loadRecords();
         if(mAdapter != null) {

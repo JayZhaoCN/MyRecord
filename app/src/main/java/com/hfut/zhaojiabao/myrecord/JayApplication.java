@@ -14,12 +14,19 @@ import java.util.List;
 
 public class JayApplication extends Application {
 
+    private static JayApplication sInstance;
+
+    public static JayApplication getApplication() {
+        return sInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         JayDaoManager.init(this);
         initCategory();
+        sInstance = this;
     }
 
     /**

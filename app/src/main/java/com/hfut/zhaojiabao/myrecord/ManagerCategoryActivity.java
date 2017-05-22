@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
+import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if(!checkCanDelete()) {
-                        Toast.makeText(ManagerCategoryActivity.this, R.string.at_least_one, Toast.LENGTH_SHORT).show();
+                        ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
                         return;
                     }
                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
