@@ -57,4 +57,5 @@
     <string name="manage_catrgory">管理类别</string>
     <string name="at_least_one">至少要留一种类别</string>
     <string name="title_activity_record_chart">RecordChartActivity</string>
+    <string name="chart">图表</string>
 </resources>

@@ -17,6 +17,7 @@ public class RecordChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_chart);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.chart);
         setSupportActionBar(toolbar);
 
         init();
@@ -30,6 +31,8 @@ public class RecordChartActivity extends AppCompatActivity {
                 Log.i("JayTest", "selected: " + position);
             }
         });
+
+
     }
 
 }

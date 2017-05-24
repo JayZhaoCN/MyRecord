@@ -28,7 +28,7 @@ public class RecordChart extends View {
     private Context mContext;
     private int mWidth, mHeight;
     //一屏显示的柱子数量
-    private int mCount = 6;
+    private int mCount = 5;
     //每根柱子的宽度
     private float mPerWidth;
     //底部的高度
@@ -61,6 +61,11 @@ public class RecordChart extends View {
     //未选中时的颜色
     private int mNormalColor;
 
+    private float left, top, right, bottom;
+    private int max, min;
+
+    private ValueAnimator mAnimator;
+
     private int mSelectedIndex = -1;
     private float mSelectedLeft;
     private float mSelectedRight;
@@ -74,17 +79,18 @@ public class RecordChart extends View {
         public boolean onDown(MotionEvent e) {
             endAnimation();
             mShouldFly = false;
+            mCurrX = 0;
             mScroller.forceFinished(true);
             return true;
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            mShouldFly = false;
-            mExcursion -= distanceX;
-            if(!judgeExcursion()) {
+            if (!judgeExcursion()) {
                 return false;
             }
+            mShouldFly = false;
+            mExcursion -= distanceX;
             invalidate();
             return true;
         }
@@ -99,7 +105,6 @@ public class RecordChart extends View {
             return true;
         }
     };
-
 
     public RecordChart(Context context) {
         this(context, null);
@@ -138,13 +143,14 @@ public class RecordChart extends View {
         mScroller = new Scroller(mContext);
 
         //TODO test code
-        for (int i = 0; i < 50; i++) {
-            mDatas.add(new ChartItem(900, "一月"));
-            mDatas.add(new ChartItem(800, "二月"));
-            mDatas.add(new ChartItem(700, "三月"));
-            mDatas.add(new ChartItem(600, "四月"));
-            mDatas.add(new ChartItem(500, "五月"));
-            mDatas.add(new ChartItem(400, "六月"));
+        for (int i = 0; i < 30; i++) {
+            mDatas.add(new ChartItem(900, String.valueOf(i)));
+            mDatas.add(new ChartItem(600, String.valueOf(i)));
+            mDatas.add(new ChartItem(700, String.valueOf(i)));
+            mDatas.add(new ChartItem(800, String.valueOf(i)));
+            mDatas.add(new ChartItem(1000, String.valueOf(i)));
+            mDatas.add(new ChartItem(700, String.valueOf(i)));
+            mDatas.add(new ChartItem(500, String.valueOf(i)));
         }
 
         mInterval = DisplayUtil.dp2px(mContext, 1.5f);
@@ -158,17 +164,12 @@ public class RecordChart extends View {
         mWidth = w;
         mHeight = h;
         mPerWidth = (float) w / mCount;
-        mMaxExcursion = mPerWidth * mDatas.size();
+        mMaxExcursion = mPerWidth * (mDatas.size() - 1);
     }
-
-    private float left, top, right, bottom;
-    private int max, min;
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0, mHeight - mXHeight, mWidth, mHeight, mXPaint);
-
-        Log.i("JayTest", "excursion: " + mExcursion);
 
         min = (int) (mDatas.size() - (1.5 * mPerWidth + mWidth / 2 + mExcursion) / mPerWidth - 1);
         max = (int) ((2.5 * mPerWidth + mWidth / 2 - mExcursion) / mPerWidth + mDatas.size() - 1);
@@ -218,7 +219,7 @@ public class RecordChart extends View {
     public void computeScroll() {
         super.computeScroll();
 
-        if(!mShouldFly) return;
+        if (!mShouldFly) return;
 
         if (mScroller.isFinished()) {
             Log.i("JayTest", "fling end.");
@@ -231,7 +232,7 @@ public class RecordChart extends View {
         if (mScroller.computeScrollOffset()) {
             mExcursion += mScroller.getCurrX() - mCurrX;
             mCurrX = mScroller.getCurrX();
-            if(!judgeExcursion()) {
+            if (!judgeExcursion()) {
                 return;
             }
             invalidate();
@@ -241,12 +242,12 @@ public class RecordChart extends View {
     }
 
     private boolean judgeExcursion() {
-        if(mExcursion >= mMaxExcursion) {
-            mExcursion = mMaxExcursion - mPerWidth / 2;
+        if (mExcursion >= mMaxExcursion) {
+            mExcursion = mMaxExcursion;
             mScroller.forceFinished(true);
             return false;
         }
-        if(mExcursion <= 0) {
+        if (mExcursion <= 0) {
             mExcursion = 0;
             mScroller.forceFinished(true);
             return false;
@@ -270,10 +271,8 @@ public class RecordChart extends View {
         invalidate();
     }
 
-    private ValueAnimator mAnimator;
-
     private void endAnimation() {
-        if(mAnimator != null && mAnimator.isRunning()) {
+        if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.end();
             mAnimator = null;
         }
@@ -288,6 +287,7 @@ public class RecordChart extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 mExcursion = (float) animation.getAnimatedValue();
+
                 postInvalidateOnAnimation();
             }
         });
