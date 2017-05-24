@@ -146,15 +146,18 @@ public class RecordChart extends View {
         mScroller = new Scroller(mContext);
 
         //TODO test code
-        for (int i = 0; i < 30; i++) {
-            mDatas.add(new ChartItem(900, String.valueOf(i)));
-            mDatas.add(new ChartItem(600, String.valueOf(i)));
-            mDatas.add(new ChartItem(700, String.valueOf(i)));
-            mDatas.add(new ChartItem(800, String.valueOf(i)));
-            mDatas.add(new ChartItem(1000, String.valueOf(i)));
-            mDatas.add(new ChartItem(700, String.valueOf(i)));
-            mDatas.add(new ChartItem(500, String.valueOf(i)));
-        }
+        mDatas.add(new ChartItem(15, "一月"));
+        mDatas.add(new ChartItem(14, "二月"));
+        mDatas.add(new ChartItem(90, "三月"));
+        mDatas.add(new ChartItem(100, "四月"));
+        mDatas.add(new ChartItem(2, "五月"));
+        mDatas.add(new ChartItem(7, "六月"));
+        mDatas.add(new ChartItem(15, "七月"));
+        mDatas.add(new ChartItem(15, "八月"));
+        mDatas.add(new ChartItem(14, "九月"));
+        mDatas.add(new ChartItem(90, "十月"));
+        mDatas.add(new ChartItem(100, "十一月"));
+        mDatas.add(new ChartItem(2, "十二月"));
 
         mInterval = DisplayUtil.dp2px(mContext, 1.5f);
         mNormalColor = Color.parseColor("#ABD2F1");
@@ -168,6 +171,9 @@ public class RecordChart extends View {
         mHeight = h;
         mPerWidth = (float) w / mCount;
         mMaxExcursion = mPerWidth * (mDatas.size() - 1);
+
+        //-60是为了防止柱子和图表一样高
+        ValueTransfer.transform(mDatas, mHeight - 60 - mXHeight);
     }
 
     @Override
@@ -190,7 +196,7 @@ public class RecordChart extends View {
         for (int i = min; i <= max; i++) {
             left = mWidth / 2 - mPerWidth / 2 - mPerWidth * (mDatas.size() - i - 1) + mExcursion;
             right = left + mPerWidth;
-            top = mHeight - mDatas.get(i).value;
+            top = mHeight - mDatas.get(i).value - mXHeight;
             bottom = mHeight - mXHeight;
 
             if (judgeCenter(left, right)) {

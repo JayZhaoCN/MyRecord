@@ -8,6 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <com.hfut.zhaojiabao.myrecord.chart.RecordChart
+        android:background="@color/bf3_list_attention"
         android:id="@+id/record_chart"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
