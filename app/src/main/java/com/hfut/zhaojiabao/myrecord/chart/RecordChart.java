@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,6 +65,9 @@ public class RecordChart extends View {
 
     private ValueAnimator mAnimator;
 
+    //标识是否向左滑动
+    private boolean mFlingLeft = false;
+
     private int mSelectedIndex = -1;
     private float mSelectedLeft;
     private float mSelectedRight;
@@ -86,7 +88,7 @@ public class RecordChart extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (!judgeExcursion()) {
+            if (!judgeExcursion(distanceX > 0)) {
                 return false;
             }
             mShouldFly = false;
@@ -97,6 +99,7 @@ public class RecordChart extends View {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            mFlingLeft = velocityX < 0;
             endAnimation();
             mShouldFly = true;
             int max = 5400;
@@ -222,7 +225,6 @@ public class RecordChart extends View {
         if (!mShouldFly) return;
 
         if (mScroller.isFinished()) {
-            Log.i("JayTest", "fling end.");
             mCurrX = 0;
             mShouldFly = false;
             getExcursion();
@@ -232,7 +234,7 @@ public class RecordChart extends View {
         if (mScroller.computeScrollOffset()) {
             mExcursion += mScroller.getCurrX() - mCurrX;
             mCurrX = mScroller.getCurrX();
-            if (!judgeExcursion()) {
+            if (!judgeExcursion(mFlingLeft)) {
                 return;
             }
             invalidate();
@@ -241,13 +243,13 @@ public class RecordChart extends View {
         }
     }
 
-    private boolean judgeExcursion() {
-        if (mExcursion >= mMaxExcursion) {
+    private boolean judgeExcursion(boolean left) {
+        if (mExcursion >= mMaxExcursion && !left) {
             mExcursion = mMaxExcursion;
             mScroller.forceFinished(true);
             return false;
         }
-        if (mExcursion <= 0) {
+        if (mExcursion <= 0 && left) {
             mExcursion = 0;
             mScroller.forceFinished(true);
             return false;

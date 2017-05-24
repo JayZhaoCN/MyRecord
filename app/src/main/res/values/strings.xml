@@ -58,4 +58,8 @@
     <string name="at_least_one">至少要留一种类别</string>
     <string name="title_activity_record_chart">RecordChartActivity</string>
     <string name="chart">图表</string>
+    <string name="day_chart">日视图</string>
+    <string name="week_chart">周视图</string>
+    <string name="month_chart">月视图</string>
+    <string name="year_chart">年视图</string>
 </resources>

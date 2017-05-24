@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_day"
+        android:orderInCategory="100"
+        android:title="@string/day_chart"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/item_week"
+        android:orderInCategory="100"
+        android:title="@string/week_chart"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/item_month"
+        android:orderInCategory="100"
+        android:title="@string/month_chart"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/item_year"
+        android:orderInCategory="100"
+        android:title="@string/year_chart"
+        app:showAsAction="never"/>
+
+</menu>
