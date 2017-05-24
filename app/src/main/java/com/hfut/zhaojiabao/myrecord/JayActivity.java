@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -177,7 +176,7 @@ public class JayActivity extends AppCompatActivity
                 pickTimeDialog.show(getFragmentManager(), "pickTimeDialog");
                 break;
             case R.id.item_1:
-                Log.i("JayTest", "item 1 clicked");
+                startActivity(new Intent(this, RecordChartActivity.class));
                 break;
             case R.id.item_2:
                 break;
