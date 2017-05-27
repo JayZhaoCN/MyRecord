@@ -146,15 +146,15 @@ public class RecordChart extends View {
         mScroller = new Scroller(mContext);
 
         //TODO test code
-        mDatas.add(new ChartItem(15, "一月"));
-        mDatas.add(new ChartItem(14, "二月"));
-        mDatas.add(new ChartItem(90, "三月"));
+        mDatas.add(new ChartItem(10000000, "一月"));
+        mDatas.add(new ChartItem(10000, "二月"));
+        mDatas.add(new ChartItem(1000, "三月"));
         mDatas.add(new ChartItem(100, "四月"));
-        mDatas.add(new ChartItem(2, "五月"));
-        mDatas.add(new ChartItem(7, "六月"));
-        mDatas.add(new ChartItem(15, "七月"));
-        mDatas.add(new ChartItem(15, "八月"));
-        mDatas.add(new ChartItem(14, "九月"));
+        mDatas.add(new ChartItem(10, "五月"));
+        mDatas.add(new ChartItem(2, "六月"));
+        mDatas.add(new ChartItem(10, "七月"));
+        mDatas.add(new ChartItem(150000, "八月"));
+        mDatas.add(new ChartItem(1500000, "九月"));
         mDatas.add(new ChartItem(90, "十月"));
         mDatas.add(new ChartItem(100, "十一月"));
         mDatas.add(new ChartItem(2, "十二月"));
@@ -310,7 +310,7 @@ public class RecordChart extends View {
         void onColumnSelected(int position);
     }
 
-    public class ChartItem {
+    public static class ChartItem {
         public float value;
         public String text;
 

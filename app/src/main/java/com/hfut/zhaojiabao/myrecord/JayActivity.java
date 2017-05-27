@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
