@@ -22,7 +22,7 @@ import java.util.List;
  * @author zhaojiabao 2017/5/23
  */
 
-public class RecordChart extends View {
+public class RecordChart extends View implements BaseChart {
 
     private Context mContext;
     private int mWidth, mHeight;
@@ -274,11 +274,6 @@ public class RecordChart extends View {
         return mDetector.onTouchEvent(event);
     }
 
-    public void provideData(List<ChartItem> datas) {
-        mDatas = datas;
-        invalidate();
-    }
-
     private void endAnimation() {
         if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.end();
@@ -306,17 +301,20 @@ public class RecordChart extends View {
         mOnColumnSelectedListener = listener;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public void provideData(List<? extends BaseChartItem> data) {
+        mDatas = (List<ChartItem>) data;
+        invalidate();
+    }
+
     public interface OnColumnSelectedListener {
         void onColumnSelected(int position);
     }
 
-    public static class ChartItem {
-        public float value;
-        public String text;
-
+    public static class ChartItem extends BaseChartItem {
         public ChartItem(float value, String text) {
-            this.value = value;
-            this.text = text;
+            super(text, value);
         }
     }
 }
