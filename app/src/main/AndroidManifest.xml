@@ -36,6 +36,11 @@
             android:label="@string/title_activity_record_chart"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".SectorActivity"
+            android:label="@string/title_activity_sector"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

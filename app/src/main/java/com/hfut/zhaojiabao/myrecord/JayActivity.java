@@ -180,6 +180,7 @@ public class JayActivity extends AppCompatActivity
                 startActivity(new Intent(this, RecordChartActivity.class));
                 break;
             case R.id.item_2:
+                startActivity(new Intent(this, SectorActivity.class));
                 break;
             case R.id.item_3:
                 break;
