@@ -50,7 +50,7 @@ public class SectorChart extends View implements BaseChart {
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mColors = new int[] {
+        mColors = new int[]{
                 ContextCompat.getColor(mContext, R.color.pale_grey_three),
                 ContextCompat.getColor(mContext, R.color.deep_lavender),
                 ContextCompat.getColor(mContext, R.color.dark_sky_blue),
@@ -71,7 +71,10 @@ public class SectorChart extends View implements BaseChart {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for (int i=0; i<mDatas.size(); i++) {
+        if (mDatas == null || mDatas.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < mDatas.size(); i++) {
             mSectorPaint.setColor(mColors[i]);
             canvas.drawArc(mRectF, mAngle, mDatas.get(i).angle, true, mSectorPaint);
             mAngle += mDatas.get(i).angle;
@@ -88,7 +91,7 @@ public class SectorChart extends View implements BaseChart {
     }
 
     private void parseData() {
-        if(mDatas == null || mDatas.size() == 0) {
+        if (mDatas == null || mDatas.size() == 0) {
             return;
         }
 
