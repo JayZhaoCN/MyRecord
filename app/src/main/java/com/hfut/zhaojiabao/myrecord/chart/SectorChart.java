@@ -27,7 +27,7 @@ public class SectorChart extends View implements BaseChart {
 
     private Context mContext;
 
-    private int[] mColors;
+    public static int[] mColors;
     private Paint mSectorPaint;
 
     private RectF mRectF;
@@ -56,7 +56,7 @@ public class SectorChart extends View implements BaseChart {
 
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mColors = new int[]{
+        mColors = new int[] {
                 ContextCompat.getColor(mContext, R.color.deep_lavender),
                 ContextCompat.getColor(mContext, R.color.dark_sky_blue),
                 ContextCompat.getColor(mContext, R.color.golden),
@@ -136,9 +136,10 @@ public class SectorChart extends View implements BaseChart {
     public static class SectorChartItem extends BaseChartItem {
         //所占的角度
         float angle = 0;
+        public float percent = 0;
 
-        public SectorChartItem(String text, float percent, float angle) {
-            super(text, percent);
+        public SectorChartItem(String text, float value, float angle) {
+            super(text, value);
             this.angle = angle;
         }
 

@@ -3,6 +3,7 @@ package com.hfut.zhaojiabao.myrecord.chart;
 import android.util.Log;
 
 import com.hfut.zhaojiabao.JayDaoManager;
+import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.DayRecord;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
@@ -14,6 +15,7 @@ import java.util.Locale;
 
 /**
  * @author zhaojiabao 2017/5/24
+ *         数值转换工具
  */
 
 public class ValueTransfer {
@@ -131,6 +133,36 @@ public class ValueTransfer {
 
         for (DayRecord record : result) {
             Log.i("JayTest", "record: " + record.toString());
+        }
+
+        return result;
+    }
+
+
+    public static List<SectorChart.SectorChartItem> getTypePercent(boolean income) {
+        List<SectorChart.SectorChartItem> result = new ArrayList<>();
+        List<Category> categories = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
+
+        for (Category category : categories) {
+            result.add(new SectorChart.SectorChartItem(category.getCategory(), 0));
+        }
+
+        List<Record> records = JayDaoManager.getInstance().getDaoSession().getRecordDao()
+                .queryBuilder().where(RecordDao.Properties.Income.eq(income)).list();
+
+        float totalValue = 0;
+        for (Record record : records) {
+            totalValue += record.getSum();
+            for (SectorChart.SectorChartItem item : result) {
+                if (record.getCategory().equals(item.text)) {
+                        item.value += record.getSum();
+                }
+            }
+        }
+
+        for(SectorChart.SectorChartItem item : result) {
+            //百分比保留两位小数
+            item.percent = item.value / totalValue * 100;
         }
 
         return result;
