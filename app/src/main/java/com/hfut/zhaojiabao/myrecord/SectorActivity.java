@@ -105,7 +105,7 @@ public class SectorActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(IndicatorViewHolder holder, int position) {
-            holder.indicatorView.setBackgroundColor(SectorChart.mColors[position]);
+            holder.indicatorView.setBackgroundColor(mTypeDatas.get(position).color);
             holder.typeTv.setText(mTypeDatas.get(position).text + "  " + mTypeDatas.get(position).percent + "%");
         }
 
