@@ -11,6 +11,7 @@
     <declare-styleable name="CircleShadowView">
         <attr name="circle_color" format="color"/>
         <attr name="icon" format="reference"/>
+        <attr name="tint" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="CrossBottomView">

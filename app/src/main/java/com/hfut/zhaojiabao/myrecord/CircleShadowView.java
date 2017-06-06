@@ -14,11 +14,14 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+
+import com.hfut.zhaojiabao.myrecord.utils.TintUtils;
 
 /**
  * Created by Jay on 2016/12/29.
@@ -47,6 +50,8 @@ public class CircleShadowView extends View {
     private ValueAnimator mRippleAnimator;
     private ValueAnimator mRippleColorAnimator;
 
+    @ColorInt private int mTintColor;
+
     private static final int RIPPLE_DURATION = 400;
 
     private PorterDuffXfermode mode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
@@ -72,10 +77,14 @@ public class CircleShadowView extends View {
     private void initAttrs(AttributeSet attrs, int defStyleAttr) {
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.CircleShadowView, 0, defStyleAttr);
         mIconDrawable = ta.getDrawable(R.styleable.CircleShadowView_icon);
+        mTintColor = ta.getColor(R.styleable.CircleShadowView_tint, ContextCompat.getColor(mContext, R.color.black));
+
         //为什么TypedArray.getDrawable()不提供一个默认值？
         if (mIconDrawable == null) {
             mIconDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_fab_write);
         }
+
+        TintUtils.tintDrawable(mIconDrawable, mTintColor);
         mBackgroundColor = ta.getColor
                 (R.styleable.CircleShadowView_circle_color, ContextCompat.getColor(mContext, R.color.colorAccent));
         ta.recycle();

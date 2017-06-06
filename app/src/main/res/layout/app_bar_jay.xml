@@ -37,6 +37,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:circle_color="@color/stp_blue"
+            app:tint="@color/sunflower"
             app:icon="@drawable/ic_view_column"/>
 
         <com.hfut.zhaojiabao.myrecord.CircleShadowView
@@ -44,6 +45,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:circle_color="@color/stp_blue"
+            app:tint="@color/sunflower"
             app:icon="@drawable/ic_pie_chart"/>
 
         <com.hfut.zhaojiabao.myrecord.CircleShadowView
@@ -51,13 +53,14 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:circle_color="@color/stp_blue"
+            app:tint="@color/sunflower"
             app:icon="@drawable/ic_show_chart"/>
 
         <com.hfut.zhaojiabao.myrecord.CrossBottomView
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:background_color="@color/stp_blue"
-            app:cross_color="@color/white"/>
+            app:cross_color="@color/sunflower"/>
 
     </com.hfut.zhaojiabao.myrecord.PopLayout>
 
