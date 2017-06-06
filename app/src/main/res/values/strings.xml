@@ -63,4 +63,6 @@
     <string name="month_chart">月视图</string>
     <string name="year_chart">年视图</string>
     <string name="title_activity_sector">SectorActivity</string>
+    <string name="income_percent">收入占比</string>
+    <string name="expend_percent">支出占比</string>
 </resources>

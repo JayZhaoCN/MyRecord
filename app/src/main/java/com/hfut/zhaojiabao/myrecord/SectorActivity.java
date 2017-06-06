@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,19 +25,21 @@ public class SectorActivity extends AppCompatActivity {
     private List<TypeItem> mTypeDatas;
 
     private SectorChart mChart;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sector);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mChart = (SectorChart) findViewById(R.id.sector_chart);
-        updateUI();
+        updateUI(false);
     }
 
-    private void updateUI() {
-        mDatas = ValueTransfer.getTypePercent(false);
+    private void updateUI(boolean income) {
+        mToolbar.setTitle(income ? R.string.income_percent : R.string.expend_percent);
+        setSupportActionBar(mToolbar);
+        mDatas = ValueTransfer.getTypePercent(income);
         mChart.provideData(mDatas);
 
         bindDataAndType();
@@ -55,6 +59,28 @@ public class SectorActivity extends AppCompatActivity {
         RecyclerView typeIndicator = (RecyclerView) findViewById(R.id.type_indicator);
         typeIndicator.setLayoutManager(new GridLayoutManager(this, 2));
         typeIndicator.setAdapter(new IndicatorAdapter());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sector_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_income:
+                updateUI(true);
+                return true;
+            case R.id.action_expend:
+                updateUI(false);
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private static class TypeItem {

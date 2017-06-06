@@ -156,12 +156,12 @@ public class ValueTransfer {
             totalValue += record.getSum();
             for (SectorChart.SectorChartItem item : result) {
                 if (record.getCategory().equals(item.text)) {
-                        item.value += record.getSum();
+                    item.value += record.getSum();
                 }
             }
         }
 
-        for(SectorChart.SectorChartItem item : result) {
+        for (SectorChart.SectorChartItem item : result) {
             //百分比保留两位小数
             item.percent = NumberUtils.format(item.value / totalValue * 100, 2);
         }
