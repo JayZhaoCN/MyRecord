@@ -1,5 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.chart;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -8,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.Utils;
 
 import java.util.List;
 
@@ -25,12 +28,14 @@ public class SectorChart extends View implements BaseChart {
     private Context mContext;
 
     private int[] mColors;
-    private Paint mBorderPaint;
     private Paint mSectorPaint;
 
     private RectF mRectF;
     private float mWidth, mHeight;
     private float mAngle;
+    private float mBorderSize;
+
+    private ValueAnimator mAnimator;
 
     public SectorChart(Context context) {
         this(context, null);
@@ -47,11 +52,11 @@ public class SectorChart extends View implements BaseChart {
     }
 
     private void init() {
-        mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBorderSize = Utils.dp2px(mContext, 1);
+
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mColors = new int[]{
-                ContextCompat.getColor(mContext, R.color.pale_grey_three),
+        mColors = new int[] {
                 ContextCompat.getColor(mContext, R.color.deep_lavender),
                 ContextCompat.getColor(mContext, R.color.dark_sky_blue),
                 ContextCompat.getColor(mContext, R.color.golden),
@@ -66,7 +71,7 @@ public class SectorChart extends View implements BaseChart {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
-        mRectF = new RectF(0, 0, w, h);
+        mRectF = new RectF(mBorderSize, mBorderSize, w - mBorderSize, h - mBorderSize);
     }
 
     @Override
@@ -86,11 +91,34 @@ public class SectorChart extends View implements BaseChart {
     @SuppressWarnings("unchecked")
     public void provideData(List<? extends BaseChartItem> data) {
         mDatas = (List<SectorChartItem>) data;
-        parseData();
+        initAnim();
         invalidate();
     }
 
-    private void parseData() {
+    private void initAnim() {
+        clearAnim();
+        mAnimator = ValueAnimator.ofInt(0, 360);
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                parseData((int) animation.getAnimatedValue());
+                postInvalidateOnAnimation();
+            }
+        });
+        mAnimator.setRepeatCount(0);
+        mAnimator.setDuration(1200);
+        mAnimator.setInterpolator(new LinearInterpolator());
+        mAnimator.start();
+    }
+
+    private void clearAnim() {
+        if(mAnimator != null && mAnimator.isRunning()) {
+            mAnimator.end();
+            mAnimator = null;
+        }
+    }
+
+    private void parseData(int totalAngle) {
         if (mDatas == null || mDatas.size() == 0) {
             return;
         }
@@ -101,7 +129,7 @@ public class SectorChart extends View implements BaseChart {
         }
 
         for (int i = 0; i < mDatas.size(); i++) {
-            mDatas.get(i).angle = mDatas.get(i).value / totalValue * 360;
+            mDatas.get(i).angle = mDatas.get(i).value / totalValue * totalAngle;
         }
     }
 
