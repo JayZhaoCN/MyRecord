@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
-import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
@@ -219,7 +218,7 @@ public class JayActivity extends AppCompatActivity
         ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.new_record), Toast.LENGTH_SHORT);
 
         loadRecords();
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
         mSumEdit.setText("");

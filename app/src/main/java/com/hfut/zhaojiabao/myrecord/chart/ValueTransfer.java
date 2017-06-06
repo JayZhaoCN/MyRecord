@@ -71,7 +71,7 @@ public class ValueTransfer {
 
         int year, month, day;
         DayRecord dayRecord = new DayRecord();
-        if(records != null && records.size() >= 1) {
+        if (records != null && records.size() >= 1) {
             Record record = records.get(0);
 
             calender.setTimeInMillis(record.getConsumeTime());
@@ -82,8 +82,8 @@ public class ValueTransfer {
             dayRecord.year = year;
             dayRecord.month = month + 1;
             dayRecord.day = day;
-            dayRecord.date = year + "-" + (month+1) + "-" + day;
-            if(record.getIncome()) {
+            dayRecord.date = year + "-" + (month + 1) + "-" + day;
+            if (record.getIncome()) {
                 dayRecord.incomeSum = record.getSum();
                 dayRecord.sum = record.getSum();
             } else {
@@ -94,18 +94,18 @@ public class ValueTransfer {
             return null;
         }
 
-        if(records.size() == 1) {
+        if (records.size() == 1) {
             return result;
         }
 
-        for(Record record : records) {
+        for (Record record : records) {
             calender.setTimeInMillis(record.getConsumeTime());
             year = calender.get(Calendar.YEAR);
             month = calender.get(Calendar.MONTH);
             day = calender.get(Calendar.DAY_OF_MONTH);
 
-            if(dayRecord.year == year && dayRecord.month == (month+1) && dayRecord.day == day) {
-                if(record.getIncome()) {
+            if (dayRecord.year == year && dayRecord.month == (month + 1) && dayRecord.day == day) {
+                if (record.getIncome()) {
                     dayRecord.incomeSum += record.getSum();
                     dayRecord.sum += record.getSum();
                 } else {
@@ -118,8 +118,8 @@ public class ValueTransfer {
                 dayRecord.year = year;
                 dayRecord.month = month + 1;
                 dayRecord.day = day;
-                dayRecord.date = year + "-" + (month+1) + "-" + day;
-                if(record.getIncome()) {
+                dayRecord.date = year + "-" + (month + 1) + "-" + day;
+                if (record.getIncome()) {
                     dayRecord.incomeSum = record.getSum();
                     dayRecord.sum = record.getSum();
                 } else {
@@ -129,7 +129,7 @@ public class ValueTransfer {
             }
         }
 
-        for(DayRecord record : result) {
+        for (DayRecord record : result) {
             Log.i("JayTest", "record: " + record.toString());
         }
 

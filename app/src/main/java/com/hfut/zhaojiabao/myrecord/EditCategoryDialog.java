@@ -45,7 +45,7 @@ public class EditCategoryDialog extends DialogFragment implements View.OnClickLi
                 break;
             case R.id.confirm_tv:
                 addCategory();
-                if(mListener != null) {
+                if (mListener != null) {
                     mListener.onCategoryAdded();
                 }
                 dismiss();

@@ -1,8 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.dialogs;
 
-import android.annotation.TargetApi;
 import android.app.DialogFragment;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -58,7 +56,7 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
                 dismiss();
                 break;
             case R.id.confirm_tv:
-                if(mListener != null) {
+                if (mListener != null) {
                     mListener.onTimePick(mHour, mMinute);
                 }
                 dismiss();

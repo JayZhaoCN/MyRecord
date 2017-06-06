@@ -73,7 +73,7 @@ public class CircleShadowView extends View {
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.CircleShadowView, 0, defStyleAttr);
         mIconDrawable = ta.getDrawable(R.styleable.CircleShadowView_icon);
         //为什么TypedArray.getDrawable()不提供一个默认值？
-        if(mIconDrawable == null) {
+        if (mIconDrawable == null) {
             mIconDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_fab_write);
         }
         mBackgroundColor = ta.getColor
@@ -99,8 +99,8 @@ public class CircleShadowView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mIconBounds = new Rect(w/4, h/4, 3*w/4, 3*h/4);
-        mMaxRippleRadius = (int) Math.sqrt(w*w + h*h);
+        mIconBounds = new Rect(w / 4, h / 4, 3 * w / 4, 3 * h / 4);
+        mMaxRippleRadius = (int) Math.sqrt(w * w + h * h);
     }
 
     @Override
@@ -108,12 +108,12 @@ public class CircleShadowView extends View {
         super.onDraw(canvas);
 
         //draw shadow
-        canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2 - 15, mShadowPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 15, mShadowPaint);
 
         //draw background and ripple
         int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
         mCirclePaint.setColor(mBackgroundColor);
-        canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2 - 15, mCirclePaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 15, mCirclePaint);
         mCirclePaint.setXfermode(mode);
         mCirclePaint.setColor(mRippleColor);
         canvas.drawCircle(centerX, centerY, mRippleRadius, mCirclePaint);
@@ -126,7 +126,7 @@ public class CircleShadowView extends View {
     }
 
     private void initRippleAnim() {
-        if(mRippleAnimator == null) {
+        if (mRippleAnimator == null) {
             mRippleColor = ContextCompat.getColor(mContext, R.color.ripple_color);
             mRippleAnimator = ValueAnimator.ofInt(0, mMaxRippleRadius);
             mRippleAnimator.setDuration(RIPPLE_DURATION);
@@ -149,7 +149,7 @@ public class CircleShadowView extends View {
             });
         }
 
-        if(mRippleColorAnimator == null) {
+        if (mRippleColorAnimator == null) {
             mRippleColorAnimator = ValueAnimator.ofInt(ContextCompat.getColor(mContext, R.color.ripple_color), Color.TRANSPARENT);
             mRippleColorAnimator.setDuration(RIPPLE_DURATION);
             mRippleColorAnimator.setInterpolator(new LinearInterpolator());
@@ -170,7 +170,7 @@ public class CircleShadowView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        switch(event.getAction()) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 centerX = event.getX();
                 centerY = event.getY();

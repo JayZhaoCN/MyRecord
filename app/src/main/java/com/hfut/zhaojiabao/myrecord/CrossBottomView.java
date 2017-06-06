@@ -104,19 +104,19 @@ public class CrossBottomView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mPaint.setStrokeWidth((float) (w*LINE_WIDTH_PERCENT));
-        mMaxRippleRadius = (int) Math.sqrt(w*w + h*h);
+        mPaint.setStrokeWidth((float) (w * LINE_WIDTH_PERCENT));
+        mMaxRippleRadius = (int) Math.sqrt(w * w + h * h);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2 - 15, mShadowPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 15, mShadowPaint);
 
         int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
         mBackgroundPaint.setColor(mBackgroundColor);
-        canvas.drawCircle(getWidth()/2, getHeight()/2, getWidth()/2 - 15, mBackgroundPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 15, mBackgroundPaint);
         mBackgroundPaint.setXfermode(mode);
         mBackgroundPaint.setColor(mRippleColor);
         canvas.drawCircle(centerX, centerY, mRippleRadius, mBackgroundPaint);
@@ -124,7 +124,7 @@ public class CrossBottomView extends View {
         canvas.restoreToCount(sc);
 
         canvas.save();
-        canvas.rotate(mRotateDegree, getWidth()/2, getHeight()/2);
+        canvas.rotate(mRotateDegree, getWidth() / 2, getHeight() / 2);
         drawLines(canvas);
         canvas.restore();
     }
@@ -145,15 +145,15 @@ public class CrossBottomView extends View {
     }
 
     private void drawLines(Canvas canvas) {
-        canvas.drawLine((float) (getWidth()/2 - getWidth()* HALF_CROSS_LENGTH_PERCENT), getHeight()/2,
-                (float) (getWidth()/2 + getWidth()* HALF_CROSS_LENGTH_PERCENT), getHeight()/2, mPaint);
+        canvas.drawLine((float) (getWidth() / 2 - getWidth() * HALF_CROSS_LENGTH_PERCENT), getHeight() / 2,
+                (float) (getWidth() / 2 + getWidth() * HALF_CROSS_LENGTH_PERCENT), getHeight() / 2, mPaint);
 
-        canvas.drawLine(getWidth()/2, (float) (getHeight()/2 - getHeight()* HALF_CROSS_LENGTH_PERCENT),
-                getWidth()/2, (float) (getHeight()/2 + getHeight()* HALF_CROSS_LENGTH_PERCENT), mPaint);
+        canvas.drawLine(getWidth() / 2, (float) (getHeight() / 2 - getHeight() * HALF_CROSS_LENGTH_PERCENT),
+                getWidth() / 2, (float) (getHeight() / 2 + getHeight() * HALF_CROSS_LENGTH_PERCENT), mPaint);
     }
 
     private void initRippleAnim() {
-        if(mRippleAnimator == null) {
+        if (mRippleAnimator == null) {
             mRippleColor = ContextCompat.getColor(mContext, R.color.ripple_color);
             mRippleAnimator = ValueAnimator.ofInt(0, mMaxRippleRadius);
             mRippleAnimator.setDuration(RIPPLE_DURATION);
@@ -176,7 +176,7 @@ public class CrossBottomView extends View {
             });
         }
 
-        if(mRippleColorAnimator == null) {
+        if (mRippleColorAnimator == null) {
             mRippleColorAnimator = ValueAnimator.ofInt(ContextCompat.getColor(mContext, R.color.ripple_color), Color.TRANSPARENT);
             mRippleColorAnimator.setDuration(RIPPLE_DURATION);
             mRippleColorAnimator.setInterpolator(new LinearInterpolator());
@@ -197,7 +197,7 @@ public class CrossBottomView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        switch(event.getAction()) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 centerX = event.getX();
                 centerY = event.getY();

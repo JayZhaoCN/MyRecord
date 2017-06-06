@@ -12,7 +12,7 @@ public class ToastUtil {
     private static Toast sToast;
 
     public static void showToast(Context context, String text, int duration) {
-        if(sToast == null) {
+        if (sToast == null) {
             sToast = Toast.makeText(context, text, duration);
         }
         sToast.setText(text);

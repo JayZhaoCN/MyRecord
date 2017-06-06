@@ -79,7 +79,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!checkCanDelete()) {
+                    if (!checkCanDelete()) {
                         ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
                         return;
                     }

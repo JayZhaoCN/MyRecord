@@ -95,7 +95,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mScreenContentStr += "9";
                 break;
             case R.id.operator_add:
-                if(!mCanInputOperator) {
+                if (!mCanInputOperator) {
                     return;
                 }
                 mCanInputOperator = false;
@@ -103,7 +103,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputDot = true;
                 break;
             case R.id.operator_subtraction:
-                if(!mCanInputOperator) {
+                if (!mCanInputOperator) {
                     return;
                 }
                 mCanInputOperator = false;
@@ -111,7 +111,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputDot = true;
                 break;
             case R.id.operator_multi:
-                if(!mCanInputOperator) {
+                if (!mCanInputOperator) {
                     return;
                 }
                 mCanInputOperator = false;
@@ -119,7 +119,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputDot = true;
                 break;
             case R.id.operator_division:
-                if(!mCanInputOperator) {
+                if (!mCanInputOperator) {
                     return;
                 }
                 mCanInputOperator = false;
@@ -127,10 +127,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputDot = true;
                 break;
             case R.id.num_dot:
-                if(!mCanInputDot) {
+                if (!mCanInputDot) {
                     return;
                 }
-                if(mScreenContentStr.charAt(mScreenContentStr.length() - 1) == '.') {
+                if (mScreenContentStr.charAt(mScreenContentStr.length() - 1) == '.') {
                     return;
                 }
                 mScreenContentStr += ".";

@@ -35,9 +35,9 @@ public class JayApplication extends Application {
     private void initCategory() {
         CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
         List<Category> list = categoryDao.loadAll();
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             String[] defaultCategories = getResources().getStringArray(R.array.default_categories);
-            for(String category : defaultCategories) {
+            for (String category : defaultCategories) {
                 Category entity = new Category();
                 entity.setCategory(category);
                 categoryDao.insert(entity);

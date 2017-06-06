@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 
 //TODO Alpha and Scale
-public class PopLayout extends ViewGroup implements View.OnClickListener{
+public class PopLayout extends ViewGroup implements View.OnClickListener {
     private static final int TOP_MARGIN = 100;
     private static final int TEXT_SIZE = 13;
 
@@ -76,7 +76,7 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mAnimator != null) {
+        if (mAnimator != null) {
             mAnimator.removeAllUpdateListeners();
             mAnimator.end();
             mAnimator.cancel();
@@ -85,19 +85,19 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     public void initPopAnim() {
 
-        if(mAnimator != null) {
+        if (mAnimator != null) {
             mAnimator.removeAllUpdateListeners();
         }
 
         //TODO 为什么两次添加的mTranslatesY不一样？导致展开动画不正常
-        if(mTranslatesY.size() == 0) {
+        if (mTranslatesY.size() == 0) {
             View bottomView = mIcons.get(mIcons.size() - 1);
             for (int i = 0; i < mIcons.size() - 1; i++) {
                 mTranslatesY.add(i, (int) (bottomView.getY() - mIcons.get(i).getY()));
             }
         }
 
-        if(!isExpanded) {
+        if (!isExpanded) {
             displayIcons();
             mAnimator = ValueAnimator.ofFloat(1, 0);
             mAnimator.setDuration(270);
@@ -113,13 +113,13 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                for(int i=0; i<mIcons.size() - 1; i++) {
-                    mIcons.get(i).setTranslationY(mTranslatesY.get(i) * (float)valueAnimator.getAnimatedValue());
-                    if(mTipsTv.get(i) == null) {
+                for (int i = 0; i < mIcons.size() - 1; i++) {
+                    mIcons.get(i).setTranslationY(mTranslatesY.get(i) * (float) valueAnimator.getAnimatedValue());
+                    if (mTipsTv.get(i) == null) {
                         continue;
                     }
-                    mTipsTv.get(i).setTranslationY(mTranslatesY.get(i) * (float)valueAnimator.getAnimatedValue());
-                    mTipsTv.get(i).setAlpha(1 - (float)valueAnimator.getAnimatedValue());
+                    mTipsTv.get(i).setTranslationY(mTranslatesY.get(i) * (float) valueAnimator.getAnimatedValue());
+                    mTipsTv.get(i).setAlpha(1 - (float) valueAnimator.getAnimatedValue());
 
                     //Log.i("JAYTEST1", "Y: " + mTipsTv.get(0).getY() + " TranslationY: " + mTipsTv.get(0).getTranslationY());
                 }
@@ -133,13 +133,13 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     public void initScaleAnim() {
 
-        if(mAnimator != null) {
+        if (mAnimator != null) {
             mAnimator.removeAllUpdateListeners();
         }
 
-        if(mTranslatesX.size() == 0) {
-            for(int i=0; i<mIcons.size() - 1; i++) {
-                if(mTipsTv.get(i) != null) {
+        if (mTranslatesX.size() == 0) {
+            for (int i = 0; i < mIcons.size() - 1; i++) {
+                if (mTipsTv.get(i) != null) {
                     //这里也要改成getLeft()，不能用getX()
                     mTranslatesX.put(i, mIcons.get(i).getLeft() - mTipsTv.get(i).getLeft());
                 }
@@ -147,7 +147,7 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
         }
 
         final boolean flag = isExpanded;
-        if(!isExpanded) {
+        if (!isExpanded) {
             displayIcons();
             mAnimator = ValueAnimator.ofFloat(0, 1);
             mAnimator.setDuration(270);
@@ -164,9 +164,9 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                    for(View child : mIcons) {
-                        child.setClickable(!flag);
-                    }
+                for (View child : mIcons) {
+                    child.setClickable(!flag);
+                }
                 mIcons.get(mIcons.size() - 1).setClickable(true);
             }
         });
@@ -174,24 +174,24 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                for(int i=0; i<mIcons.size() - 1; i++) {
+                for (int i = 0; i < mIcons.size() - 1; i++) {
                     mIcons.get(i).setScaleX((float) valueAnimator.getAnimatedValue());
                     mIcons.get(i).setScaleY((float) valueAnimator.getAnimatedValue());
 
-                    if(flag) {
-                        mIcons.get(i).setAlpha((float)valueAnimator.getAnimatedValue());
+                    if (flag) {
+                        mIcons.get(i).setAlpha((float) valueAnimator.getAnimatedValue());
                     }
 
-                    if(mTipsTv.get(i) != null) {
-                        mTipsTv.get(i).setTranslationX(mTranslatesX.get(i)*(1 - (float)valueAnimator.getAnimatedValue()));
+                    if (mTipsTv.get(i) != null) {
+                        mTipsTv.get(i).setTranslationX(mTranslatesX.get(i) * (1 - (float) valueAnimator.getAnimatedValue()));
 
                         float alpha;
-                        if(!flag) {
-                            alpha = (float)valueAnimator.getAnimatedValue();
+                        if (!flag) {
+                            alpha = (float) valueAnimator.getAnimatedValue();
                         } else {
-                            alpha = (float) ((float)valueAnimator.getAnimatedValue() - 0.3);
+                            alpha = (float) ((float) valueAnimator.getAnimatedValue() - 0.3);
                         }
-                        if(alpha < 0) {
+                        if (alpha < 0) {
                             alpha = 0;
                         }
 
@@ -206,12 +206,12 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     public void setTips(int index, String tips) {
         //TODO 到底谁动了mChildCount?
-        if(index < 0 || (mTips.get(index) != null && mTips.get(index).equals(tips))) {
+        if (index < 0 || (mTips.get(index) != null && mTips.get(index).equals(tips))) {
             Log.e("JAYTEST", "index illegal or already added.");
             return;
         }
 
-        if(mTips.get(index) != null) {
+        if (mTips.get(index) != null) {
             mTips.put(index, tips);
             mTipsTv.get(index).setText(tips);
             //这里需要及时做一次刷新，否则Tips显示位置不正确
@@ -249,24 +249,24 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
     }
 
     public void hideIcons() {
-        for(int i=0; i<mIcons.size(); i++) {
+        for (int i = 0; i < mIcons.size(); i++) {
             mIcons.get(i).setAlpha(0);
         }
 
-        for(int i=0; i<mTipsTv.size(); i++) {
-            if(mTipsTv.get(i) != null) {
+        for (int i = 0; i < mTipsTv.size(); i++) {
+            if (mTipsTv.get(i) != null) {
                 mTipsTv.get(i).setAlpha(0);
             }
         }
     }
 
     public void displayIcons() {
-        for(int i=0; i<mIcons.size(); i++) {
+        for (int i = 0; i < mIcons.size(); i++) {
             mIcons.get(i).setAlpha(1);
         }
 
-        for(int i=0; i<mTipsTv.size(); i++) {
-            if(mTipsTv.get(i) != null) {
+        for (int i = 0; i < mTipsTv.size(); i++) {
+            if (mTipsTv.get(i) != null) {
                 mTipsTv.get(i).setAlpha(1);
             }
         }
@@ -284,16 +284,16 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
         int maxIconWidth = 0;
 
         //这里的多次循环是不可避免的，因为onMeasure方法需要调用多次才能得到每个child的宽高
-        for(int i=0; i<getChildCount(); i++) {
-            if(!(getChildAt(i) instanceof TextView)) {
+        for (int i = 0; i < getChildCount(); i++) {
+            if (!(getChildAt(i) instanceof TextView)) {
                 mIcons.add(getChildAt(i));
                 maxIconWidth = Math.max(maxIconWidth, getChildAt(i).getMeasuredWidth());
             }
         }
 
-        for(int i=0; i<mIcons.size(); i++) {
+        for (int i = 0; i < mIcons.size(); i++) {
 
-            if(i == mIcons.size() - 1 && !mIcons.get(i).hasOnClickListeners()) {
+            if (i == mIcons.size() - 1 && !mIcons.get(i).hasOnClickListeners()) {
                 mIcons.get(i).setId(R.id.bottom_view);
                 mIcons.get(i).setOnClickListener(this);
             }
@@ -303,13 +303,13 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
             childWidth += childView.getWidth() + lp.getMarginStart() + lp.getMarginEnd();
             String tip = mTips.get(i);
-            if(tip != null) {
+            if (tip != null) {
                 childWidth = getTextWidth(tip) + maxIconWidth + 150;
 
             }
             maxWidth = Math.max(childWidth, maxWidth);
 
-            if(i == 0) {
+            if (i == 0) {
                 totalHeight += lp.topMargin;
             }
             totalHeight += lp.bottomMargin;
@@ -324,7 +324,7 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     private int getIconMaxWidth() {
         int maxWidth = 0;
-        for(View view : mIcons) {
+        for (View view : mIcons) {
             maxWidth = Math.max(view.getWidth(), maxWidth);
         }
         return maxWidth;
@@ -336,32 +336,32 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
         int topLocation = TOP_MARGIN;
         PopLayoutParams lp;
         int left;
-        for(int i=0; i<getChildCount(); i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             childView = getChildAt(i);
-            if(childView instanceof TextView) {
-               continue;
+            if (childView instanceof TextView) {
+                continue;
             }
             lp = (PopLayoutParams) childView.getLayoutParams();
             topLocation += lp.topMargin;
 
-            if(mTipsTv.size() == 0) {
+            if (mTipsTv.size() == 0) {
                 left = (getWidth() - childView.getMeasuredWidth()) / 2;
             } else {
-                left = getWidth() - childView.getWidth() - (getIconMaxWidth() - childView.getWidth())/2;
+                left = getWidth() - childView.getWidth() - (getIconMaxWidth() - childView.getWidth()) / 2;
             }
             childView.layout(left, topLocation,
                     left + childView.getMeasuredWidth(), topLocation + childView.getMeasuredHeight());
             topLocation += (childView.getMeasuredHeight() + lp.bottomMargin);
         }
 
-        if(mTipsTv.size() != 0) {
+        if (mTipsTv.size() != 0) {
             int minIconX = Integer.MAX_VALUE;
-            for(int i=0; i<mIcons.size(); i++) {
+            for (int i = 0; i < mIcons.size(); i++) {
                 minIconX = Math.min(minIconX, mIcons.get(i).getLeft());
             }
             for (int i = 0; i < mIcons.size(); i++) {
                 TextView tips = mTipsTv.get(i);
-                if(tips == null)
+                if (tips == null)
                     continue;
                 // 要理解决定View位置的几个因素: x = left + translationX, y = top + translationY
                 //所以这里不能用mIcons.get(i).getY()，而应该用mIcons.get(i).getTop()
@@ -390,16 +390,16 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.bottom_view:
-                if(mListener != null) {
-                    if(!isExpanded) {
+                if (mListener != null) {
+                    if (!isExpanded) {
                         mListener.onExpand();
                     } else {
                         mListener.onCollapse();
                     }
                 }
-                if(mStyle == STYLE_POP) {
+                if (mStyle == STYLE_POP) {
                     initPopAnim();
                 } else {
                     initScaleAnim();
@@ -433,6 +433,7 @@ public class PopLayout extends ViewGroup implements View.OnClickListener{
 
     public interface OnExpandListener {
         void onExpand();
+
         void onCollapse();
     }
 }

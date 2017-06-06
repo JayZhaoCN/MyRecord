@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,7 @@ public class CategoryDialog extends DialogFragment {
             holder.categoryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mListener != null) {
+                    if (mListener != null) {
                         mListener.onSelect(mCategories.get(position).getCategory());
                     }
                     dismiss();

@@ -8,7 +8,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Window;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -72,7 +71,7 @@ public class Utils {
     }
 
     public static String timeStamp2Date(long timeStamp) {
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         return simpleDateFormat.format(new Date(timeStamp));
     }
 }

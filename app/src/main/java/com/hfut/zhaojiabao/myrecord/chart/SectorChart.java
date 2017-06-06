@@ -56,7 +56,7 @@ public class SectorChart extends View implements BaseChart {
 
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mColors = new int[] {
+        mColors = new int[]{
                 ContextCompat.getColor(mContext, R.color.deep_lavender),
                 ContextCompat.getColor(mContext, R.color.dark_sky_blue),
                 ContextCompat.getColor(mContext, R.color.golden),
@@ -112,7 +112,7 @@ public class SectorChart extends View implements BaseChart {
     }
 
     private void clearAnim() {
-        if(mAnimator != null && mAnimator.isRunning()) {
+        if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.end();
             mAnimator = null;
         }
