@@ -77,4 +77,21 @@
     <color name="half_black_dark">#606060</color>
     <color name="light_white">#11FFFFFF</color>
 
+    <!--color for sector chart-->
+    <color name="grapefruit">#ED5565</color>
+    <color name="bittersweet">#FC6E51</color>
+    <color name="sunflower">#FFCE54</color>
+    <color name="grass">#A0D468</color>
+    <color name="mint">#48CFAD</color>
+    <color name="aqua">#4FC1E9</color>
+    <color name="blue_jeans">#5D9CEC</color>
+    <color name="lavender">#AC92EC</color>
+    <color name="pink_rose">#EC87C0</color>
+    <color name="light_gray">#ECE9ED</color>
+    <color name="medium_gray">#CCD1D9</color>
+    <color name="dark_gray">#656D78</color>
+
+
+    <!--color for sector chart-->
+
 </resources>

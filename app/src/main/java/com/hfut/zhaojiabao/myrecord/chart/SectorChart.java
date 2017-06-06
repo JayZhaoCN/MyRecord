@@ -57,12 +57,17 @@ public class SectorChart extends View implements BaseChart {
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mColors = new int[] {
-                ContextCompat.getColor(mContext, R.color.deep_lavender),
-                ContextCompat.getColor(mContext, R.color.dark_sky_blue),
-                ContextCompat.getColor(mContext, R.color.golden),
-                ContextCompat.getColor(mContext, R.color.coral),
-                ContextCompat.getColor(mContext, R.color.black_80),
-                ContextCompat.getColor(mContext, R.color.colorAccent),
+                ContextCompat.getColor(mContext, R.color.grapefruit),
+                ContextCompat.getColor(mContext, R.color.sunflower),
+                ContextCompat.getColor(mContext, R.color.grass),
+                ContextCompat.getColor(mContext, R.color.mint),
+                ContextCompat.getColor(mContext, R.color.aqua),
+                ContextCompat.getColor(mContext, R.color.blue_jeans),
+                ContextCompat.getColor(mContext, R.color.lavender),
+                ContextCompat.getColor(mContext, R.color.pink_rose),
+                ContextCompat.getColor(mContext, R.color.light_gray),
+                ContextCompat.getColor(mContext, R.color.dark_gray),
+                ContextCompat.getColor(mContext, R.color.bittersweet),
         };
     }
 
