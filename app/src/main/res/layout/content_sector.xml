@@ -8,18 +8,19 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <com.hfut.zhaojiabao.myrecord.chart.SectorChart
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
         android:id="@+id/sector_chart"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/type_indicator"
-        android:layout_alignStart="@id/sector_chart"
-        android:layout_marginTop="50dp"
-        android:layout_below="@id/sector_chart"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:layout_alignStart="@id/sector_chart"
+        android:layout_below="@id/sector_chart"
+        android:layout_marginTop="30dp"
+        android:overScrollMode="never"/>
 
 </RelativeLayout>

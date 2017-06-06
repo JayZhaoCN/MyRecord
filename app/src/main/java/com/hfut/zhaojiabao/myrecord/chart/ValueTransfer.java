@@ -6,6 +6,7 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.DayRecord;
+import com.hfut.zhaojiabao.myrecord.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class ValueTransfer {
 
         for(SectorChart.SectorChartItem item : result) {
             //百分比保留两位小数
-            item.percent = item.value / totalValue * 100;
+            item.percent = NumberUtils.format(item.value / totalValue * 100, 2);
         }
 
         return result;
