@@ -106,9 +106,9 @@ public class JayActivity extends AppCompatActivity
         recordList.setNestedScrollingEnabled(false);
 
         final PopLayout popLayout = (PopLayout) findViewById(R.id.pop_Layout);
-        popLayout.setTips(0, "侧滑");
-        popLayout.setTips(1, "回答");
-        popLayout.setTips(2, "提问");
+        popLayout.setTips(0, "柱状图");
+        popLayout.setTips(1, "饼图");
+        popLayout.setTips(2, "折线图");
 
         findViewById(R.id.item_1).setOnClickListener(this);
         findViewById(R.id.item_2).setOnClickListener(this);
