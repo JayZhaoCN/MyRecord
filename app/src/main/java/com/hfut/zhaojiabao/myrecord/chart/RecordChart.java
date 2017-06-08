@@ -136,13 +136,13 @@ public class RecordChart extends View implements BaseChart {
     }
 
     private void init() {
-        mXPaint = new Paint();
+        mXPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mXPaint.setColor(Color.parseColor("#F6F7F8"));
 
-        mColumnPaint = new Paint();
+        mColumnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mColumnPaint.setColor(Color.BLUE);
 
-        mTextPaint = new Paint();
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(DisplayUtil.sp2px(mContext, 13));
         mTextPaint.setColor(Color.parseColor("#66000000"));
         mTextPaint.setTextAlign(Paint.Align.CENTER);
