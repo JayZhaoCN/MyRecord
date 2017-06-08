@@ -1,5 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.chart;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,9 +10,12 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import com.hfut.zhaojiabao.myrecord.utils.DisplayUtil;
@@ -77,9 +82,14 @@ public class RecordChart extends View implements BaseChart {
 
     private boolean mShouldFly = false;
 
+    private ValueAnimator mEnterAnimator;
+    private float mHeightPercent = 0;
+    private boolean mShouldEnd = false;
+
     private GestureDetector.OnGestureListener mListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onDown(MotionEvent e) {
+            mShouldEnd = false;
             endAnimation();
             mShouldFly = false;
             mCurrX = 0;
@@ -101,6 +111,7 @@ public class RecordChart extends View implements BaseChart {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             mFlingLeft = velocityX < 0;
+            mShouldEnd = false;
             endAnimation();
             mShouldFly = true;
             int max = 5400;
@@ -175,6 +186,7 @@ public class RecordChart extends View implements BaseChart {
 
         //-60是为了防止柱子和图表一样高
         ValueTransfer.transform(mDatas, mHeight - 60 - mXHeight);
+        initAnim();
     }
 
     @Override
@@ -197,15 +209,12 @@ public class RecordChart extends View implements BaseChart {
         for (int i = min; i <= max; i++) {
             left = mWidth / 2 - mPerWidth / 2 - mPerWidth * (mDatas.size() - i - 1) + mExcursion;
             right = left + mPerWidth;
-            top = mHeight - mDatas.get(i).value - mXHeight;
+            top = mHeight - mDatas.get(i).value * mHeightPercent - mXHeight;
             bottom = mHeight - mXHeight;
 
             if (judgeCenter(left, right)) {
                 if (mSelectedIndex != i) {
                     mSelectedIndex = i;
-                    if (mOnColumnSelectedListener != null) {
-                        mOnColumnSelectedListener.onColumnSelected(i);
-                    }
                 }
                 mSelectedLeft = left;
                 mSelectedRight = right;
@@ -250,13 +259,53 @@ public class RecordChart extends View implements BaseChart {
         }
     }
 
+    /**
+     * 初始化动画
+     */
+    private void initAnim() {
+        cleanAnim();
+
+        mEnterAnimator = ValueAnimator.ofFloat(0, 1);
+        mEnterAnimator.setRepeatCount(0);
+        mEnterAnimator.setDuration(1000);
+        mEnterAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mHeightPercent = (float) animation.getAnimatedValue();
+                postInvalidateOnAnimation();
+            }
+        });
+        mEnterAnimator.start();
+    }
+
+    /**
+     * 清除动画
+     */
+    private void cleanAnim() {
+        if(mEnterAnimator != null && mEnterAnimator.isRunning()) {
+            mEnterAnimator.end();
+        }
+        mEnterAnimator = null;
+    }
+
+    private int mSelectedIndexForListener = -1;
+
     private boolean judgeExcursion(boolean left) {
         if (mExcursion >= mMaxExcursion && !left) {
+            if (mSelectedIndexForListener != 0 && mOnColumnSelectedListener != null) {
+                mOnColumnSelectedListener.onColumnSelected(0);
+                mSelectedIndexForListener = 0;
+            }
+
             mExcursion = mMaxExcursion;
             mScroller.forceFinished(true);
             return false;
         }
         if (mExcursion <= 0 && left) {
+            if (mSelectedIndexForListener != mDatas.size() - 1 && mOnColumnSelectedListener != null) {
+                mOnColumnSelectedListener.onColumnSelected(mDatas.size() - 1);
+                mSelectedIndexForListener = mDatas.size() - 1;
+            }
             mExcursion = 0;
             mScroller.forceFinished(true);
             return false;
@@ -295,7 +344,20 @@ public class RecordChart extends View implements BaseChart {
                 postInvalidateOnAnimation();
             }
         });
+        mShouldEnd = true;
         mAnimator.start();
+        mAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (mShouldEnd) {
+                    if (mOnColumnSelectedListener != null) {
+                        mSelectedIndexForListener = mSelectedIndex;
+                        mOnColumnSelectedListener.onColumnSelected(mSelectedIndex);
+                    }
+                }
+            }
+        });
     }
 
     public void setOnColumnSelectedListener(OnColumnSelectedListener listener) {

@@ -23,9 +23,7 @@ import java.util.Locale;
  */
 
 public class ValueTransfer {
-    public static List<Float> transform(List<RecordChart.ChartItem> data, float height) {
-
-        List<Float> output = new ArrayList<>();
+    public static void transform(List<RecordChart.ChartItem> data, float height) {
 
         for (int i = 0; i < data.size(); i++) {
             if (data.get(i).value == 0) {
@@ -58,8 +56,6 @@ public class ValueTransfer {
             //data.get(i).value = (float) 0.01 * height;
             data.get(i).value = x * height + 10;
         }
-
-        return output;
     }
 
     //TODO 数据量小的时候，暂且这样做，后面肯定要做完善
