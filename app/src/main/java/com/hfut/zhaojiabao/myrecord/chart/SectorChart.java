@@ -23,6 +23,8 @@ import java.util.List;
 public class SectorChart extends View implements BaseChart {
     private static final String TAG = "SectorChart";
 
+    private static final int START_ANIM_DURATION = 1200;
+
     private List<SectorChartItem> mDatas;
 
     private Context mContext;
@@ -86,8 +88,8 @@ public class SectorChart extends View implements BaseChart {
         }
         for (int i = 0; i < mDatas.size(); i++) {
             mSectorPaint.setColor(mColors[i]);
-            canvas.drawArc(mRectF, mAngle, mDatas.get(i).angle, true, mSectorPaint);
-            mAngle += mDatas.get(i).angle;
+            canvas.drawArc(mRectF, mAngle, mDatas.get(i).angle * mAnimPercent, true, mSectorPaint);
+            mAngle += mDatas.get(i).angle * mAnimPercent;
         }
         mAngle = 0;
     }
@@ -97,21 +99,24 @@ public class SectorChart extends View implements BaseChart {
     public void provideData(List<? extends BaseChartItem> data) {
         mDatas = (List<SectorChartItem>) data;
         initAnim();
+        parseData(360);
         invalidate();
     }
 
+    private float mAnimPercent = 0;
+
     private void initAnim() {
         clearAnim();
-        mAnimator = ValueAnimator.ofInt(0, 360);
+        mAnimator = ValueAnimator.ofFloat(0, 1);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                parseData((int) animation.getAnimatedValue());
+                mAnimPercent = (float) animation.getAnimatedValue();
                 postInvalidateOnAnimation();
             }
         });
         mAnimator.setRepeatCount(0);
-        mAnimator.setDuration(1200);
+        mAnimator.setDuration(START_ANIM_DURATION);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.start();
     }
