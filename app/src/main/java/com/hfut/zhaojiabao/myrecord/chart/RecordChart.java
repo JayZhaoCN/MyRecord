@@ -30,6 +30,8 @@ import java.util.List;
 
 public class RecordChart extends View implements BaseChart {
 
+    private static final int START_ANIM_DURATION = 600;
+
     private Context mContext;
     private int mWidth, mHeight;
     //一屏显示的柱子数量
@@ -267,7 +269,7 @@ public class RecordChart extends View implements BaseChart {
 
         mEnterAnimator = ValueAnimator.ofFloat(0, 1);
         mEnterAnimator.setRepeatCount(0);
-        mEnterAnimator.setDuration(1000);
+        mEnterAnimator.setDuration(START_ANIM_DURATION);
         mEnterAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
