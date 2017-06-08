@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * @author zhaojiabao 2017/5/23
+ *         柱状图
  */
 
 public class RecordChart extends View implements BaseChart {

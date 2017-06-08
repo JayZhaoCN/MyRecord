@@ -10,6 +10,7 @@ public class DayRecord {
     public int year = -1;
     public int month = -1;
     public int day = -1;
+    public long timeMillis = -1;
     //支出总计
     public float incomeSum = -1;
     //收入总计
