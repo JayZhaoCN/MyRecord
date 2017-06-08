@@ -65,4 +65,7 @@
     <string name="title_activity_sector">SectorActivity</string>
     <string name="income_percent">收入占比</string>
     <string name="expend_percent">支出占比</string>
+    <string name="day_view">日视图</string>
+    <string name="week_view">周视图</string>
+    <string name="month_view">月视图</string>
 </resources>

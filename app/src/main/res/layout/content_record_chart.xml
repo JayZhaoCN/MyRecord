@@ -1,17 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4191E1"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <com.hfut.zhaojiabao.myrecord.chart.RecordChart
-        android:background="@color/bf3_list_attention"
+        android:background="@color/dark_sky_blue_three"
         android:id="@+id/record_chart"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="300dp"/>
 
-</RelativeLayout>
+    <View
+        android:background="@color/divider_line_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:ignore="NestedWeights">
+
+            <TextView
+                android:gravity="center"
+                android:text="Item 1"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:background="@color/divider_line_color"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:gravity="center"
+                android:text="Item 2"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/divider_line_color"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <TextView
+                android:gravity="center"
+                android:text="Item 3"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:background="@color/divider_line_color"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:gravity="center"
+                android:text="Item 4"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/divider_line_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <TextView
+            android:text="@string/day_view"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:text="@string/week_view"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:text="@string/month_view"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</LinearLayout>
