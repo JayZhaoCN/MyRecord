@@ -9,7 +9,6 @@ import com.hfut.zhaojiabao.myrecord.DayRecord;
 import com.hfut.zhaojiabao.myrecord.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -110,7 +109,7 @@ public class ValueTransfer {
             return result;
         }
 
-        for (int i= 0; i<records.size(); i++) {
+        for (int i = 0; i < records.size(); i++) {
             Record record = records.get(i);
             calender.setTimeInMillis(record.getConsumeTime());
             year = calender.get(Calendar.YEAR);
@@ -147,8 +146,6 @@ public class ValueTransfer {
             if (i == records.size() - 1) {
                 result.add(dayRecord);
             }
-
-
         }
 
         //TODO 没有记录的日期也要保存起来

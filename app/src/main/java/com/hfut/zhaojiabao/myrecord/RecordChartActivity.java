@@ -32,8 +32,10 @@ public class RecordChartActivity extends AppCompatActivity {
         List<DayRecord> datas = ValueTransfer.getDayRecords();
         List<RecordChart.ChartItem> chartItems = new ArrayList<>();
 
-        for (DayRecord record : datas) {
-            chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
+        if (datas != null) {
+            for (DayRecord record : datas) {
+                chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
+            }
         }
 
         chart.provideData(chartItems);
