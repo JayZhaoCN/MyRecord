@@ -10,12 +10,9 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import com.hfut.zhaojiabao.myrecord.utils.DisplayUtil;
@@ -24,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 柱状图
+ *
  * @author zhaojiabao 2017/5/23
- *         柱状图
  */
 
 public class RecordChart extends View implements BaseChart {
@@ -284,7 +282,7 @@ public class RecordChart extends View implements BaseChart {
      * 清除动画
      */
     private void cleanAnim() {
-        if(mEnterAnimator != null && mEnterAnimator.isRunning()) {
+        if (mEnterAnimator != null && mEnterAnimator.isRunning()) {
             mEnterAnimator.end();
         }
         mEnterAnimator = null;
