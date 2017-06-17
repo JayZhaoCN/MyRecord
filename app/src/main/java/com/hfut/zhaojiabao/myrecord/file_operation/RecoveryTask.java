@@ -10,10 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 
 /**
  * @author zhaojiabao 2017/6/17
