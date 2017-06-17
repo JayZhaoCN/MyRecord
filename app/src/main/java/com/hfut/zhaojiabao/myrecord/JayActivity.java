@@ -2,6 +2,7 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,9 +26,11 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
+import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -64,6 +67,8 @@ public class JayActivity extends AppCompatActivity
         initUI();
         initTime();
         loadRecords();
+
+        new BackupTask(this).execute();
     }
 
     private void initTime() {
