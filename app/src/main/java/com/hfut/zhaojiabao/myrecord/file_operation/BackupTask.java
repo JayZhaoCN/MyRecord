@@ -18,7 +18,8 @@ import java.io.FileWriter;
  */
 
 public class BackupTask extends AsyncTask<Void, Void, Void> {
-    private static final String FILE_NAME = "my_backup.jay";
+    private static final String TAG = "BackupTask";
+    private static final String FILE_NAME = "my_backup.txt";
 
     private String mFilePath;
     private Context mContext;
@@ -32,26 +33,26 @@ public class BackupTask extends AsyncTask<Void, Void, Void> {
 
     public BackupTask(Context context) {
         mContext = context;
-        mFilePath = Environment.getExternalStorageDirectory() + File.separator + FILE_NAME;
         verifyStoragePermissions(mContext);
+        mFilePath = Environment.getExternalStorageDirectory() + File.separator + FILE_NAME;
+        Log.i(TAG, "filePath: " + mFilePath);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         try {
             File file = new File(mFilePath);
-            Log.i("JayTest", "filePath: " + mFilePath);
 
-            FileWriter fileWriter = new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write("Hello World.");
             writer.newLine();
             writer.write("Hello Android.");
+            writer.newLine();
 
-            fileWriter.close();
             writer.close();
+            fileWriter.close();
         } catch (Exception e) {
-            Log.i("JayTest", "exception.");
             e.printStackTrace();
         }
 
@@ -63,7 +64,7 @@ public class BackupTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
     }
 
-    public static void verifyStoragePermissions(Context context) {
+    private static void verifyStoragePermissions(Context context) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
