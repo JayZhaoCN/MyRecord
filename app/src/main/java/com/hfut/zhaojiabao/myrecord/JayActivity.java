@@ -27,6 +27,7 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
+import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
@@ -68,7 +69,8 @@ public class JayActivity extends AppCompatActivity
         initTime();
         loadRecords();
 
-        new BackupTask(this).execute();
+        //new BackupTask(this).execute();
+        new RecoveryTask(this).execute();
     }
 
     private void initTime() {
