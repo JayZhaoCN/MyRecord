@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.hfut.zhaojiabao.myrecord">
 
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".JayApplication"
@@ -43,6 +42,11 @@
         <activity
             android:name=".SectorActivity"
             android:label="@string/title_activity_sector"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".RecoveryActivity"
+            android:label="@string/title_activity_recovery"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

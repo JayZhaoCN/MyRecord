@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.hfut.zhaojiabao.myrecord.RecoveryActivity"
+    tools:showIn="@layout/activity_recovery">
+
+    <TextView
+        android:textColor="@color/black60"
+        android:textSize="14sp"
+        android:layout_margin="10dp"
+        android:text="@string/recovery_tips"
+        android:id="@+id/recovery_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/recovery_title_tv"
+        android:id="@+id/recovery_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

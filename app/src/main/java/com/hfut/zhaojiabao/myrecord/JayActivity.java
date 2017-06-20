@@ -2,7 +2,6 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,10 +27,10 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
+import com.hfut.zhaojiabao.myrecord.file_operation.TraverseTask;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,9 +67,7 @@ public class JayActivity extends AppCompatActivity
         initUI();
         initTime();
         loadRecords();
-
-        //new BackupTask(this).execute();
-        new RecoveryTask(this).execute();
+        new TraverseTask().execute();
     }
 
     private void initTime() {
@@ -275,13 +272,13 @@ public class JayActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_backup) {
+            new BackupTask(this).execute();
+            return true;
+        } else if (id == R.id.action_recovery) {
+            startActivity(new Intent(this, RecoveryActivity.class));
             return true;
         }
 
