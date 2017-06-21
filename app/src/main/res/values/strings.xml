@@ -72,4 +72,8 @@
     <string name="month_view">月视图</string>
     <string name="title_activity_recovery">RecoveryActivity</string>
     <string name="recovery_tips">下面是可供选择恢复的备份文件。需要注意的是, 恢复的同时会删除App原来的所有记录, 请谨慎恢复。</string>
+    <string name="recovery_done">恢复完成</string>
+    <string name="recovery_fail">恢复失败</string>
+    <string name="backup_done">备份完成</string>
+    <string name="backup_fail">备份失败</string>
 </resources>

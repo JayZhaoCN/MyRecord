@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.BufferedWriter;
@@ -27,8 +28,7 @@ import java.util.List;
 public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackupTask";
     private static final String RECORD_FILE_NAME = "my_backup.jay";
-    private static final String CATEGORY_FILE_NAME = "my_category.jay";
-    //分隔符,表示另一种记录的开始
+
     /**
      * 记录顺序：
      * Record
@@ -39,10 +39,10 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
      * .
      * .
      */
-    private static final String FILE_DIVIDER = "---------";
+    //分隔符,表示另一种记录的开始
+    static final String FILE_DIVIDER = "---------";
 
     private String mFilePath;
-    private String mCategoryFilePath;
     private Context mContext;
 
     // Storage Permissions
@@ -56,15 +56,14 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
         mContext = context;
         verifyStoragePermissions(mContext);
         mFilePath = Environment.getExternalStorageDirectory() + File.separator + RECORD_FILE_NAME;
-        mCategoryFilePath = Environment.getExternalStorageDirectory() + File.separator + CATEGORY_FILE_NAME;
-        Log.i(TAG, "filePath: " + mFilePath);
-        Log.i(TAG, "category filePath: " + mCategoryFilePath);
+        Log.i(TAG, "backup filePath: " + mFilePath);
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
             File file = new File(mFilePath);
+            //如果文件存在，则删除
             if (file.exists()) {
                 Log.i(TAG, "delete exist file: " + file.delete());
             }
@@ -78,23 +77,18 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
                 writer.newLine();
             }
 
-            writer.close();
-            fileWriter.close();
-
-            File categoryFile = new File(mCategoryFilePath);
-            if (categoryFile.exists()) {
-                Log.i(TAG, "delete exist category file: " + categoryFile.delete());
-            }
-            FileWriter categoryFileWriter = new FileWriter(categoryFile, true);
-            BufferedWriter categoryWriter = new BufferedWriter(categoryFileWriter);
+            //write category data to sdcard
+            //先写入分割标志
+            writer.write(FILE_DIVIDER);
+            writer.newLine();
             List<Category> categories = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
             for (Category category : categories) {
-                categoryWriter.write(category.toJSONString());
-                categoryWriter.newLine();
+                writer.write(category.toJSONString());
+                writer.newLine();
             }
 
-            categoryWriter.close();
-            categoryFileWriter.close();
+            writer.close();
+            fileWriter.close();
 
             return true;
         } catch (Exception e) {
@@ -106,10 +100,10 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "backup success: " + success);
-        ToastUtil.showToast(mContext, success ? "备份完成" : "备份失败", Toast.LENGTH_SHORT);
+        ToastUtil.showToast(mContext, mContext.getString(success ? R.string.backup_done : R.string.backup_fail), Toast.LENGTH_SHORT);
     }
 
-    private static void verifyStoragePermissions(Context context) {
+    static void verifyStoragePermissions(Context context) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 

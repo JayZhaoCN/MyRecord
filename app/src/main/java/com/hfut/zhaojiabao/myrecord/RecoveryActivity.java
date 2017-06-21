@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -56,13 +58,14 @@ public class RecoveryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecoveryItemHolder holder, int position) {
+        public void onBindViewHolder(RecoveryItemHolder holder, final int position) {
             holder.titleTv.setText(mRecoveryItem.get(position).toString());
-            if (position == mRecoveryItem.size() - 1) {
-                holder.divider.setVisibility(View.GONE);
-            } else {
-                holder.divider.setVisibility(View.VISIBLE);
-            }
+            holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new RecoveryTask(RecoveryActivity.this).execute(mRecoveryItem.get(position).toString());
+                }
+            });
         }
 
         @Override
@@ -72,13 +75,13 @@ public class RecoveryActivity extends AppCompatActivity {
 
         class RecoveryItemHolder extends  RecyclerView.ViewHolder {
             TextView titleTv;
-            CheckBox checkBox;
+            TextView recoveryTv;
             View divider;
 
             RecoveryItemHolder(View itemView) {
                 super(itemView);
                 titleTv = (TextView) itemView.findViewById(R.id.recovery_item_tv);
-                checkBox = (CheckBox) itemView.findViewById(R.id.recovery_item_check_box);
+                recoveryTv = (TextView) itemView.findViewById(R.id.recovery_item_check_box);
                 divider = itemView.findViewById(R.id.divider);
             }
         }
