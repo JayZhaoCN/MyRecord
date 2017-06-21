@@ -71,5 +71,5 @@
     <string name="week_view">周视图</string>
     <string name="month_view">月视图</string>
     <string name="title_activity_recovery">RecoveryActivity</string>
-    <string name="recovery_tips">下面是可供选择恢复的备份文件,需要注意的是, 恢复的同时会删除App原来的所有记录，请谨慎恢复。</string>
+    <string name="recovery_tips">下面是可供选择恢复的备份文件。需要注意的是, 恢复的同时会删除App原来的所有记录, 请谨慎恢复。</string>
 </resources>

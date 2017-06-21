@@ -10,19 +10,28 @@
     tools:showIn="@layout/activity_recovery">
 
     <TextView
-        android:textColor="@color/black60"
-        android:textSize="14sp"
-        android:layout_margin="10dp"
-        android:text="@string/recovery_tips"
         android:id="@+id/recovery_title_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/recovery_tips"
+        android:textColor="@color/black60"
+        android:textSize="14sp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/recovery_title_tv"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/divider_line_color"/>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/recovery_title_tv"
         android:id="@+id/recovery_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/divider"/>
 
 </RelativeLayout>

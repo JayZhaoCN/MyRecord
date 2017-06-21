@@ -28,6 +28,18 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackupTask";
     private static final String RECORD_FILE_NAME = "my_backup.jay";
     private static final String CATEGORY_FILE_NAME = "my_category.jay";
+    //分隔符,表示另一种记录的开始
+    /**
+     * 记录顺序：
+     * Record
+     * ---------
+     * Category
+     * ---------
+     * .
+     * .
+     * .
+     */
+    private static final String FILE_DIVIDER = "---------";
 
     private String mFilePath;
     private String mCategoryFilePath;
