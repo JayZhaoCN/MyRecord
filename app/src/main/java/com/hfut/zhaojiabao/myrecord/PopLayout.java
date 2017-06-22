@@ -120,8 +120,6 @@ public class PopLayout extends ViewGroup implements View.OnClickListener {
                     }
                     mTipsTv.get(i).setTranslationY(mTranslatesY.get(i) * (float) valueAnimator.getAnimatedValue());
                     mTipsTv.get(i).setAlpha(1 - (float) valueAnimator.getAnimatedValue());
-
-                    //Log.i("JAYTEST1", "Y: " + mTipsTv.get(0).getY() + " TranslationY: " + mTipsTv.get(0).getTranslationY());
                 }
             }
         });
@@ -205,12 +203,6 @@ public class PopLayout extends ViewGroup implements View.OnClickListener {
 
 
     public void setTips(int index, String tips) {
-        //TODO 到底谁动了mChildCount?
-        if (index < 0 || (mTips.get(index) != null && mTips.get(index).equals(tips))) {
-            Log.e("JAYTEST", "index illegal or already added.");
-            return;
-        }
-
         if (mTips.get(index) != null) {
             mTips.put(index, tips);
             mTipsTv.get(index).setText(tips);
@@ -274,7 +266,6 @@ public class PopLayout extends ViewGroup implements View.OnClickListener {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.i("JAYTEST", "onMeasure");
         mIcons.clear();
         View childView;
         int totalHeight = 0;

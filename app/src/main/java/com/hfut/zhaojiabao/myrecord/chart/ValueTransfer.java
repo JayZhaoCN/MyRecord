@@ -47,7 +47,6 @@ public class ValueTransfer {
         }
 
         float sub = max - min;
-        Log.i("JayTest", "sub: " + sub);
         if (data.size() == 1) {
             data.get(0).value = height + 10;
             return;
@@ -56,7 +55,6 @@ public class ValueTransfer {
         for (int i = 0; i < data.size(); i++) {
             item = data.get(i);
             float x = (item.value - min) / sub;
-            Log.i("JayTest", "x: " + x);
             data.get(i).value = x * height + 10;
         }
     }
@@ -154,38 +152,23 @@ public class ValueTransfer {
         DayRecord startRecord = result.get(0);
         DayRecord endRecord = result.get(result.size() - 1);
 
-        /*Log.i("JayTest", "startRecord: " + startRecord.toString());
-        Log.i("JayTest", "endRecord: " + endRecord.toString());*/
-
         calendarJ.set(startRecord.year, startRecord.month - 1, startRecord.day);
         Date startDate = calendarJ.getTime();
         calendarJ.set(endRecord.year, endRecord.month - 1, endRecord.day);
         Date endDate = calendarJ.getTime();
-
-        Log.i("JayTest", "startDate: " + startDate.toString());
-        Log.i("JayTest", "endDate: " + endDate.toString());
 
         calendarJ.setTime(startDate);
         Date middleDate = calendarJ.getTime();
 
         List<DayRecord> tmpRecord = new ArrayList<>();
 
-        Log.i("JayTestQ", "--------");
-        for (DayRecord record : result) {
-            Log.i("JayTestQ", "year: " + record.year + " month: " + record.month + " day: " + record.day);
-        }
-        Log.i("JayTestQ", "--------");
-
         while (middleDate.before(endDate)) {
-            Log.i("JayTest", "middleDate: " + middleDate.toString());
-            Log.i("JayTestQ", "year: " + (middleDate.getYear() + 1900) + " month: " + (middleDate.getMonth() + 1) + " day: " + middleDate.getDate());
             if (!recordContains(result, middleDate)) {
                 DayRecord record = new DayRecord();
                 record.year = calendarJ.get(Calendar.YEAR);
                 record.month = calendarJ.get(Calendar.MONTH) + 1;
                 record.day = calendarJ.get(Calendar.DAY_OF_MONTH);
                 record.date = record.year + "-" + record.month + "-" + record.day;
-                Log.i("JayTest", "middleDate do not contains: " + record.date);
                 record.timeMillis = middleDate.getTime();
                 tmpRecord.add(record);
             }
@@ -193,7 +176,6 @@ public class ValueTransfer {
             calendarJ.add(Calendar.DAY_OF_MONTH, 1);
             middleDate = calendarJ.getTime();
         }
-        Log.i("JayTestQ", "--------");
         result.addAll(tmpRecord);
         Collections.sort(result, new Comparator<DayRecord>() {
             @Override
@@ -210,7 +192,6 @@ public class ValueTransfer {
         for (DayRecord record : result) {
             Calendar calendar = Calendar.getInstance(Locale.getDefault());
             calendar.setTimeInMillis(record.timeMillis);
-            Log.i("JayTestResult", calendar.getTime().toString() + " " + record.timeMillis);
         }
 
         return result;

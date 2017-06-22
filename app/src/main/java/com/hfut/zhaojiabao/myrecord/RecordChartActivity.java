@@ -63,7 +63,6 @@ public class RecordChartActivity extends AppCompatActivity {
         chart.setOnColumnSelectedListener(new RecordChart.OnColumnSelectedListener() {
             @Override
             public void onColumnSelected(int position) {
-                Log.i("JayTest", "selected: " + position);
             }
         });
     }

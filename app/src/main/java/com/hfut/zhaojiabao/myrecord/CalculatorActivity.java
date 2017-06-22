@@ -137,7 +137,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputDot = false;
                 break;
             case R.id.equal:
-                Log.i("JayTest", mScreenContentStr);
                 double result = ArithmeticHelper.calculate(mScreenContentStr);
                 mScreenTv.setText(String.valueOf(result));
                 mScreenContentStr = String.valueOf(result);

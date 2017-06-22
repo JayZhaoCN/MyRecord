@@ -23,7 +23,7 @@ public class Utils {
     private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
     private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
 
-    private static final String TAG = "JAYTEST";
+    private static final String TAG = "Utils";
 
     public static final double GENHAO_2 = 1.4142135624;
 
