@@ -47,13 +47,16 @@ public class ValueTransfer {
         }
 
         float sub = max - min;
+        Log.i("JayTest", "sub: " + sub);
+        if (data.size() == 1) {
+            data.get(0).value = height + 10;
+            return;
+        }
 
         for (int i = 0; i < data.size(); i++) {
             item = data.get(i);
             float x = (item.value - min) / sub;
-            //+30是为了给一个最低高度。
-            //data.get(i).value = (float) (height * Math.sin(Math.PI / 2 * x)) + 30;
-            //data.get(i).value = (float) 0.01 * height;
+            Log.i("JayTest", "x: " + x);
             data.get(i).value = x * height + 10;
         }
     }
@@ -102,6 +105,7 @@ public class ValueTransfer {
         }
 
         if (records.size() == 1) {
+            result.add(dayRecord);
             return result;
         }
 
