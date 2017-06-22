@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.hfut.zhaojiabao.myrecord.chart.RecordChart;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
@@ -15,6 +16,17 @@ import java.util.List;
 
 public class RecordChartActivity extends AppCompatActivity {
 
+    private List<DayRecord> mDatas;
+
+    //支出
+    private TextView mIncomeValueTv;
+    //收入
+    private TextView mExpendValueTv;
+    //恩格尔系数
+    private TextView mEngleTv;
+    //总计
+    private TextView mTotalTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,17 +35,25 @@ public class RecordChartActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.chart);
         setSupportActionBar(toolbar);
 
-        init();
+        initChart();
+        initViews();
     }
 
-    private void init() {
+    private void initViews() {
+        mIncomeValueTv = (TextView) findViewById(R.id.income_value_tv);
+        mExpendValueTv = (TextView) findViewById(R.id.expend_value_tv);
+        mEngleTv = (TextView) findViewById(R.id.engel_coefficient_value_tv);
+        mTotalTv = (TextView) findViewById(R.id.total_value_tv);
+    }
+
+    private void initChart() {
         RecordChart chart = (RecordChart) findViewById(R.id.record_chart);
 
-        List<DayRecord> datas = ValueTransfer.getDayRecords();
+        mDatas = ValueTransfer.getDayRecords();
         List<RecordChart.ChartItem> chartItems = new ArrayList<>();
 
-        if (datas != null) {
-            for (DayRecord record : datas) {
+        if (mDatas != null) {
+            for (DayRecord record : mDatas) {
                 chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
             }
         }
