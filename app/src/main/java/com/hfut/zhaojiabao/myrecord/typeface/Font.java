@@ -4,8 +4,9 @@ package com.hfut.zhaojiabao.myrecord.typeface;
  * 字体枚举
  */
 public enum Font {
-    KM("km", "fonts/KMedium.ttf"),
-    DIN_MED("din-med", "fonts/dincond_medium.otf");
+    PT_DIN("pt_din", "fonts/pt_din_condensed_cyrillic.ttf"),
+    DIN_MED("din_med", "fonts/dincond_medium.otf"),
+    KM("km", "fonts/KMedium.ttf");
 
     public String mFontName = null;
     public String mFontPath = null;
@@ -19,7 +20,12 @@ public enum Font {
         return mFontName;
     }
 
-    public String getPath() {
-        return mFontPath;
+    public static Font fromName(String name) {
+        for (Font font : Font.values()) {
+            if (name.equals(font.getName())) {
+                return font;
+            }
+        }
+        return KM;
     }
 }

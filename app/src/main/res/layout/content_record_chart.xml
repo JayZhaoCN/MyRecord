@@ -9,157 +9,196 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <com.hfut.zhaojiabao.myrecord.chart.RecordChart
-        android:background="@color/dark_sky_blue_three"
         android:id="@+id/record_chart"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:background="@color/dark_sky_blue_three"/>
 
     <View
-        android:background="@color/divider_line_color"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="@color/divider_line_color"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
             tools:ignore="NestedWeights">
 
             <RelativeLayout
-                android:clickable="true"
-                android:background="@drawable/item_bg"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/item_bg"
+                android:clickable="true">
 
                 <TextView
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/income"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:id="@+id/income_item_tips_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/income"/>
+
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:textColor="@color/black60"
+                    android:id="@+id/income_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="din_med"
+                    android:textSize="30sp"
+                    tools:text="10"/>
 
                 <TextView
-                    android:id="@+id/income_value_tv"
-                    tools:text="10"
-                    android:textSize="35sp"
-                    android:layout_centerInParent="true"
+                    android:layout_marginStart="3dp"
+                    android:id="@+id/income_unit_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/income_value_tv"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/income_value_tv"
+                    android:text="@string/unit_yuan"/>
 
             </RelativeLayout>
 
             <View
-                android:background="@color/divider_line_color"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/divider_line_color"/>
 
             <RelativeLayout
-                android:clickable="true"
-                android:background="@drawable/item_bg"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/item_bg"
+                android:clickable="true">
 
                 <TextView
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/expend"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:id="@+id/expend_item_tips_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/expend"/>
+
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:textColor="@color/black60"
+                    android:id="@+id/expend_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="din_med"
+                    android:textSize="30sp"
+                    tools:text="10"/>
 
                 <TextView
-                    android:id="@+id/expend_value_tv"
-                    tools:text="10"
-                    android:textSize="35sp"
-                    android:layout_centerInParent="true"
+                    android:layout_marginStart="3dp"
+                    android:id="@+id/expend_unit_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/expend_value_tv"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/expend_value_tv"
+                    android:text="@string/unit_yuan"/>
 
             </RelativeLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/divider_line_color"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/divider_line_color"/>
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <RelativeLayout
-                android:clickable="true"
-                android:background="@drawable/item_bg"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/item_bg"
+                android:clickable="true">
 
                 <TextView
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/engel_coefficient"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:id="@+id/engel_coefficient_item_tips_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/engel_coefficient"/>
 
-                <TextView
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:textColor="@color/black60"
                     android:id="@+id/engel_coefficient_value_tv"
-                    tools:text="0.9"
-                    android:textSize="35sp"
-                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="din_med"
+                    android:text="0.31"
+                    android:textSize="30sp"
+                    tools:text="10"/>
 
             </RelativeLayout>
 
             <View
-                android:background="@color/divider_line_color"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/divider_line_color"/>
 
             <RelativeLayout
-                android:clickable="true"
-                android:background="@drawable/item_bg"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/item_bg"
+                android:clickable="true">
 
                 <TextView
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/total"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:id="@+id/total_item_tips_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/total"/>
+
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:textColor="@color/black60"
+                    android:id="@+id/total_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="din_med"
+                    android:textSize="30sp"
+                    tools:text="10"/>
 
                 <TextView
-                    android:id="@+id/total_value_tv"
-                    tools:text="0"
-                    android:textSize="35sp"
-                    android:layout_centerInParent="true"
+                    android:layout_marginStart="3dp"
+                    android:id="@+id/total_unit_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/total_value_tv"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/total_value_tv"
+                    android:text="@string/unit_yuan"/>
 
             </RelativeLayout>
 
@@ -168,34 +207,34 @@
     </LinearLayout>
 
     <View
-        android:background="@color/divider_line_color"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="@color/divider_line_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp">
 
         <TextView
-            android:text="@string/day_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
+            android:text="@string/day_view"/>
 
         <TextView
-            android:text="@string/week_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
+            android:text="@string/week_view"/>
 
         <TextView
-            android:text="@string/month_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
+            android:text="@string/month_view"/>
 
     </LinearLayout>
 

@@ -1,9 +1,9 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecordChartActivity extends AppCompatActivity {
+    private static final String TAG = "RecordChartActivity";
 
     private List<DayRecord> mDatas;
 
@@ -48,23 +49,45 @@ public class RecordChartActivity extends AppCompatActivity {
 
     private void initChart() {
         RecordChart chart = (RecordChart) findViewById(R.id.record_chart);
-
         mDatas = ValueTransfer.getDayRecords();
         List<RecordChart.ChartItem> chartItems = new ArrayList<>();
-
         if (mDatas != null) {
             for (DayRecord record : mDatas) {
                 chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
             }
         }
-
         chart.provideData(chartItems);
-
         chart.setOnColumnSelectedListener(new RecordChart.OnColumnSelectedListener() {
             @Override
             public void onColumnSelected(int position) {
+                updateValues(position);
             }
         });
+    }
+
+    private void updateValues(int position) {
+        DayRecord dayRecord = mDatas.get(position);
+
+        //收入
+        float income = dayRecord.incomeSum;
+        if (income == -1) {
+            income = 0;
+        }
+        mIncomeValueTv.setText(String.valueOf(income));
+
+        //支出
+        float expend = dayRecord.expendSum;
+        if (expend == -1) {
+            expend = 0;
+        }
+        mExpendValueTv.setText(String.valueOf(expend));
+
+        //总计
+        float sum = dayRecord.sum;
+        if (sum == -1) {
+            sum = 0;
+        }
+        mTotalTv.setText(String.valueOf(sum));
     }
 
     @Override
