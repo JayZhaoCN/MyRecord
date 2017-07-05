@@ -25,7 +25,6 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
-import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
@@ -272,7 +271,7 @@ public class JayActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_backup) {
-            new BackupTask(this).execute();
+            startActivity(new Intent(this, BackupActivity.class));
             return true;
         } else if (id == R.id.action_recovery) {
             startActivity(new Intent(this, RecoveryActivity.class));
