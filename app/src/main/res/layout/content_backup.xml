@@ -16,10 +16,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="18dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:text="@string/backup_tips_1"
-        android:textColor="@color/black70"
-        android:textSize="20sp"/>
+        android:textColor="@color/black60"
+        android:textSize="17sp"/>
 
     <Button
         android:text="@string/start_backup"
