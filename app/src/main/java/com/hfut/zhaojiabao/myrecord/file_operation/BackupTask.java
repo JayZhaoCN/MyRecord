@@ -66,12 +66,11 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
             File file = new File(mFilePath);
             //如果文件存在，则删除
             if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdir();
+                Log.i(TAG, "parents not exist, so create: " + file.getParentFile().mkdir());
             }
             if (!file.exists()) {
-                file.createNewFile();
+                Log.i(TAG, "file not exist, so create: " + file.createNewFile());
             }
-
             FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
 
@@ -108,7 +107,7 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
         ToastUtil.showToast(mContext, mContext.getString(success ? R.string.backup_done : R.string.backup_fail), Toast.LENGTH_SHORT);
     }
 
-    public static String getFilePath() {
+    private static String getFilePath() {
         StringBuilder sb = new StringBuilder();
         sb.append(Environment.getExternalStorageDirectory())
                 .append(File.separator)
