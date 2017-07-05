@@ -27,7 +27,8 @@ import java.util.List;
 
 public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackupTask";
-    private static final String RECORD_FILE_NAME = "my_backup.jay";
+    private static final String RECORD_FILE_SUFFIX_NAME = ".jay";
+    public static final String FOLDER_NAME = "jay_backups";
 
     /**
      * 记录顺序：
@@ -55,7 +56,7 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     public BackupTask(Context context) {
         mContext = context;
         verifyStoragePermissions(mContext);
-        mFilePath = Environment.getExternalStorageDirectory() + File.separator + RECORD_FILE_NAME;
+        mFilePath = getFilePath();
         Log.i(TAG, "backup filePath: " + mFilePath);
     }
 
@@ -64,9 +65,13 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
         try {
             File file = new File(mFilePath);
             //如果文件存在，则删除
-            if (file.exists()) {
-                Log.i(TAG, "delete exist file: " + file.delete());
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdir();
             }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
             FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
 
@@ -101,6 +106,17 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "backup success: " + success);
         ToastUtil.showToast(mContext, mContext.getString(success ? R.string.backup_done : R.string.backup_fail), Toast.LENGTH_SHORT);
+    }
+
+    public static String getFilePath() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Environment.getExternalStorageDirectory())
+                .append(File.separator)
+                .append(FOLDER_NAME)
+                .append(File.separator)
+                .append(System.currentTimeMillis())
+                .append(RECORD_FILE_SUFFIX_NAME);
+        return sb.toString();
     }
 
     static void verifyStoragePermissions(Context context) {

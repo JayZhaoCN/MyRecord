@@ -3,8 +3,6 @@ package com.hfut.zhaojiabao.myrecord;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
 
 import java.io.File;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecoveryActivity extends AppCompatActivity {
+    private static final String TAG = "RecoveryActivity";
 
     private List<File> mRecoveryItem;
     private RecoveryItemAdapter mAdapter;
@@ -98,15 +97,18 @@ public class RecoveryActivity extends AppCompatActivity {
         @Override
         protected List<File> doInBackground(Void... params) {
             RecoveryActivity activity = reference.get();
-            //如果Activity被回收了，再去读文件也没有意义了
+            //若Activity被回收，则返回
             if (activity == null) {
                 return null;
             }
-
-            File file = Environment.getExternalStorageDirectory();
-            File[] children = file.listFiles();
             List<File> files = new ArrayList<>();
+            File file = new File(Environment.getExternalStorageDirectory() + File.separator + BackupTask.FOLDER_NAME);
+            if (!file.exists()) {
+                Log.i(TAG, "file not exist, return.");
+                return files;
+            }
 
+            File[] children = file.listFiles();
             for (File child : children) {
                 if (child.getPath().endsWith(".jay")) {
                     files.add(child);
@@ -119,7 +121,6 @@ public class RecoveryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<File> files) {
             RecoveryActivity activity = reference.get();
-            //如果Activity被回收了，再去读文件也没有意义了
             if (activity == null) {
                 return;
             }
