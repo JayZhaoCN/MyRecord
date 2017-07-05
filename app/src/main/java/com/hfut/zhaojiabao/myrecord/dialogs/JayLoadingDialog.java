@@ -135,4 +135,13 @@ public class JayLoadingDialog extends DialogFragment {
         mLoadingPb.setVisibility(View.GONE);
         mLoadingImg.setImageResource(R.drawable.loading_done);
     }
+
+    public void delayClose(long delayMillis) {
+        mLoadingImg.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dismiss();
+            }
+        }, delayMillis);
+    }
 }

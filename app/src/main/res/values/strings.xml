@@ -79,4 +79,6 @@
     <string name="engel_coefficient">恩格尔系数</string>
     <string name="total">总计</string>
     <string name="unit_yuan">元</string>
+    <string name="loading">正在加载…</string>
+    <string name="back_uping">正在备份…</string>
 </resources>

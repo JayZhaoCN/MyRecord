@@ -8,13 +8,12 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,7 +43,8 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     static final String FILE_DIVIDER = "---------";
 
     private String mFilePath;
-    private Context mContext;
+    private Activity mActivity;
+    private JayLoadingDialog mDialog;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -53,9 +53,15 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public BackupTask(Context context) {
-        mContext = context;
-        verifyStoragePermissions(mContext);
+    public BackupTask(Activity activity) {
+        mActivity = activity;
+        verifyStoragePermissions(mActivity);
+
+        mDialog = new JayLoadingDialog();
+        mDialog.setCancelable(false);
+        mDialog.showLoading(mActivity.getString(R.string.back_uping));
+        mDialog.show(mActivity.getFragmentManager(), "backup");
+
         mFilePath = getFilePath();
         Log.i(TAG, "backup filePath: " + mFilePath);
     }
@@ -104,7 +110,12 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "backup success: " + success);
-        ToastUtil.showToast(mContext, mContext.getString(success ? R.string.backup_done : R.string.backup_fail), Toast.LENGTH_SHORT);
+        if (success) {
+            mDialog.showSuccess(mActivity.getString(R.string.backup_done));
+        } else {
+            mDialog.showError(mActivity.getString(R.string.backup_fail));
+        }
+        mDialog.delayClose(1000);
     }
 
     private static String getFilePath() {
