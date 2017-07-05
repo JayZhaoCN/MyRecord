@@ -5,6 +5,7 @@ import android.app.Application;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class JayApplication extends Application {
         JayDaoManager.init(this);
         initCategory();
         sInstance = this;
+        LeakCanary.install(this);
     }
 
     /**
