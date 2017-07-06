@@ -11,6 +11,7 @@ public class ToastUtil {
 
     private static Toast sToast;
 
+    //这里传Application的上下文
     public static void showToast(Context context, String text, int duration) {
         if (sToast == null) {
             sToast = Toast.makeText(context, text, duration);
