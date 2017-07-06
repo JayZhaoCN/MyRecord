@@ -38,10 +38,9 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
         try {
             String filePath = params[0];
             Log.i(TAG, "recovery from: " + filePath);
-            RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
+            final RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
             //从文件中恢复之前，要删除本地数据库所有记录
-            recordDao.deleteAll();
-            List<Record> records = new ArrayList<>();
+            final List<Record> records = new ArrayList<>();
 
             File file = new File(filePath);
             FileReader fileReader = new FileReader(file);
@@ -57,21 +56,25 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
                     break;
                 }
             }
-            if (records.size() > 0) {
-                recordDao.insertInTx(records);
-            }
 
             //备份Category数据
-            List<Category> categories = new ArrayList<>();
-            CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
-            categoryDao.deleteAll();
+            final List<Category> categories = new ArrayList<>();
+            final CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
             while ((line = reader.readLine()) != null) {
                 Category category = Category.fromJSONString(line);
                 categories.add(category);
             }
-            if (categories.size() > 0) {
-                categoryDao.insertInTx(categories);
-            }
+            JayDaoManager.getInstance().getDaoSession().runInTx(new Runnable() {
+                @Override
+                public void run() {
+                    if (records.size() > 0) {
+                        recordDao.insertOrReplaceInTx(records);
+                    }
+                    if (categories.size() > 0) {
+                        categoryDao.insertOrReplaceInTx(categories);
+                    }
+                }
+            });
 
             reader.close();
             fileReader.close();
