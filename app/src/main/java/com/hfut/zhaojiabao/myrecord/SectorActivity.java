@@ -3,7 +3,6 @@ package com.hfut.zhaojiabao.myrecord;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -21,8 +20,8 @@ import java.util.List;
 
 public class SectorActivity extends AppCompatActivity {
 
-    private List<SectorChart.SectorChartItem> mDatas;
-    private List<TypeItem> mTypeDatas;
+    private List<SectorChart.SectorChartItem> mData;
+    private List<TypeItem> mTypeData;
 
     private SectorChart mChart;
     private Toolbar mToolbar;
@@ -39,18 +38,18 @@ public class SectorActivity extends AppCompatActivity {
     private void updateUI(boolean income) {
         mToolbar.setTitle(income ? R.string.income_percent : R.string.expend_percent);
         setSupportActionBar(mToolbar);
-        mDatas = ValueTransfer.getTypePercent(income);
-        mChart.provideData(mDatas);
+        mData = ValueTransfer.getTypePercent(income);
+        mChart.provideData(mData);
 
         bindDataAndType();
         initTypeIndicator();
     }
 
     private void bindDataAndType() {
-        mTypeDatas = new ArrayList<>();
-        for (int i = 0; i < mDatas.size(); i++) {
-            if (mDatas.get(i).value != 0) {
-                mTypeDatas.add(new TypeItem(mDatas.get(i).text, SectorChart.mColors[i], mDatas.get(i).percent));
+        mTypeData = new ArrayList<>();
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).value != 0) {
+                mTypeData.add(new TypeItem(mData.get(i).text, SectorChart.mColors[i], mData.get(i).percent));
             }
         }
     }
@@ -105,13 +104,13 @@ public class SectorActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(IndicatorViewHolder holder, int position) {
-            holder.indicatorView.setBackgroundColor(mTypeDatas.get(position).color);
-            holder.typeTv.setText(mTypeDatas.get(position).text + "  " + mTypeDatas.get(position).percent + "%");
+            holder.indicatorView.setBackgroundColor(mTypeData.get(position).color);
+            holder.typeTv.setText(mTypeData.get(position).text + "  " + mTypeData.get(position).percent + "%");
         }
 
         @Override
         public int getItemCount() {
-            return mTypeDatas.size();
+            return mTypeData.size();
         }
 
         class IndicatorViewHolder extends RecyclerView.ViewHolder {

@@ -21,11 +21,9 @@ import java.util.List;
  */
 
 public class SectorChart extends View implements BaseChart {
-    private static final String TAG = "SectorChart";
-
     private static final int START_ANIM_DURATION = 1200;
 
-    private List<SectorChartItem> mDatas;
+    private List<SectorChartItem> mData;
 
     private Context mContext;
 
@@ -33,7 +31,6 @@ public class SectorChart extends View implements BaseChart {
     private Paint mSectorPaint;
 
     private RectF mRectF;
-    private float mWidth, mHeight;
     private float mAngle;
     private float mBorderSize;
 
@@ -76,20 +73,18 @@ public class SectorChart extends View implements BaseChart {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
         mRectF = new RectF(mBorderSize, mBorderSize, w - mBorderSize, h - mBorderSize);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mDatas == null || mDatas.size() == 0) {
+        if (mData == null || mData.size() == 0) {
             return;
         }
-        for (int i = 0; i < mDatas.size(); i++) {
+        for (int i = 0; i < mData.size(); i++) {
             mSectorPaint.setColor(mColors[i]);
-            canvas.drawArc(mRectF, mAngle, mDatas.get(i).angle * mAnimPercent, true, mSectorPaint);
-            mAngle += mDatas.get(i).angle * mAnimPercent;
+            canvas.drawArc(mRectF, mAngle, mData.get(i).angle * mAnimPercent, true, mSectorPaint);
+            mAngle += mData.get(i).angle * mAnimPercent;
         }
         mAngle = 0;
     }
@@ -97,7 +92,7 @@ public class SectorChart extends View implements BaseChart {
     @Override
     @SuppressWarnings("unchecked")
     public void provideData(List<? extends BaseChartItem> data) {
-        mDatas = (List<SectorChartItem>) data;
+        mData = (List<SectorChartItem>) data;
         initAnim();
         parseData(360);
         invalidate();
@@ -129,17 +124,17 @@ public class SectorChart extends View implements BaseChart {
     }
 
     private void parseData(int totalAngle) {
-        if (mDatas == null || mDatas.size() == 0) {
+        if (mData == null || mData.size() == 0) {
             return;
         }
 
         float totalValue = 0;
-        for (int i = 0; i < mDatas.size(); i++) {
-            totalValue += mDatas.get(i).value;
+        for (int i = 0; i < mData.size(); i++) {
+            totalValue += mData.get(i).value;
         }
 
-        for (int i = 0; i < mDatas.size(); i++) {
-            mDatas.get(i).angle = mDatas.get(i).value / totalValue * totalAngle;
+        for (int i = 0; i < mData.size(); i++) {
+            mData.get(i).angle = mData.get(i).value / totalValue * totalAngle;
         }
     }
 

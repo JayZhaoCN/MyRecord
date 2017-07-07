@@ -15,16 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecordChartActivity extends AppCompatActivity {
-    private static final String TAG = "RecordChartActivity";
-
     private List<DayRecord> mDatas;
 
     //支出
     private TextView mIncomeValueTv;
     //收入
     private TextView mExpendValueTv;
-    //恩格尔系数
-    private TextView mEngleTv;
     //总计
     private TextView mTotalTv;
 
@@ -43,7 +39,6 @@ public class RecordChartActivity extends AppCompatActivity {
     private void initViews() {
         mIncomeValueTv = (TextView) findViewById(R.id.income_value_tv);
         mExpendValueTv = (TextView) findViewById(R.id.expend_value_tv);
-        mEngleTv = (TextView) findViewById(R.id.engel_coefficient_value_tv);
         mTotalTv = (TextView) findViewById(R.id.total_value_tv);
     }
 
@@ -98,8 +93,6 @@ public class RecordChartActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 
