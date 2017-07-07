@@ -49,14 +49,26 @@ public class TimeFormatter {
         int dayThen = calendar.get(Calendar.DAY_OF_MONTH);
         int hourThen = calendar.get(Calendar.HOUR_OF_DAY);
         int minuteThen = calendar.get(Calendar.MINUTE);
+        String hourThenStr;
+        if (hourThen < 10) {
+            hourThenStr = "0" + hourThen;
+        } else {
+            hourThenStr = String.valueOf(hourThen);
+        }
+        String minuteThenStr;
+        if (minuteThen < 10) {
+            minuteThenStr = "0" + minuteThen;
+        } else {
+            minuteThenStr = String.valueOf(minuteThen);
+        }
 
         //今天
         if (yearThen == year && monthThen == month && dayThen == day) {
-            return context.getString(R.string.today_item) + " " + hourThen + ":" + minuteThen;
+            return context.getString(R.string.today_item) + " " + hourThenStr + ":" + minuteThenStr;
         } else if (yearThen == year) {
-            return monthThen + "/" + dayThen + " " + hourThen + ":" + minuteThen;
+            return monthThen + "/" + dayThen + " " + hourThenStr + ":" + minuteThenStr;
         } else {
-            return yearThen + "/" + monthThen + "/" + dayThen + " " + hourThen + ":" + minuteThen;
+            return yearThen + "/" + monthThen + "/" + dayThen + " " + hourThenStr + ":" + minuteThenStr;
         }
     }
 }
