@@ -15,6 +15,7 @@ public class ArithmeticHelper {
      * @param infix infix 输入的字符串(中缀),未做非法检查
      * @return 后缀表达式
      */
+    //TODO 有问题
     private static ArrayList<Element> getSuffix(String infix) {
         Stack<Element> stack = new Stack<>();
         ArrayList<Element> output = new ArrayList<>();
@@ -34,8 +35,9 @@ public class ArithmeticHelper {
             while (!stack.isEmpty()) {
                 if (!comparePriority(element.operator, stack.peek().operator)) {
                     output.add(stack.pop());
-                    if(stack.isEmpty()) {
-
+                    if (stack.isEmpty()) {
+                        stack.push(element);
+                        break;
                     }
                 } else {
                     stack.push(element);
@@ -53,6 +55,7 @@ public class ArithmeticHelper {
 
     public static double calculate(String infix) {
         ArrayList<Element> output = getSuffix(infix);
+
         Stack<Element> stack = new Stack<>();
 
         for (int i = 0; i < output.size(); i++) {
@@ -91,6 +94,7 @@ public class ArithmeticHelper {
 
     /**
      * 判断运算符a的优先级是否大于b
+     *
      * @param a 运算符
      * @param b 运算符
      * @return a>b
