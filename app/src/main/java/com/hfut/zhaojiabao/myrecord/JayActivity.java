@@ -355,9 +355,13 @@ public class JayActivity extends AppCompatActivity
             nf.setGroupingUsed(false);
 
             holder.titleTV.setText(nf.format(sum));
-            holder.remarkTv.setText(record.getRemark());
+            String remark = record.getRemark();
+            if (TextUtils.isEmpty(remark)) {
+                remark = getString(R.string.no_remark);
+            }
+            holder.remarkTv.setText(remark);
             holder.typeTv.setText(record.getCategory());
-            holder.timeTv.setText(TimeFormatter.getInstance().format(record.getConsumeTime()));
+            holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
         }
 

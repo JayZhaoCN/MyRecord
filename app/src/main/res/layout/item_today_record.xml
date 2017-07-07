@@ -12,44 +12,29 @@
         android:layout_width="match_parent"
         android:layout_height="80dp">
 
-        <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
-            android:id="@+id/title_tv"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:fontFamily="din_med"
-            android:textColor="@color/black80"
-            android:textSize="36sp"
-            tools:text="98"/>
-
-        <LinearLayout
-            android:id="@+id/type_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_toEndOf="@id/title_tv"
             android:orientation="horizontal">
 
-            <com.hfut.zhaojiabao.myrecord.views.DotView
-                android:id="@+id/type_dot"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="3dp"
-                app:dot_color="@color/stp_blue"/>
-
-            <TextView
-                android:id="@+id/type_tv"
+            <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                android:id="@+id/title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="km"
                 android:textColor="@color/black60"
-                android:textSize="12sp"
-                tools:text="餐饮"/>
+                android:textSize="36sp"
+                tools:text="98"/>
+
+            <TextView
+                android:id="@+id/unit_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/rmb"/>
 
         </LinearLayout>
 
@@ -57,10 +42,9 @@
             android:id="@+id/income_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
-            android:layout_toEndOf="@id/type_container"
             android:orientation="horizontal">
 
             <com.hfut.zhaojiabao.myrecord.views.DotView
@@ -81,7 +65,33 @@
 
         </LinearLayout>
 
-        <!--将备注限制在12个字以内-->
+        <LinearLayout
+            android:id="@+id/type_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="12dp"
+            android:layout_toStartOf="@id/income_container"
+            android:orientation="horizontal"
+            tools:ignore="RelativeOverlap">
+
+            <com.hfut.zhaojiabao.myrecord.views.DotView
+                android:id="@+id/type_dot"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                app:dot_color="@color/stp_blue"/>
+
+            <TextView
+                android:id="@+id/type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black60"
+                android:textSize="12sp"
+                tools:text="餐饮"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/remark_tv"
@@ -90,9 +100,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:textColor="@color/black60"
             android:textSize="14sp"
+            tools:ignore="RelativeOverlap"
             tools:text="无备注"/>
 
         <TextView
@@ -103,7 +114,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
-            android:text="2017年5月18日 10：06"/>
+            tools:ignore="RelativeOverlap"
+            tools:text="2017年5月18日 10：06"/>
 
     </RelativeLayout>
 

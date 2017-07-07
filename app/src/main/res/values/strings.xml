@@ -89,4 +89,6 @@
     <string name="pie">饼图</string>
     <string name="line_chart">折线图</string>
     <string name="no_remark">无备注</string>
+    <string name="today_item">今天</string>
+    <string name="rmb">元</string>
 </resources>
