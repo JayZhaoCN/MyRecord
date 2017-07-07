@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -353,10 +354,11 @@ public class JayActivity extends AppCompatActivity
             java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
             nf.setGroupingUsed(false);
 
-            holder.titleTV.setText(getString(record.getIncome() ? R.string.income_str : R.string.expend_str, nf.format(sum)));
-            holder.remarkTv.setText(mList.get(position).getRemark());
-            holder.typeTv.setText(mList.get(position).getCategory());
-            holder.timeTv.setText(TimeFormatter.getInstance().format(mList.get(position).getConsumeTime()));
+            holder.titleTV.setText(nf.format(sum));
+            holder.remarkTv.setText(record.getRemark());
+            holder.typeTv.setText(record.getCategory());
+            holder.timeTv.setText(TimeFormatter.getInstance().format(record.getConsumeTime()));
+            holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
         }
 
         @Override
@@ -365,7 +367,7 @@ public class JayActivity extends AppCompatActivity
         }
 
         class RecordViewHolder extends RecyclerView.ViewHolder {
-            TextView titleTV, remarkTv, typeTv, timeTv;
+            TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
 
             RecordViewHolder(View itemView) {
                 super(itemView);
@@ -373,6 +375,7 @@ public class JayActivity extends AppCompatActivity
                 remarkTv = (TextView) itemView.findViewById(R.id.remark_tv);
                 typeTv = (TextView) itemView.findViewById(R.id.type_tv);
                 timeTv = (TextView) itemView.findViewById(R.id.time_tv);
+                incomeTv = (TextView) itemView.findViewById(R.id.income_tv);
             }
         }
     }

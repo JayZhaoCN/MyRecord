@@ -88,4 +88,5 @@
     <string name="histogram">柱状图</string>
     <string name="pie">饼图</string>
     <string name="line_chart">折线图</string>
+    <string name="no_remark">无备注</string>
 </resources>

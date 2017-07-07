@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
@@ -8,19 +10,76 @@
     <RelativeLayout
         android:id="@+id/record_container"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="80dp">
 
-        <TextView
+        <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
             android:id="@+id/title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:text="支出:5"
+            android:fontFamily="din_med"
             android:textColor="@color/black80"
-            android:textSize="16sp"/>
+            android:textSize="36sp"
+            tools:text="98"/>
+
+        <LinearLayout
+            android:id="@+id/type_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_toEndOf="@id/title_tv"
+            android:orientation="horizontal">
+
+            <com.hfut.zhaojiabao.myrecord.views.DotView
+                android:id="@+id/type_dot"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                app:dot_color="@color/stp_blue"/>
+
+            <TextView
+                android:id="@+id/type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black60"
+                android:textSize="12sp"
+                tools:text="餐饮"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/income_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_toEndOf="@id/type_container"
+            android:orientation="horizontal">
+
+            <com.hfut.zhaojiabao.myrecord.views.DotView
+                android:id="@+id/income_dot"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                app:dot_color="@color/origin100"/>
+
+            <TextView
+                android:id="@+id/income_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black60"
+                android:textSize="12sp"
+                tools:text="支出"/>
+
+        </LinearLayout>
 
         <!--将备注限制在12个字以内-->
 
@@ -32,21 +91,9 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
-            android:text="无备注"
             android:textColor="@color/black60"
-            android:textSize="14sp"/>
-
-        <TextView
-            android:id="@+id/type_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="5dp"
-            android:text="餐饮"
-            android:textColor="@color/black60"
-            android:textSize="16sp"/>
+            android:textSize="14sp"
+            tools:text="无备注"/>
 
         <TextView
             android:id="@+id/time_tv"
