@@ -1,5 +1,6 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private String mScreenContentStr = "";
     private boolean mCanInputDot = true;
     private boolean mCanInputOperator = true;
+    private boolean mHasResult = false;
+    private double mResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         findViewById(R.id.operator_multi).setOnClickListener(this);
         findViewById(R.id.operator_division).setOnClickListener(this);
         findViewById(R.id.operator_subtraction).setOnClickListener(this);
+
+        //control UI
+        findViewById(R.id.clean_btn).setOnClickListener(this);
+        findViewById(R.id.delete_btn).setOnClickListener(this);
+        findViewById(R.id.confirm_btn).setOnClickListener(this);
 
         mScreenTv = (TextView) findViewById(R.id.screen_tv);
     }
@@ -130,16 +138,32 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (!mCanInputDot) {
                     return;
                 }
-                if (mScreenContentStr.charAt(mScreenContentStr.length() - 1) == '.') {
+                if (mScreenContentStr.length() != 0 && mScreenContentStr.charAt(mScreenContentStr.length() - 1) == '.') {
                     return;
                 }
                 mScreenContentStr += ".";
                 mCanInputDot = false;
                 break;
             case R.id.equal:
-                double result = ArithmeticHelper.calculate(mScreenContentStr);
-                mScreenTv.setText(String.valueOf(result));
-                mScreenContentStr = String.valueOf(result);
+                mResult = ArithmeticHelper.calculate(mScreenContentStr);
+                mScreenTv.setText(String.valueOf(mResult));
+                mScreenContentStr = String.valueOf(mResult);
+                mHasResult = true;
+                break;
+            case R.id.clean_btn:
+                mScreenContentStr = "";
+                break;
+            case R.id.delete_btn:
+                mScreenContentStr = mScreenContentStr.substring(0, mScreenContentStr.length() - 1);
+                break;
+            case R.id.confirm_btn:
+                if (mHasResult) {
+                    Intent intent = new Intent();
+                    intent.putExtra("result", mResult);
+                    setResult(0, intent);
+                    finish();
+                }
+                mHasResult = false;
                 break;
             default:
                 break;

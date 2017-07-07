@@ -35,6 +35,7 @@ import java.util.List;
 
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    private static final int REQUEST_CODE_CUMPUTE = 0;
 
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
@@ -184,10 +185,25 @@ public class JayActivity extends AppCompatActivity
             case R.id.item_3:
                 break;
             case R.id.calculator_img:
-                startActivity(new Intent(this, CalculatorActivity.class));
+                startActivityForResult(new Intent(this, CalculatorActivity.class), REQUEST_CODE_CUMPUTE);
                 break;
             case R.id.save_btn:
                 save();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CODE_CUMPUTE:
+                mSumEdit.setText(String.valueOf(data.getDoubleExtra("result", 0)));
                 break;
             default:
                 break;
