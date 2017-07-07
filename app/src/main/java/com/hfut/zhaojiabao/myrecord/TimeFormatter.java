@@ -40,12 +40,12 @@ public class TimeFormatter {
         Calendar calendar = Calendar.getInstance();
 
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         calendar.setTimeInMillis(time);
         int yearThen = calendar.get(Calendar.YEAR);
-        int monthThen = calendar.get(Calendar.MONTH);
+        int monthThen = calendar.get(Calendar.MONTH) + 1;
         int dayThen = calendar.get(Calendar.DAY_OF_MONTH);
         int hourThen = calendar.get(Calendar.HOUR_OF_DAY);
         int minuteThen = calendar.get(Calendar.MINUTE);
