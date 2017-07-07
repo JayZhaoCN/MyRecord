@@ -1,9 +1,11 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
+import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.hfut.zhaojiabao.myrecord.views.DotView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,8 +57,9 @@ public class JayActivity extends AppCompatActivity
 
     private List<Record> mList;
     private String mDefaultCategory;
-    private Calendar mCalendar;
+    private int[] mCategoryColors;
 
+    private Calendar mCalendar;
     private RecordAdapter mAdapter;
 
     @Override
@@ -355,14 +359,12 @@ public class JayActivity extends AppCompatActivity
             nf.setGroupingUsed(false);
 
             holder.titleTV.setText(nf.format(sum));
-            String remark = record.getRemark();
-            if (TextUtils.isEmpty(remark)) {
-                remark = getString(R.string.no_remark);
-            }
-            holder.remarkTv.setText(remark);
+            holder.remarkTv.setText(record.getRemark());
             holder.typeTv.setText(record.getCategory());
             holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
+            holder.typeDot.setColor(getCategoryColor(record.getCategory()));
+            holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
         }
 
         @Override
@@ -372,6 +374,7 @@ public class JayActivity extends AppCompatActivity
 
         class RecordViewHolder extends RecyclerView.ViewHolder {
             TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
+            DotView incomeDot, typeDot;
 
             RecordViewHolder(View itemView) {
                 super(itemView);
@@ -380,7 +383,43 @@ public class JayActivity extends AppCompatActivity
                 typeTv = (TextView) itemView.findViewById(R.id.type_tv);
                 timeTv = (TextView) itemView.findViewById(R.id.time_tv);
                 incomeTv = (TextView) itemView.findViewById(R.id.income_tv);
+
+                incomeDot = (DotView) itemView.findViewById(R.id.income_dot);
+                typeDot = (DotView) itemView.findViewById(R.id.type_dot);
             }
         }
+    }
+
+    private int getCategoryColor(String categoryStr) {
+        if (mCategoryColors == null) {
+            mCategoryColors = new int[]{
+                    ContextCompat.getColor(this, R.color.grapefruit),
+                    ContextCompat.getColor(this, R.color.bittersweet),
+                    ContextCompat.getColor(this, R.color.sunflower),
+                    ContextCompat.getColor(this, R.color.grass),
+                    ContextCompat.getColor(this, R.color.mint),
+                    ContextCompat.getColor(this, R.color.aqua),
+                    ContextCompat.getColor(this, R.color.blue_jeans),
+                    ContextCompat.getColor(this, R.color.lavender),
+                    ContextCompat.getColor(this, R.color.pink_rose),
+                    ContextCompat.getColor(this, R.color.light_gray),
+                    ContextCompat.getColor(this, R.color.dark_gray)
+            };
+        }
+
+        List<Category> categories = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
+        int index = -1;
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getCategory().equals(categoryStr)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            return Color.BLACK;
+        }
+
+        return mCategoryColors[index % mCategoryColors.length];
     }
 }

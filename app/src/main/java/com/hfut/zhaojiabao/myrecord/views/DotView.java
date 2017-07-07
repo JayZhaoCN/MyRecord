@@ -55,4 +55,9 @@ public class DotView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
     }
+
+    public void setColor(int color) {
+        mPaint.setColor(color);
+        invalidate();
+    }
 }
