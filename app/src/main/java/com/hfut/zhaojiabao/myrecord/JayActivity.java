@@ -2,6 +2,7 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,8 +35,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class JayActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    private static final int REQUEST_CODE_CUMPUTE = 0;
+        implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    private static final int REQUEST_CODE_COMPUTE = 0;
 
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
@@ -44,18 +47,14 @@ public class JayActivity extends AppCompatActivity
     private TextView mTimeTv;
     private EditText mSumEdit;
     private EditText mRemarkEdit;
+    private DrawerLayout mDrawerLayout;
 
     private List<Record> mList;
-
-    private String mAccount;
-    private String mCategory;
-    private String mTime;
-    private String mDate;
-    private RecordAdapter mAdapter;
+    private String mDefaultCategory;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
 
-    private String mDefaultCategory;
+    private RecordAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +73,16 @@ public class JayActivity extends AppCompatActivity
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
-        mDateTv.setText(String.valueOf(mYear).substring(2) + "-" + (mMonth + 1) + "-" + mDay);
-        mTimeTv.setText(mHour + ":" + mMinute);
+        mDateTv.setText(getDateDescription());
+        mTimeTv.setText(getTimeDescription());
+    }
+
+    private String getDateDescription() {
+        return String.valueOf(mYear).substring(2) + "-" + (mMonth + 1) + "-" + mDay;
+    }
+
+    private String getTimeDescription() {
+        return mHour + ":" + mMinute;
     }
 
     private void initUI() {
@@ -185,7 +192,7 @@ public class JayActivity extends AppCompatActivity
             case R.id.item_3:
                 break;
             case R.id.calculator_img:
-                startActivityForResult(new Intent(this, CalculatorActivity.class), REQUEST_CODE_CUMPUTE);
+                startActivityForResult(new Intent(this, CalculatorActivity.class), REQUEST_CODE_COMPUTE);
                 break;
             case R.id.save_btn:
                 save();
@@ -202,7 +209,7 @@ public class JayActivity extends AppCompatActivity
             return;
         }
         switch (requestCode) {
-            case REQUEST_CODE_CUMPUTE:
+            case REQUEST_CODE_COMPUTE:
                 mSumEdit.setText(String.valueOf(data.getDoubleExtra("result", 0)));
                 break;
             default:
@@ -267,9 +274,9 @@ public class JayActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -299,22 +306,20 @@ public class JayActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_manage:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+            default:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -327,14 +332,13 @@ public class JayActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.record));
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        ((NavigationView) findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {

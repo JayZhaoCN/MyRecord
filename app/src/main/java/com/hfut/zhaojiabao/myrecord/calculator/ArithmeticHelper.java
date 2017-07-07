@@ -15,7 +15,6 @@ public class ArithmeticHelper {
      * @param infix infix 输入的字符串(中缀),未做非法检查
      * @return 后缀表达式
      */
-    //TODO 有问题
     private static ArrayList<Element> getSuffix(String infix) {
         Stack<Element> stack = new Stack<>();
         ArrayList<Element> output = new ArrayList<>();
