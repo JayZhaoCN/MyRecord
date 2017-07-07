@@ -85,4 +85,7 @@
     <string name="backup">备份</string>
     <string name="backup_tips_1">将App中的记账记录备份到外部存储中, 避免丢失, 方便数据迁移。\n\n备份过程中请不要退出App, 并保持App在前台。\n\n备份文件存放在手机外部存储根目录下的jay_backups目录下。</string>
     <string name="start_backup">开始备份</string>
+    <string name="histogram">柱状图</string>
+    <string name="pie">饼图</string>
+    <string name="line_chart">折线图</string>
 </resources>

@@ -29,10 +29,12 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -51,8 +53,7 @@ public class JayActivity extends AppCompatActivity
 
     private List<Record> mList;
     private String mDefaultCategory;
-
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private Calendar mCalendar;
 
     private RecordAdapter mAdapter;
 
@@ -67,22 +68,19 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void initTime() {
-        Calendar calendar = Calendar.getInstance();
-        mYear = calendar.get(Calendar.YEAR);
-        mMonth = calendar.get(Calendar.MONTH);
-        mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        mHour = calendar.get(Calendar.HOUR_OF_DAY);
-        mMinute = calendar.get(Calendar.MINUTE);
+        mCalendar = Calendar.getInstance();
         mDateTv.setText(getDateDescription());
         mTimeTv.setText(getTimeDescription());
     }
 
     private String getDateDescription() {
-        return String.valueOf(mYear).substring(2) + "-" + (mMonth + 1) + "-" + mDay;
+        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
+        return sdf.format(mCalendar.getTime());
     }
 
     private String getTimeDescription() {
-        return mHour + ":" + mMinute;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(mCalendar.getTime());
     }
 
     private void initUI() {
@@ -114,9 +112,9 @@ public class JayActivity extends AppCompatActivity
         recordList.setNestedScrollingEnabled(false);
 
         PopLayout popLayout = (PopLayout) findViewById(R.id.pop_Layout);
-        popLayout.setTips(0, "柱状图");
-        popLayout.setTips(1, "饼图");
-        popLayout.setTips(2, "折线图");
+        popLayout.setTips(0, getString(R.string.histogram));
+        popLayout.setTips(1, getString(R.string.pie));
+        popLayout.setTips(2, getString(R.string.line_chart));
 
         findViewById(R.id.item_1).setOnClickListener(this);
         findViewById(R.id.item_2).setOnClickListener(this);
@@ -163,10 +161,10 @@ public class JayActivity extends AppCompatActivity
                 pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
                     @Override
                     public void onDatePick(int year, int month, int day) {
-                        mDateTv.setText(String.valueOf(year).substring(2) + "-" + (month + 1) + "-" + day);
-                        mYear = year;
-                        mMonth = month;
-                        mDay = day;
+                        mCalendar.set(Calendar.YEAR, year);
+                        mCalendar.set(Calendar.MONTH, month);
+                        mCalendar.set(Calendar.DAY_OF_MONTH, day);
+                        mDateTv.setText(getDateDescription());
                     }
                 });
                 pickDateDialog.show(getFragmentManager(), "pickDateDialog");
@@ -176,9 +174,9 @@ public class JayActivity extends AppCompatActivity
                 pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
                     @Override
                     public void onTimePick(int hour, int minute) {
-                        mTimeTv.setText(hour + ":" + minute);
-                        mHour = hour;
-                        mMinute = minute;
+                        mCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                        mCalendar.set(Calendar.MINUTE, minute);
+                        mTimeTv.setText(getTimeDescription());
                     }
                 });
                 pickTimeDialog.show(getFragmentManager(), "pickTimeDialog");
@@ -231,9 +229,7 @@ public class JayActivity extends AppCompatActivity
         String category = mCategoryTv.getText().toString();
         String remark = mRemarkEdit.getText().toString();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(mYear, mMonth, mDay, mHour, mMinute);
-        long time = calendar.getTimeInMillis();
+        long time = mCalendar.getTimeInMillis();
 
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
