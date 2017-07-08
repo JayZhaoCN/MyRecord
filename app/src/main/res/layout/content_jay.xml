@@ -229,7 +229,7 @@
                     android:id="@+id/date_tv"
                     style="@style/MainTextStyle"
                     android:layout_centerInParent="true"
-                    android:text="17-5-17"/>
+                    tools:text="17-5-17"/>
 
             </RelativeLayout>
 
@@ -258,7 +258,7 @@
                     android:id="@+id/time_tv"
                     style="@style/MainTextStyle"
                     android:layout_centerInParent="true"
-                    android:text="23:30"/>
+                    tools:text="23:30"/>
 
             </RelativeLayout>
 
@@ -271,7 +271,9 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:hint="@string/add_remark"/>
+            android:hint="@string/add_remark"
+            android:singleLine="true"
+            tools:ignore="Deprecated"/>
 
         <View
             android:layout_width="match_parent"

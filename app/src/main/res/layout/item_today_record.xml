@@ -13,6 +13,7 @@
         android:layout_height="80dp">
 
         <LinearLayout
+            android:id="@+id/sum_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -97,13 +98,12 @@
         </LinearLayout>
 
         <TextView
+            android:layout_alignStart="@id/sum_container"
             android:id="@+id/remark_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginStart="10dp"
             android:textColor="@color/black60"
             android:textSize="14sp"
             tools:ignore="RelativeOverlap"

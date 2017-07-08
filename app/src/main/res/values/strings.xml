@@ -55,7 +55,7 @@
     <string name="account_tips">目前只支持默认账户，更多功能开发中~</string>
     <string name="number_error">金额有误！</string>
     <string name="new_record">新的一条记录已经生成了~</string>
-    <string name="record">账本</string>
+    <string name="record">Jay的账本</string>
     <string name="manage_catrgory">管理类别</string>
     <string name="at_least_one">至少要留一种类别</string>
     <string name="title_activity_record_chart">RecordChartActivity</string>

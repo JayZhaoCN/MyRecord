@@ -109,6 +109,10 @@ public class RecoveryActivity extends AppCompatActivity {
             }
 
             File[] children = file.listFiles();
+            if (children == null) {
+                return files;
+            }
+
             for (File child : children) {
                 if (child.getPath().endsWith(".jay")) {
                     files.add(child);
