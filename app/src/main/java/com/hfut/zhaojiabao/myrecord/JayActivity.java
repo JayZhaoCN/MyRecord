@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
@@ -378,7 +380,24 @@ public class JayActivity extends AppCompatActivity
             holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    final CommonDialog commonDialog = new CommonDialog();
+                    commonDialog.setTitle("收入还是支出？");
+                    commonDialog.setRightTitle("确定");
+                    commonDialog.setLeftTitle("取消");
+                    ViewGroup content = commonDialog.setContent(R.layout.layout_select_income);
+                    content.findViewById(R.id.left_tv).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            commonDialog.dismiss();
+                        }
+                    });
+                    content.findViewById(R.id.right_tv).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            commonDialog.dismiss();
+                        }
+                    });
+                    commonDialog.show(getFragmentManager(), "SelectIncomeDialog");
                 }
             });
             holder.typeContainer.setOnClickListener(new View.OnClickListener() {
@@ -396,12 +415,6 @@ public class JayActivity extends AppCompatActivity
                         }
                     });
                     categoryDialog.show(getFragmentManager(), "categoryDialog");
-                }
-            });
-            holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
                 }
             });
         }
