@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -351,8 +352,8 @@ public class JayActivity extends AppCompatActivity
         }
 
         @Override
-        public void onBindViewHolder(RecordViewHolder holder, int position) {
-            Record record = mList.get(position);
+        public void onBindViewHolder(RecordViewHolder holder, final int position) {
+            final Record record = mList.get(position);
 
             float sum = record.getSum();
             java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
@@ -365,6 +366,44 @@ public class JayActivity extends AppCompatActivity
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
             holder.typeDot.setColor(getCategoryColor(record.getCategory()));
             holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
+            holder.deleteImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    JayDaoManager.getInstance().getDaoSession().delete(record);
+                    mList.remove(record);
+                    notifyDataSetChanged();
+                    ToastUtil.showToast(JayApplication.getApplication(), "成功删除一条记录", Toast.LENGTH_SHORT);
+                }
+            });
+            holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            holder.typeContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CategoryDialog categoryDialog = new CategoryDialog();
+                    categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
+                        @Override
+                        public void onSelect(String category) {
+                            record.setCategory(category);
+                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                            mList.remove(position);
+                            mList.add(position, record);
+                            notifyDataSetChanged();
+                        }
+                    });
+                    categoryDialog.show(getFragmentManager(), "categoryDialog");
+                }
+            });
+            holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
         @Override
@@ -374,7 +413,9 @@ public class JayActivity extends AppCompatActivity
 
         class RecordViewHolder extends RecyclerView.ViewHolder {
             TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
+            ImageView deleteImg;
             DotView incomeDot, typeDot;
+            ViewGroup typeContainer, incomeContainer;
 
             RecordViewHolder(View itemView) {
                 super(itemView);
@@ -383,9 +424,13 @@ public class JayActivity extends AppCompatActivity
                 typeTv = (TextView) itemView.findViewById(R.id.type_tv);
                 timeTv = (TextView) itemView.findViewById(R.id.time_tv);
                 incomeTv = (TextView) itemView.findViewById(R.id.income_tv);
+                deleteImg = (ImageView) itemView.findViewById(R.id.delete_img);
 
                 incomeDot = (DotView) itemView.findViewById(R.id.income_dot);
                 typeDot = (DotView) itemView.findViewById(R.id.type_dot);
+
+                typeContainer = (ViewGroup) itemView.findViewById(R.id.type_container);
+                incomeContainer = (ViewGroup) itemView.findViewById(R.id.income_container);
             }
         }
     }

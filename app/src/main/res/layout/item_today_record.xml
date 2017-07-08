@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    tools:ignore="contentDescription">
 
     <RelativeLayout
         android:id="@+id/record_container"
@@ -42,13 +43,23 @@
 
         </LinearLayout>
 
+        <android.support.v7.widget.AppCompatImageView
+            android:tint="@color/origin100"
+            android:id="@+id/delete_img"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_delete"/>
+
         <LinearLayout
             android:id="@+id/income_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
             android:layout_marginTop="12dp"
+            android:layout_toStartOf="@id/delete_img"
             android:orientation="horizontal">
 
             <com.hfut.zhaojiabao.myrecord.views.DotView
@@ -98,11 +109,11 @@
         </LinearLayout>
 
         <TextView
-            android:layout_alignStart="@id/sum_container"
             android:id="@+id/remark_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignStart="@id/sum_container"
             android:layout_marginBottom="5dp"
             android:textColor="@color/black60"
             android:textSize="14sp"
