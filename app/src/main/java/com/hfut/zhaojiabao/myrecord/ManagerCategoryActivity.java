@@ -2,6 +2,7 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
+import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.util.List;
@@ -79,13 +81,32 @@ public class ManagerCategoryActivity extends AppCompatActivity {
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!checkCanDelete()) {
-                        ToastUtil.showToast(JayApp.getInstance(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
-                        return;
-                    }
-                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
-                    updateCategories();
-                    notifyDataSetChanged();
+                    final CommonDialog dialog = new CommonDialog();
+                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+                    builder.setTitleText("确认删除？")
+                            .setRightText(getString(R.string.confirm))
+                            .setLeftText(getString(R.string.cancel))
+                            .setRightListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!checkCanDelete()) {
+                                        ToastUtil.showToast(JayApp.getInstance(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
+                                        return;
+                                    }
+                                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
+                                    updateCategories();
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setLeftListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    dialog.setBuilder(builder);
+                    dialog.show(getFragmentManager(), "confirmDeleteCategoryDialog");
                 }
             });
         }
@@ -97,12 +118,12 @@ public class ManagerCategoryActivity extends AppCompatActivity {
 
         class ManageViewHolder extends RecyclerView.ViewHolder {
             TextView titleTv;
-            ImageView deleteImg;
+            AppCompatImageView deleteImg;
 
             ManageViewHolder(View itemView) {
                 super(itemView);
                 titleTv = (TextView) itemView.findViewById(R.id.title_tv);
-                deleteImg = (ImageView) itemView.findViewById(R.id.delete_img);
+                deleteImg = (AppCompatImageView) itemView.findViewById(R.id.delete_img);
             }
         }
     }

@@ -19,7 +19,8 @@
         tools:ignore="RelativeOverlap"
         tools:text="餐饮"/>
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
+        android:tint="@color/origin100"
         android:id="@+id/delete_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

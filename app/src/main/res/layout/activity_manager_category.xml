@@ -20,7 +20,8 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
+                android:tint="@color/white"
                 android:id="@+id/edit_img"
                 android:layout_marginEnd="16dp"
                 android:layout_gravity="end"
