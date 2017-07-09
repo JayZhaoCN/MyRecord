@@ -151,7 +151,7 @@ public class JayActivity extends AppCompatActivity
                 mIncomeBtn.setChecked(!mExpendBtn.isChecked());
                 break;
             case R.id.account_container:
-                ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
+                ToastUtil.showToast(JayApp.getInstance(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
                 break;
             case R.id.type_container:
                 final CategoryDialog categoryDialog = new CategoryDialog();
@@ -229,7 +229,7 @@ public class JayActivity extends AppCompatActivity
         try {
             sumFloat = Float.valueOf(sum);
         } catch (Exception e) {
-            ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.number_error), Toast.LENGTH_SHORT);
+            ToastUtil.showToast(JayApp.getInstance(), getString(R.string.number_error), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -241,7 +241,7 @@ public class JayActivity extends AppCompatActivity
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
         //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
-        ToastUtil.showToast(JayApplication.getApplication(), getString(R.string.new_record), Toast.LENGTH_SHORT);
+        ToastUtil.showToast(JayApp.getInstance(), getString(R.string.new_record), Toast.LENGTH_SHORT);
 
         loadRecords();
         if (mAdapter != null) {
@@ -373,7 +373,7 @@ public class JayActivity extends AppCompatActivity
                     JayDaoManager.getInstance().getDaoSession().delete(record);
                     mList.remove(record);
                     notifyDataSetChanged();
-                    ToastUtil.showToast(JayApplication.getApplication(), "成功删除一条记录", Toast.LENGTH_SHORT);
+                    ToastUtil.showToast(JayApp.getInstance(), "成功删除一条记录", Toast.LENGTH_SHORT);
                 }
             });
             holder.incomeContainer.setOnClickListener(new View.OnClickListener() {

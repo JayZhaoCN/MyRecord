@@ -13,11 +13,11 @@ import java.util.List;
  * @author zhaojiabao 2017/5/19
  */
 
-public class JayApplication extends Application {
+public class JayApp extends Application {
 
-    private static JayApplication sInstance;
+    private static JayApp sInstance;
 
-    public static JayApplication getApplication() {
+    public static JayApp getInstance() {
         return sInstance;
     }
 

@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
-import com.hfut.zhaojiabao.myrecord.JayApplication;
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
@@ -90,7 +90,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "backup success: " + success);
-        ToastUtil.showToast(JayApplication.getApplication(), mContext.getString
+        ToastUtil.showToast(JayApp.getInstance(), mContext.getString
                 (success ? R.string.recovery_done : R.string.recovery_fail), Toast.LENGTH_SHORT);
     }
 }
