@@ -60,6 +60,7 @@ public class JayActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
 
     private List<Record> mList;
+    private List<Category> mCategoryList;
     private String mDefaultCategory;
     private int[] mCategoryColors;
 
@@ -135,14 +136,15 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void loadRecords() {
-        RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
-        mList = recordDao.loadAll();
+        mList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
         Collections.sort(mList, new Comparator<Record>() {
             @Override
             public int compare(Record o1, Record o2) {
                 return o2.getRecordTime().compareTo(o1.getRecordTime());
             }
         });
+
+        mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
     }
 
     @Override
@@ -366,7 +368,7 @@ public class JayActivity extends AppCompatActivity
 
             holder.titleTV.setText(nf.format(sum));
             holder.remarkTv.setText(record.getRemark());
-            holder.typeTv.setText(record.getCategory());
+            holder.typeTv.setText(getCategory(record.getCategory()));
             holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
             holder.typeDot.setColor(getCategoryColor(record.getCategory()));
@@ -441,6 +443,15 @@ public class JayActivity extends AppCompatActivity
             return mList.size();
         }
 
+        private String getCategory(String categoryStr) {
+            for (Category category : mCategoryList) {
+                if (category.getCategory().equals(categoryStr)) {
+                    return categoryStr;
+                }
+            }
+            return getString(R.string.no_category);
+        }
+
         class RecordViewHolder extends RecyclerView.ViewHolder {
             TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
             ImageView deleteImg;
@@ -466,6 +477,9 @@ public class JayActivity extends AppCompatActivity
     }
 
     private int getCategoryColor(String categoryStr) {
+        if (categoryStr.equals(getString(R.string.no_category))) {
+            return Color.BLACK;
+        }
         if (mCategoryColors == null) {
             mCategoryColors = new int[]{
                     ContextCompat.getColor(this, R.color.grapefruit),

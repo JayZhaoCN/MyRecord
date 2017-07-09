@@ -114,8 +114,9 @@ public class CommonDialog extends DialogFragment {
             return this;
         }
 
-        public void setContent(View content) {
+        public CommonBuilder setContent(View content) {
             this.content = content;
+            return this;
         }
 
         public CommonBuilder setLeftListener(View.OnClickListener leftListener) {

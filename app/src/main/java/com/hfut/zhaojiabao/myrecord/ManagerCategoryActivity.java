@@ -81,11 +81,14 @@ public class ManagerCategoryActivity extends AppCompatActivity {
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    TextView contentText = new TextView(ManagerCategoryActivity.this);
+                    contentText.setText(R.string.delete_category_tips);
                     final CommonDialog dialog = new CommonDialog();
                     CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-                    builder.setTitleText("确认删除？")
+                    builder.setTitleText(getString(R.string.confirm_delete))
                             .setRightText(getString(R.string.confirm))
                             .setLeftText(getString(R.string.cancel))
+                            .setContent(contentText)
                             .setRightListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
