@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -381,22 +380,36 @@ public class JayActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     final CommonDialog commonDialog = new CommonDialog();
-                    commonDialog.setTitle("收入还是支出？");
-                    commonDialog.setRightTitle("确定");
-                    commonDialog.setLeftTitle("取消");
-                    ViewGroup content = commonDialog.setContent(R.layout.layout_select_income);
-                    content.findViewById(R.id.left_tv).setOnClickListener(new View.OnClickListener() {
+                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+                    builder.setTitleText("收入还是支出？")
+                            .setLeftTextVisible(false)
+                            .setRightTextVisible(false);
+
+                    View content = View.inflate(JayActivity.this, R.layout.layout_select_income, null);
+                    content.findViewById(R.id.income_tv).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            record.setIncome(true);
+                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                            mList.remove(position);
+                            mList.add(position, record);
+                            notifyDataSetChanged();
                             commonDialog.dismiss();
                         }
                     });
-                    content.findViewById(R.id.right_tv).setOnClickListener(new View.OnClickListener() {
+                    content.findViewById(R.id.expend_tv).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            record.setIncome(false);
+                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                            mList.remove(position);
+                            mList.add(position, record);
+                            notifyDataSetChanged();
                             commonDialog.dismiss();
                         }
                     });
+                    builder.setContent(content);
+                    commonDialog.setBuilder(builder);
                     commonDialog.show(getFragmentManager(), "SelectIncomeDialog");
                 }
             });

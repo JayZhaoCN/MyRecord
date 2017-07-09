@@ -3,7 +3,6 @@ package com.hfut.zhaojiabao.myrecord.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,7 @@ public class CommonDialog extends DialogFragment {
     private TextView mLeftTv;
     private TextView mRightTv;
 
-    private String mTitleText, mLeftText, mRightText;
-    private int mContentRes;
+    private CommonBuilder mBuilder;
 
     @Nullable
     @Override
@@ -44,41 +42,90 @@ public class CommonDialog extends DialogFragment {
         mLeftTv = (TextView) content.findViewById(R.id.left_tv);
         mRightTv = (TextView) content.findViewById(R.id.right_tv);
 
-        mTitleTv.setText(mTitleText);
-        mLeftTv.setText(mLeftText);
-        mRightTv.setText(mRightText);
-        mInflater.inflate(mContentRes, mContentContainer, true);
+        if (!mBuilder.titleVisible) {
+            mTitleTv.setVisibility(View.GONE);
+        } else {
+            mTitleTv.setText(mBuilder.titleText);
+        }
+        if (!mBuilder.leftTextVisible) {
+            mLeftTv.setVisibility(View.GONE);
+        } else {
+            mRightTv.setText(mBuilder.rightText);
+        }
+        if (!mBuilder.rightTextVisible) {
+            mRightTv.setVisibility(View.GONE);
+        } else {
+            mRightTv.setOnClickListener(mBuilder.rightListener);
+        }
+        mLeftTv.setText(mBuilder.leftText);
+        mLeftTv.setOnClickListener(mBuilder.leftListener);
+        if (mBuilder.content != null) {
+            if (mBuilder.content.getParent() != null) {
+                ((ViewGroup) mBuilder.content.getParent()).removeView(content);
+            }
+            mContentContainer.addView(mBuilder.content);
+        }
     }
 
-    public ViewGroup setContent(@LayoutRes int layoutRes) {
-        mContentRes = layoutRes;
-        if (mInflater == null || mContentContainer == null) {
-            return null;
-        }
-        return (ViewGroup) mInflater.inflate(layoutRes, mContentContainer, true);
+    public void setBuilder(CommonBuilder builder) {
+        mBuilder = builder;
     }
 
-    public void setTitle(String title) {
-        mTitleText = title;
-        if (mTitleTv == null) {
-            return;
-        }
-        mTitleTv.setText(title);
-    }
+    public static class CommonBuilder {
+        public String titleText;
+        public String leftText;
+        public String rightText;
+        public View content;
+        public CommonDialog dialog;
+        public boolean titleVisible = true;
+        public boolean leftTextVisible = true;
+        public boolean rightTextVisible = true;
 
-    public void setRightTitle(String rightText) {
-        mRightText = rightText;
-        if (mRightTv == null) {
-            return;
-        }
-        mRightTv.setText(rightText);
-    }
+        private View.OnClickListener leftListener;
+        private View.OnClickListener rightListener;
 
-    public void setLeftTitle(String leftText) {
-        mLeftText = leftText;
-        if (mLeftTv == null) {
-            return;
+        public CommonBuilder setTitleVisible(boolean visible) {
+            titleVisible = visible;
+            return this;
         }
-        mLeftTv.setText(leftText);
+
+        public CommonBuilder setLeftTextVisible(boolean visible) {
+            leftTextVisible = visible;
+            return this;
+        }
+
+        public CommonBuilder setRightTextVisible(boolean visible) {
+            rightTextVisible = visible;
+            return this;
+        }
+
+        public CommonBuilder setTitleText(String titleText) {
+            this.titleText = titleText;
+            return this;
+        }
+
+        public CommonBuilder setLeftText(String leftText) {
+            this.leftText = leftText;
+            return this;
+        }
+
+        public CommonBuilder setRightText(String rightText) {
+            this.rightText = rightText;
+            return this;
+        }
+
+        public void setContent(View content) {
+            this.content = content;
+        }
+
+        public CommonBuilder setLeftListener(View.OnClickListener leftListener) {
+            this.leftListener = leftListener;
+            return this;
+        }
+
+        public CommonBuilder setRightListener(View.OnClickListener rightListener) {
+            this.rightListener = rightListener;
+            return this;
+        }
     }
 }
