@@ -11,7 +11,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="@string/income"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/expend_tv"
@@ -19,6 +19,6 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="@string/expend"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
 
 </LinearLayout>
