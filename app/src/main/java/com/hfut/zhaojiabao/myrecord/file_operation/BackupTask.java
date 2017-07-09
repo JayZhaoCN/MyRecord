@@ -129,7 +129,7 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
         return sb.toString();
     }
 
-    static void verifyStoragePermissions(Context context) {
+    public static void verifyStoragePermissions(Context context) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 

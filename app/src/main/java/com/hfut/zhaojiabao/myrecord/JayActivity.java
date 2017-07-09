@@ -42,6 +42,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import static com.hfut.zhaojiabao.myrecord.file_operation.BackupTask.verifyStoragePermissions;
+
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -72,6 +74,8 @@ public class JayActivity extends AppCompatActivity
         initUI();
         initTime();
         loadRecords();
+        //请求读取存储权限
+        verifyStoragePermissions(this);
     }
 
     private void initTime() {
