@@ -16,7 +16,7 @@
     tools:ignore="contentDescription">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/user_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"

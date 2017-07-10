@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +36,9 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,6 +63,7 @@ public class JayActivity extends AppCompatActivity
     private EditText mSumEdit;
     private EditText mRemarkEdit;
     private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     private List<Record> mList;
     private List<Category> mCategoryList;
@@ -208,14 +214,33 @@ public class JayActivity extends AppCompatActivity
             case R.id.save_btn:
                 save();
                 break;
+            case R.id.user_img:
+                showMatisse();
+                break;
             default:
                 break;
         }
     }
 
+    private void showMatisse() {
+        Matisse.from(this)
+                .choose(MimeType.allOf())
+                .countable(true)
+                .maxSelectable(9)
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .imageEngine(new GlideEngine())
+                .forResult(9);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 9 && resultCode == RESULT_OK) {
+
+            Log.i("JayTest", "data: " + Matisse.obtainResult(data).toString());
+            return;
+        }
         if (data == null) {
             return;
         }
@@ -372,7 +397,9 @@ public class JayActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        ((NavigationView) findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.getHeaderView(0).findViewById(R.id.user_img).setOnClickListener(this);
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
