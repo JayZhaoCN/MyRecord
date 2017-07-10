@@ -50,15 +50,15 @@ public class CommonDialog extends DialogFragment {
         if (!mBuilder.leftTextVisible) {
             mLeftTv.setVisibility(View.GONE);
         } else {
-            mRightTv.setText(mBuilder.rightText);
+            mLeftTv.setText(mBuilder.leftText);
+            mLeftTv.setOnClickListener(mBuilder.leftListener);
         }
         if (!mBuilder.rightTextVisible) {
             mRightTv.setVisibility(View.GONE);
         } else {
+            mRightTv.setText(mBuilder.rightText);
             mRightTv.setOnClickListener(mBuilder.rightListener);
         }
-        mLeftTv.setText(mBuilder.leftText);
-        mLeftTv.setOnClickListener(mBuilder.leftListener);
         if (mBuilder.content != null) {
             if (mBuilder.content.getParent() != null) {
                 ((ViewGroup) mBuilder.content.getParent()).removeView(content);

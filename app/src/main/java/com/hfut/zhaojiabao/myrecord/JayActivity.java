@@ -328,8 +328,9 @@ public class JayActivity extends AppCompatActivity
                 break;
             case R.id.nav_histogram:
                 startActivity(new Intent(this, RecordChartActivity.class));
+                break;
             case R.id.nav_about:
-
+                showAboutDialog();
                 break;
             default:
                 break;
@@ -338,6 +339,26 @@ public class JayActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showAboutDialog() {
+        final CommonDialog aboutDialog = new CommonDialog();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        TextView textView = new TextView(this);
+        textView.setText("version:1.0.0\nauthor:zhaojiabao\nemail:1760064052@qq.com");
+        builder.setContent(textView)
+                .setTitleText(getString(R.string.about))
+                .setLeftTextVisible(false)
+                .setRightText(getString(R.string.confirm))
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        aboutDialog.dismiss();
+                    }
+                });
+        aboutDialog.setBuilder(builder);
+        aboutDialog.show(getFragmentManager(), "aboutDialog");
+
     }
 
     private void initToolbarAndDrawer() {
