@@ -16,10 +16,10 @@
     tools:ignore="contentDescription">
 
     <ImageView
+        android:scaleType="fitXY"
         android:id="@+id/user_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:srcCompat="@drawable/app_icon"/>
 
     <TextView

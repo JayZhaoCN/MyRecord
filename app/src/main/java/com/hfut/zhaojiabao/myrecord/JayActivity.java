@@ -1,9 +1,16 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -40,6 +47,8 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,6 +73,7 @@ public class JayActivity extends AppCompatActivity
     private EditText mRemarkEdit;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private ImageView mUserIcon;
 
     private List<Record> mList;
     private List<Category> mCategoryList;
@@ -237,8 +247,7 @@ public class JayActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9 && resultCode == RESULT_OK) {
-
-            Log.i("JayTest", "data: " + Matisse.obtainResult(data).toString());
+            mUserIcon.setImageBitmap(getImageFromUri(Matisse.obtainResult(data).get(0).toString()));
             return;
         }
         if (data == null) {
@@ -251,6 +260,35 @@ public class JayActivity extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+    private Bitmap getImageFromUri(String uriStr) {
+        Uri uri = Uri.parse(uriStr);
+        AssetFileDescriptor afd;
+        try {
+            afd = getContentResolver().openAssetFileDescriptor(uri, "r");
+            byte[] buffer = new byte[16 * 1024];
+            FileInputStream fis;
+            if (afd != null) {
+                fis = afd.createInputStream();
+            } else {
+                return null;
+            }
+            // 保存为图片
+            //FileOutputStream fos = new FileOutputStream(new File("sdcard/11212"));
+            // 将byte array存储到ByteArrayOutputStream
+            ByteArrayOutputStream temp_byte = new ByteArrayOutputStream();
+            int size;
+            while ((size = fis.read(buffer)) != -1) {
+                //fos.write(buffer, 0, size);
+                temp_byte.write(buffer, 0, size);
+            }
+
+            return BitmapFactory.decodeByteArray(temp_byte.toByteArray(), 0, temp_byte.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void save() {
@@ -399,7 +437,8 @@ public class JayActivity extends AppCompatActivity
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
-        mNavigationView.getHeaderView(0).findViewById(R.id.user_img).setOnClickListener(this);
+        mUserIcon = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_img);
+        mUserIcon.setOnClickListener(this);
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
