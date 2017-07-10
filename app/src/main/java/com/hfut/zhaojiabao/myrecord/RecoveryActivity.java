@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
+import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.File;
@@ -142,7 +143,7 @@ public class RecoveryActivity extends AppCompatActivity {
                 return null;
             }
             List<File> files = new ArrayList<>();
-            File file = new File(Environment.getExternalStorageDirectory() + File.separator + BackupTask.FOLDER_NAME);
+            File file = new File(Environment.getExternalStorageDirectory() + File.separator + IOUtils.BACKUP_FOLDER_NAME);
             if (!file.exists()) {
                 Log.i(TAG, "file not exist, return.");
                 return files;

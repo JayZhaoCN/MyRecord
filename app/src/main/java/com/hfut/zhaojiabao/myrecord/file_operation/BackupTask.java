@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +14,7 @@ import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
+import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,8 +27,6 @@ import java.util.List;
 
 public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "BackupTask";
-    private static final String RECORD_FILE_SUFFIX_NAME = ".jay";
-    public static final String FOLDER_NAME = "jay_backups";
 
     /**
      * 记录顺序：
@@ -63,7 +61,7 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
         mDialog.showLoading(mActivity.getString(R.string.back_uping));
         mDialog.show(mActivity.getSupportFragmentManager(), "backup");
 
-        mFilePath = getFilePath();
+        mFilePath = IOUtils.getBackupFilePath();
         Log.i(TAG, "backup filePath: " + mFilePath);
     }
 
@@ -71,7 +69,6 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     protected Boolean doInBackground(Void... params) {
         try {
             File file = new File(mFilePath);
-            //如果文件存在，则删除
             if (!file.getParentFile().exists()) {
                 Log.i(TAG, "parents not exist, so create: " + file.getParentFile().mkdir());
             }
@@ -117,17 +114,6 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
             mDialog.showError(mActivity.getString(R.string.backup_fail));
         }
         mDialog.delayClose(1000);
-    }
-
-    private static String getFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory())
-                .append(File.separator)
-                .append(FOLDER_NAME)
-                .append(File.separator)
-                .append(System.currentTimeMillis())
-                .append(RECORD_FILE_SUFFIX_NAME);
-        return sb.toString();
     }
 
     public static void verifyStoragePermissions(Context context) {

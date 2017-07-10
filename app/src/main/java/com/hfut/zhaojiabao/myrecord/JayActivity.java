@@ -1,11 +1,11 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -37,6 +37,7 @@ import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
+import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
 import com.soundcloud.android.crop.Crop;
@@ -57,6 +58,7 @@ public class JayActivity extends AppCompatActivity
     private static final String TAG = "JayActivity";
 
     private static final int REQUEST_CODE_COMPUTE = 0;
+    private static final int REQUEST_CODE_CAPTURE = 11;
 
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
@@ -225,9 +227,20 @@ public class JayActivity extends AppCompatActivity
         }
     }
 
+    public static void pickCapture(Activity activity, Uri path, int requestCode){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, path);
+        try {
+            activity.startActivityForResult(intent, requestCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private File mCaptureFile;
+
     private void showPickImgDialog() {
         final CommonDialog dialog = new CommonDialog();
-
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
         content.findViewById(R.id.pick_img_tv).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,10 +252,11 @@ public class JayActivity extends AppCompatActivity
         content.findViewById(R.id.capture_img_tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCaptureFile =  IOUtils.getCropImgFilePath(IOUtils.CAPTURE_IMG_FOLDER_NAME);
+                pickCapture(JayActivity.this, Uri.fromFile(mCaptureFile), REQUEST_CODE_CAPTURE);
                 dialog.dismiss();
             }
         });
-
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
         builder.setTitleText(getString(R.string.select_img))
                 .setLeftTextVisible(false)
@@ -255,45 +269,68 @@ public class JayActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data == null) {
-            return;
-        }
         onSelectImg(requestCode, data);
-        onCroppedImg(requestCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_COMPUTE:
-                mSumEdit.setText(String.valueOf(data.getDoubleExtra("result", 0)));
-                break;
-            default:
-                break;
-        }
+        onCropImg(requestCode);
+        onComputeDone(requestCode, data);
+        onCaptureImg(requestCode);
     }
 
-    private Uri mDestination;
+    private void onCaptureImg(int requestCode) {
+        if (requestCode != REQUEST_CODE_CAPTURE) {
+           return;
+        }
+        Bitmap bitmap = IOUtils.getSmallBitmap(mCaptureFile.toString());
+        Uri source = IOUtils.saveBitmap(bitmap);
+        Log.i(TAG, "source uri: " + source);
+        mDestinationUri = Uri.fromFile(IOUtils.getCropImgFilePath(IOUtils.CROP_IMG_FOLDER_NAME));
+        Crop.of(source, mDestinationUri).asSquare().start(this);
+    }
 
-    private void onCroppedImg(int requestCode, Intent intent) {
+    private void onComputeDone(int requestCode, Intent intent) {
+        if (intent == null) {
+            Log.i(TAG, "data is null, so return.");
+            return;
+        }
+        if (requestCode != REQUEST_CODE_COMPUTE) {
+            return;
+        }
+        mSumEdit.setText(String.valueOf(intent.getDoubleExtra("result", 0)));
+    }
+
+    private Uri mDestinationUri;
+
+    private void onCropImg(int requestCode) {
         if (requestCode != Crop.REQUEST_CROP) {
             return;
         }
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestination);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestinationUri);
             mUserIcon.setImageBitmap(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void onSelectImg(int requestCode, Intent intent) {
-        if (requestCode != Crop.REQUEST_PICK) {
+        if (intent == null) {
+            Log.i(TAG, "data is null, so return.");
             return;
         }
-        Uri pickedUri = intent.getData();
-        Log.i(TAG, "picked img uri: " + pickedUri);
-        mDestination = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + File.separator + "jay_crop.png"));
-        Log.i(TAG, "mDestination: " + mDestination);
-        //开始裁剪
-        Crop.of(pickedUri, mDestination).asSquare().start(this);
+        try {
+            if (requestCode != Crop.REQUEST_PICK) {
+                return;
+            }
+            Uri pickedUri = intent.getData();
+            File destinationFile = IOUtils.getCropImgFilePath(IOUtils.CROP_IMG_FOLDER_NAME);
+
+            mDestinationUri = Uri.fromFile(destinationFile);
+            Log.i(TAG, "picked img uri: " + pickedUri);
+            Log.i(TAG, "mDestination img uri: " + mDestinationUri);
+            //开始裁剪
+            Crop.of(pickedUri, mDestinationUri).asSquare().start(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void save() {

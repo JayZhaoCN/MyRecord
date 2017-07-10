@@ -1,6 +1,8 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.app.Application;
+import android.os.Build;
+import android.os.StrictMode;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
@@ -29,6 +31,10 @@ public class JayApp extends Application {
         initCategory();
         sInstance = this;
         LeakCanary.install(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
     }
 
     /**
