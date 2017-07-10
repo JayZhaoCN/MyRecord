@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,7 +108,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
                                 }
                             });
                     dialog.setBuilder(builder);
-                    dialog.show(getFragmentManager(), "confirmDeleteCategoryDialog");
+                    dialog.show(getSupportFragmentManager(), "confirmDeleteCategoryDialog");
                 }
             });
         }

@@ -180,7 +180,7 @@ public class JayActivity extends AppCompatActivity
                         mDateTv.setText(getDateDescription());
                     }
                 });
-                pickDateDialog.show(getFragmentManager(), "pickDateDialog");
+                pickDateDialog.show(getSupportFragmentManager(), "pickDateDialog");
                 break;
             case R.id.time_container:
                 PickTimeDialog pickTimeDialog = new PickTimeDialog();
@@ -192,7 +192,7 @@ public class JayActivity extends AppCompatActivity
                         mTimeTv.setText(getTimeDescription());
                     }
                 });
-                pickTimeDialog.show(getFragmentManager(), "pickTimeDialog");
+                pickTimeDialog.show(getSupportFragmentManager(), "pickTimeDialog");
                 break;
             case R.id.item_1:
                 startActivity(new Intent(this, RecordChartActivity.class));
@@ -357,7 +357,7 @@ public class JayActivity extends AppCompatActivity
                     }
                 });
         aboutDialog.setBuilder(builder);
-        aboutDialog.show(getFragmentManager(), "aboutDialog");
+        aboutDialog.show(getSupportFragmentManager(), "aboutDialog");
 
     }
 
@@ -441,7 +441,7 @@ public class JayActivity extends AppCompatActivity
                     });
                     builder.setContent(content);
                     commonDialog.setBuilder(builder);
-                    commonDialog.show(getFragmentManager(), "SelectIncomeDialog");
+                    commonDialog.show(getSupportFragmentManager(), "SelectIncomeDialog");
                 }
             });
             holder.typeContainer.setOnClickListener(new View.OnClickListener() {

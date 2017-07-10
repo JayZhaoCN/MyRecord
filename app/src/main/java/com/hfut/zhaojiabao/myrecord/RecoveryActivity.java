@@ -102,7 +102,7 @@ public class RecoveryActivity extends AppCompatActivity {
                         }
                     });
             dialog.setBuilder(builder);
-            dialog.show(getFragmentManager(), "deleteConfirmDialog");
+            dialog.show(getSupportFragmentManager(), "deleteConfirmDialog");
         }
 
         @Override

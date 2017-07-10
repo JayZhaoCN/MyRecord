@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.hfut.zhaojiabao.JayDaoManager;
@@ -43,7 +44,7 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
     static final String FILE_DIVIDER = "---------";
 
     private String mFilePath;
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     private JayLoadingDialog mDialog;
 
     // Storage Permissions
@@ -53,14 +54,14 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public BackupTask(Activity activity) {
+    public BackupTask(AppCompatActivity activity) {
         mActivity = activity;
         verifyStoragePermissions(mActivity);
 
         mDialog = new JayLoadingDialog();
         mDialog.setCancelable(false);
         mDialog.showLoading(mActivity.getString(R.string.back_uping));
-        mDialog.show(mActivity.getFragmentManager(), "backup");
+        mDialog.show(mActivity.getSupportFragmentManager(), "backup");
 
         mFilePath = getFilePath();
         Log.i(TAG, "backup filePath: " + mFilePath);
