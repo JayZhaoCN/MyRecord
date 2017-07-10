@@ -39,6 +39,7 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
 import com.soundcloud.android.crop.Crop;
 
@@ -68,7 +69,7 @@ public class JayActivity extends AppCompatActivity
     private EditText mSumEdit;
     private EditText mRemarkEdit;
     private DrawerLayout mDrawerLayout;
-    private ImageView mUserIcon;
+    private CircleImageView mUserIcon;
 
     private List<Record> mList;
     private List<Category> mCategoryList;
@@ -486,7 +487,7 @@ public class JayActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mUserIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
+        mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
         mUserIcon.setOnClickListener(this);
         mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
     }
