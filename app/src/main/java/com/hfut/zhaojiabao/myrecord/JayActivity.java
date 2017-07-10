@@ -317,15 +317,19 @@ public class JayActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_gallery:
+            case R.id.nav_backup:
+                startActivity(new Intent(this, BackupActivity.class));
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav_recovery:
+                startActivity(new Intent(this, RecoveryActivity.class));
                 break;
-            case R.id.nav_manage:
+            case R.id.nav_pie_chart:
+                startActivity(new Intent(this, SectorActivity.class));
                 break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
+            case R.id.nav_histogram:
+                startActivity(new Intent(this, RecordChartActivity.class));
+            case R.id.nav_about:
+
                 break;
             default:
                 break;

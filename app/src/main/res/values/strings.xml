@@ -95,4 +95,6 @@
     <string name="no_category">无类别</string>
     <string name="delete_category_tips">删除类别后, 对应的记录类别将变成\"无类别\"。</string>
     <string name="confirm_delete">确认删除？</string>
+    <string name="about">关于</string>
+    <string name="more">更多</string>
 </resources>
