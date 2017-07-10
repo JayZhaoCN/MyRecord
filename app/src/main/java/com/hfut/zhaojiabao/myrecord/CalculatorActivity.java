@@ -212,7 +212,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 if (mHasResult) {
                     Intent intent = new Intent();
                     intent.putExtra("result", mResult);
-                    setResult(0, intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
                 mHasResult = false;
