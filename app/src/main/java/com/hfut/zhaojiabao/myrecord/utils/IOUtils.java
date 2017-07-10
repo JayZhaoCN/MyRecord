@@ -1,10 +1,13 @@
 package com.hfut.zhaojiabao.myrecord.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+
+import com.hfut.zhaojiabao.myrecord.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,6 +24,7 @@ public class IOUtils {
     public static final String CROP_IMG_FOLDER_NAME = "jay_crops";
     public static final String CAPTURE_IMG_FOLDER_NAME = "jay_capture";
     private static final String CROP_IMG_SUFFIX_NAME = ".png";
+    public static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
 
     public static String getBackupFilePath() {
         StringBuilder sb = new StringBuilder();
@@ -61,20 +65,63 @@ public class IOUtils {
         return null;
     }
 
-    public static Uri saveBitmap(Bitmap bm) {
-        //在SD卡上创建目录
-        File tmpDir = new File(Environment.getExternalStorageDirectory() + "/org.chenlijian.test");
-        if (!tmpDir.exists()) {
-            tmpDir.mkdir();
-        }
-
-        File img = new File(tmpDir.getAbsolutePath() + "test.png");
+    public static File getAvatarImgFile() {
         try {
-            FileOutputStream fos = new FileOutputStream(img);
-            bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
-            fos.flush();
-            fos.close();
-            return Uri.fromFile(img);
+            StringBuilder sb = new StringBuilder();
+            sb.append(Environment.getExternalStorageDirectory())
+                    .append(File.separator)
+                    .append(BACKUP_FOLDER_NAME)
+                    .append(File.separator)
+                    .append(AVATAR_IMG_FOLDER_NAME)
+                    .append(File.separator)
+                    .append("jay_avatar")
+                    .append(CROP_IMG_SUFFIX_NAME);
+            File file = new File(sb.toString());
+            if (!file.getParentFile().exists()) {
+                Log.i(TAG, "parents not exist, so create: " + file.getParentFile().getParentFile().mkdir());
+            }
+            if (!file.getParentFile().exists()) {
+                Log.i(TAG, "parents not exist, so create: " + file.getParentFile().mkdir());
+            }
+            if (!file.exists()) {
+                Log.i(TAG, "file not exist, so create: " + file.createNewFile());
+            }
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Bitmap getAvatar(Context context) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Environment.getExternalStorageDirectory())
+                .append(File.separator)
+                .append(BACKUP_FOLDER_NAME)
+                .append(File.separator)
+                .append(AVATAR_IMG_FOLDER_NAME)
+                .append(File.separator)
+                .append("jay_avatar")
+                .append(CROP_IMG_SUFFIX_NAME);
+        File file = new File(sb.toString());
+        if (!file.exists()) {
+            return BitmapFactory.decodeResource(context.getResources(), R.drawable.app_icon);
+        }
+        return BitmapFactory.decodeFile(file.toString());
+    }
+
+    //将裁剪后的图片保存起来
+    public static Uri saveAvatar(Bitmap bm) {
+        File avatarFile = getAvatarImgFile();
+        try {
+            FileOutputStream fos;
+            if (avatarFile != null) {
+                fos = new FileOutputStream(avatarFile);
+                bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
+                fos.flush();
+                fos.close();
+                return Uri.fromFile(avatarFile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

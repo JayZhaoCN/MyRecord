@@ -310,6 +310,8 @@ public class JayActivity extends AppCompatActivity
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestinationUri);
             mUserIcon.setImageBitmap(bitmap);
+            //这个等下新开线程去做
+            IOUtils.saveAvatar(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -486,6 +488,7 @@ public class JayActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         mUserIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
         mUserIcon.setOnClickListener(this);
+        mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
