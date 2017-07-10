@@ -97,4 +97,5 @@
     <string name="confirm_delete">确认删除？</string>
     <string name="about">关于</string>
     <string name="more">更多</string>
+    <string name="delete_all">清空</string>
 </resources>

@@ -203,6 +203,9 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mScreenContentStr = "";
                 break;
             case R.id.delete_btn:
+                if (mScreenContentStr == null || mScreenContentStr.length() == 0) {
+                    return;
+                }
                 mScreenContentStr = mScreenContentStr.substring(0, mScreenContentStr.length() - 1);
                 break;
             case R.id.confirm_btn:
