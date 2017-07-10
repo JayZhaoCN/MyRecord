@@ -54,6 +54,7 @@
             android:label="@string/title_activity_backup"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
     </application>
 
 </manifest>

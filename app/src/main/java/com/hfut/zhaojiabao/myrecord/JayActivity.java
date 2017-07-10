@@ -1,15 +1,11 @@
 package com.hfut.zhaojiabao.myrecord;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -43,12 +39,9 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.soundcloud.android.crop.Crop;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,6 +54,7 @@ import static com.hfut.zhaojiabao.myrecord.file_operation.BackupTask.verifyStora
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    private static final String TAG = "JayActivity";
 
     private static final int REQUEST_CODE_COMPUTE = 0;
 
@@ -72,7 +66,6 @@ public class JayActivity extends AppCompatActivity
     private EditText mSumEdit;
     private EditText mRemarkEdit;
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
     private ImageView mUserIcon;
 
     private List<Record> mList;
@@ -225,34 +218,48 @@ public class JayActivity extends AppCompatActivity
                 save();
                 break;
             case R.id.user_img:
-                showMatisse();
+                showPickImgDialog();
                 break;
             default:
                 break;
         }
     }
 
-    private void showMatisse() {
-        Matisse.from(this)
-                .choose(MimeType.allOf())
-                .countable(true)
-                .maxSelectable(9)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                .imageEngine(new GlideEngine())
-                .forResult(9);
+    private void showPickImgDialog() {
+        final CommonDialog dialog = new CommonDialog();
+
+        View content = View.inflate(this, R.layout.dialog_pick_img, null);
+        content.findViewById(R.id.pick_img_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Crop.pickImage(JayActivity.this);
+                dialog.dismiss();
+            }
+        });
+        content.findViewById(R.id.capture_img_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        builder.setTitleText(getString(R.string.select_img))
+                .setLeftTextVisible(false)
+                .setRightTextVisible(false)
+                .setContent(content);
+        dialog.setBuilder(builder);
+        dialog.show(getSupportFragmentManager(), "pickImgDialog");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 9 && resultCode == RESULT_OK) {
-            mUserIcon.setImageBitmap(getImageFromUri(Matisse.obtainResult(data).get(0).toString()));
-            return;
-        }
         if (data == null) {
             return;
         }
+        onSelectImg(requestCode, data);
+        onCroppedImg(requestCode, data);
         switch (requestCode) {
             case REQUEST_CODE_COMPUTE:
                 mSumEdit.setText(String.valueOf(data.getDoubleExtra("result", 0)));
@@ -262,33 +269,31 @@ public class JayActivity extends AppCompatActivity
         }
     }
 
-    private Bitmap getImageFromUri(String uriStr) {
-        Uri uri = Uri.parse(uriStr);
-        AssetFileDescriptor afd;
-        try {
-            afd = getContentResolver().openAssetFileDescriptor(uri, "r");
-            byte[] buffer = new byte[16 * 1024];
-            FileInputStream fis;
-            if (afd != null) {
-                fis = afd.createInputStream();
-            } else {
-                return null;
-            }
-            // 保存为图片
-            //FileOutputStream fos = new FileOutputStream(new File("sdcard/11212"));
-            // 将byte array存储到ByteArrayOutputStream
-            ByteArrayOutputStream temp_byte = new ByteArrayOutputStream();
-            int size;
-            while ((size = fis.read(buffer)) != -1) {
-                //fos.write(buffer, 0, size);
-                temp_byte.write(buffer, 0, size);
-            }
+    private Uri mDestination;
 
-            return BitmapFactory.decodeByteArray(temp_byte.toByteArray(), 0, temp_byte.size());
+    private void onCroppedImg(int requestCode, Intent intent) {
+        if (requestCode != Crop.REQUEST_CROP) {
+            return;
+        }
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestination);
+            mUserIcon.setImageBitmap(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
+    }
+
+    private void onSelectImg(int requestCode, Intent intent) {
+        if (requestCode != Crop.REQUEST_PICK) {
+            return;
+        }
+        Uri pickedUri = intent.getData();
+        Log.i(TAG, "picked img uri: " + pickedUri);
+        mDestination = Uri.fromFile(new File(Environment.getExternalStorageDirectory() + File.separator + "jay_crop.png"));
+        Log.i(TAG, "mDestination: " + mDestination);
+        //开始裁剪
+        Crop.of(pickedUri, mDestination).asSquare().start(this);
     }
 
     private void save() {
@@ -435,9 +440,9 @@ public class JayActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mUserIcon = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_img);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        mUserIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
         mUserIcon.setOnClickListener(this);
     }
 

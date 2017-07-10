@@ -97,4 +97,7 @@
     <string name="confirm_delete">确认删除？</string>
     <string name="about">关于</string>
     <string name="more">更多</string>
+    <string name="select_from_store">从图库选择</string>
+    <string name="photo">拍照</string>
+    <string name="select_img">选择图片</string>
 </resources>
