@@ -58,7 +58,7 @@ public class JayActivity extends AppCompatActivity
     private static final String TAG = "JayActivity";
 
     private static final int REQUEST_CODE_COMPUTE = 0;
-    private static final int REQUEST_CODE_CAPTURE = 11;
+    private static final int REQUEST_CODE_CAPTURE = 1;
 
     private CheckBox mIncomeBtn;
     private CheckBox mExpendBtn;
@@ -77,6 +77,10 @@ public class JayActivity extends AppCompatActivity
 
     private Calendar mCalendar;
     private RecordAdapter mAdapter;
+
+    private File mCaptureFile;
+    //存放裁剪后临时图片的Uri
+    private Uri mDestinationUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,17 +231,12 @@ public class JayActivity extends AppCompatActivity
         }
     }
 
-    public static void pickCapture(Activity activity, Uri path, int requestCode){
+    //调用相机，准备拍照
+    public static void pickCapture(Activity activity, Uri path, int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, path);
-        try {
-            activity.startActivityForResult(intent, requestCode);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        activity.startActivityForResult(intent, requestCode);
     }
-
-    private File mCaptureFile;
 
     private void showPickImgDialog() {
         final CommonDialog dialog = new CommonDialog();
@@ -252,8 +251,8 @@ public class JayActivity extends AppCompatActivity
         content.findViewById(R.id.capture_img_tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCaptureFile =  IOUtils.getCropImgFilePath(IOUtils.CAPTURE_IMG_FOLDER_NAME);
-                pickCapture(JayActivity.this, Uri.fromFile(mCaptureFile), REQUEST_CODE_CAPTURE);
+                pickCapture(JayActivity.this, Uri.fromFile
+                        (mCaptureFile = IOUtils.getCropImgFile(IOUtils.CAPTURE_IMG_FOLDER_NAME)), REQUEST_CODE_CAPTURE);
                 dialog.dismiss();
             }
         });
@@ -269,20 +268,25 @@ public class JayActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         onSelectImg(requestCode, data);
         onCropImg(requestCode);
         onComputeDone(requestCode, data);
         onCaptureImg(requestCode);
     }
 
+    //拍照完成，准备裁剪图片
     private void onCaptureImg(int requestCode) {
         if (requestCode != REQUEST_CODE_CAPTURE) {
-           return;
+            return;
         }
-        Bitmap bitmap = IOUtils.getSmallBitmap(mCaptureFile.toString());
-        Uri source = IOUtils.saveBitmap(bitmap);
+
+        Uri source = Uri.fromFile(mCaptureFile);
+        mDestinationUri = Uri.fromFile(IOUtils.getCropImgFile(IOUtils.CROP_IMG_FOLDER_NAME));
         Log.i(TAG, "source uri: " + source);
-        mDestinationUri = Uri.fromFile(IOUtils.getCropImgFilePath(IOUtils.CROP_IMG_FOLDER_NAME));
+        Log.i(TAG, "destination uri: " + mDestinationUri);
         Crop.of(source, mDestinationUri).asSquare().start(this);
     }
 
@@ -297,8 +301,8 @@ public class JayActivity extends AppCompatActivity
         mSumEdit.setText(String.valueOf(intent.getDoubleExtra("result", 0)));
     }
 
-    private Uri mDestinationUri;
-
+    //获取裁剪完的图片，更新到UI
+    //这里裁剪的图片可能来自图库选择，也可能来自拍照
     private void onCropImg(int requestCode) {
         if (requestCode != Crop.REQUEST_CROP) {
             return;
@@ -311,6 +315,7 @@ public class JayActivity extends AppCompatActivity
         }
     }
 
+    //从图库选择完图片，调用该方法开始图片裁剪
     private void onSelectImg(int requestCode, Intent intent) {
         if (intent == null) {
             Log.i(TAG, "data is null, so return.");
@@ -320,10 +325,10 @@ public class JayActivity extends AppCompatActivity
             if (requestCode != Crop.REQUEST_PICK) {
                 return;
             }
+            //被选中的图片的Uri
             Uri pickedUri = intent.getData();
-            File destinationFile = IOUtils.getCropImgFilePath(IOUtils.CROP_IMG_FOLDER_NAME);
-
-            mDestinationUri = Uri.fromFile(destinationFile);
+            //裁剪完的图片放在该目录下
+            mDestinationUri = Uri.fromFile(IOUtils.getCropImgFile(IOUtils.CROP_IMG_FOLDER_NAME));
             Log.i(TAG, "picked img uri: " + pickedUri);
             Log.i(TAG, "mDestination img uri: " + mDestinationUri);
             //开始裁剪

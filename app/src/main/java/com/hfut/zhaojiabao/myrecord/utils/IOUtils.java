@@ -33,7 +33,7 @@ public class IOUtils {
         return sb.toString();
     }
 
-    public static File getCropImgFilePath(String imgFolder) {
+    public static File getCropImgFile(String imgFolder) {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append(Environment.getExternalStorageDirectory())
