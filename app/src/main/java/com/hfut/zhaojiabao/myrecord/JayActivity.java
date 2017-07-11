@@ -267,6 +267,32 @@ public class JayActivity extends AppCompatActivity
         dialog.show(getSupportFragmentManager(), "pickImgDialog");
     }
 
+    private void showModifyNameDialog() {
+        final CommonDialog dialog = new CommonDialog();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        View content = View.inflate(this, R.layout.dialog_modify_name, null);
+        final EditText nameEdit = (EditText) content.findViewById(R.id.edit_name);
+        builder.setContent(content)
+                .setTitleText("修改昵称")
+                .setLeftText(getString(R.string.cancel))
+                .setRightText(getString(R.string.confirm))
+                .setLeftListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mUserNameTv.setText(nameEdit.getText().toString());
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setBuilder(builder);
+        dialog.show(getSupportFragmentManager(), "modifyNameDialog");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -493,6 +519,12 @@ public class JayActivity extends AppCompatActivity
         mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(R.string.default_user_name);
+        mUserNameTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showModifyNameDialog();
+            }
+        });
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
