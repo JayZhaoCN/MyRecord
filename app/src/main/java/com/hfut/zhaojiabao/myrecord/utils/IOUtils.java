@@ -111,21 +111,24 @@ public class IOUtils {
     }
 
     //将裁剪后的图片保存起来
-    public static Uri saveAvatar(Bitmap bm) {
-        File avatarFile = getAvatarImgFile();
-        try {
-            FileOutputStream fos;
-            if (avatarFile != null) {
-                fos = new FileOutputStream(avatarFile);
-                bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
-                fos.flush();
-                fos.close();
-                return Uri.fromFile(avatarFile);
+    public static void saveAvatar(final Bitmap bm) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File avatarFile = getAvatarImgFile();
+                try {
+                    FileOutputStream fos;
+                    if (avatarFile != null) {
+                        fos = new FileOutputStream(avatarFile);
+                        bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
+                        fos.flush();
+                        fos.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        }).start();
     }
 
     public static Bitmap getSmallBitmap(String filePath) {

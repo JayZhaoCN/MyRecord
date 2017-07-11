@@ -70,6 +70,7 @@ public class JayActivity extends AppCompatActivity
     private EditText mRemarkEdit;
     private DrawerLayout mDrawerLayout;
     private CircleImageView mUserIcon;
+    private TextView mUserNameTv;
 
     private List<Record> mList;
     private List<Category> mCategoryList;
@@ -490,6 +491,8 @@ public class JayActivity extends AppCompatActivity
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
         mUserIcon.setOnClickListener(this);
         mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
+        mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
+        mUserNameTv.setText(R.string.default_user_name);
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
