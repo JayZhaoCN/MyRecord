@@ -25,6 +25,7 @@ public class SectorActivity extends AppCompatActivity {
 
     private SectorChart mChart;
     private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,15 @@ public class SectorActivity extends AppCompatActivity {
     private void updateUI(boolean income) {
         mToolbar.setTitle(income ? R.string.income_percent : R.string.expend_percent);
         setSupportActionBar(mToolbar);
+        mRecyclerView = (RecyclerView) findViewById(R.id.type_indicator);
+
         mData = ValueTransfer.getTypePercent(income);
+        if (mData == null) {
+            mChart.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
+            findViewById(R.id.empty_tips_tv).setVisibility(View.VISIBLE);
+            return;
+        }
         mChart.provideData(mData);
 
         bindDataAndType();
@@ -55,9 +64,8 @@ public class SectorActivity extends AppCompatActivity {
     }
 
     private void initTypeIndicator() {
-        RecyclerView typeIndicator = (RecyclerView) findViewById(R.id.type_indicator);
-        typeIndicator.setLayoutManager(new GridLayoutManager(this, 2));
-        typeIndicator.setAdapter(new IndicatorAdapter());
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mRecyclerView.setAdapter(new IndicatorAdapter());
     }
 
     @Override

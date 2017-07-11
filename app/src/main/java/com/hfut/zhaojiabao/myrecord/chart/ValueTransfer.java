@@ -218,6 +218,10 @@ public class ValueTransfer {
         List<Record> records = JayDaoManager.getInstance().getDaoSession().getRecordDao()
                 .queryBuilder().where(RecordDao.Properties.Income.eq(income)).list();
 
+        if (records == null || records.size() == 0) {
+            return null;
+        }
+
         float totalValue = 0;
         for (Record record : records) {
             totalValue += record.getSum();

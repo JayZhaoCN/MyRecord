@@ -7,6 +7,16 @@
     android:background="@color/pale_grey_two"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <TextView
+        android:id="@+id/empty_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/empty_data_tips"
+        android:textColor="@color/black60"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
     <com.hfut.zhaojiabao.myrecord.chart.SectorChart
         android:id="@+id/sector_chart"
         android:layout_width="250dp"
