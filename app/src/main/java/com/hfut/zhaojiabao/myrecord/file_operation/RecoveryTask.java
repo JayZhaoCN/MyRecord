@@ -8,10 +8,12 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
+import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.BufferedReader;
@@ -48,7 +50,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
             BufferedReader reader = new BufferedReader(fileReader);
 
             String line;
-            //备份Record数据
+            //恢复Record数据
             while ((line = reader.readLine()) != null) {
                 if (!line.equals(BackupTask.FILE_DIVIDER)) {
                     Record record = Record.fromJSONString(line);
@@ -58,21 +60,42 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
                 }
             }
 
-            //备份Category数据
+            //恢复Category数据
             final List<Category> categories = new ArrayList<>();
             final CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
             while ((line = reader.readLine()) != null) {
-                Category category = Category.fromJSONString(line);
-                categories.add(category);
+                if(!line.equals(BackupTask.FILE_DIVIDER)) {
+                    Category category = Category.fromJSONString(line);
+                    categories.add(category);
+                } else {
+                    break;
+                }
             }
+
+            //恢复User数据
+            final List<User> users = new ArrayList<>();
+            final UserDao userDao = JayDaoManager.getInstance().getDaoSession().getUserDao();
+            while ((line = reader.readLine()) != null) {
+                User user = User.fromJSONString(line);
+                users.add(user);
+            }
+
             JayDaoManager.getInstance().getDaoSession().runInTx(new Runnable() {
                 @Override
                 public void run() {
+
+                    recordDao.deleteAll();
+                    categoryDao.deleteAll();
+                    userDao.deleteAll();
+
                     if (records.size() > 0) {
                         recordDao.insertOrReplaceInTx(records);
                     }
                     if (categories.size() > 0) {
                         categoryDao.insertOrReplaceInTx(categories);
+                    }
+                    if (users.size() > 0) {
+                        userDao.insertOrReplaceInTx(users);
                     }
                 }
             });

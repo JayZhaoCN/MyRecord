@@ -6,7 +6,9 @@ import android.os.StrictMode;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
+import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
+import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class JayApp extends Application {
         super.onCreate();
 
         JayDaoManager.init(this);
-        initCategory();
+        initDatabase();
         sInstance = this;
         LeakCanary.install(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -38,9 +40,9 @@ public class JayApp extends Application {
     }
 
     /**
-     * load default category.
+     * load default data.
      */
-    private void initCategory() {
+    private void initDatabase() {
         CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
         List<Category> list = categoryDao.loadAll();
         if (list.isEmpty()) {
@@ -51,5 +53,13 @@ public class JayApp extends Application {
                 categoryDao.insert(entity);
             }
         }
+        UserDao userDao = JayDaoManager.getInstance().getDaoSession().getUserDao();
+        List<User> userList = userDao.loadAll();
+        if (userList.isEmpty()) {
+            User defaultUser = new User();
+            defaultUser.setUserName("JayZhaocc");
+            userDao.insert(defaultUser);
+        }
     }
+
 }

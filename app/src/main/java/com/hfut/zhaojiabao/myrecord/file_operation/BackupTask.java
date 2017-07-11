@@ -12,6 +12,7 @@ import android.util.Log;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
@@ -94,6 +95,14 @@ public class BackupTask extends AsyncTask<Void, Void, Boolean> {
                 writer.write(category.toJSONString());
                 writer.newLine();
             }
+
+            //write user name data to sdcard
+            //先写入分割标志
+            writer.write(FILE_DIVIDER);
+            writer.newLine();
+            List<User> users = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll();
+            writer.write(users.get(0).toJSONString());
+            writer.newLine();
 
             writer.close();
             fileWriter.close();

@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
@@ -285,7 +287,15 @@ public class JayActivity extends AppCompatActivity
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mUserNameTv.setText(nameEdit.getText().toString());
+                        String userName = nameEdit.getText().toString();
+                        if (!userName.equals("")) {
+                            mUserNameTv.setText(userName);
+                            User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
+                            user.setUserName(userName);
+                            JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
+                            closeKeyboard(nameEdit);
+                        }
+
                         dialog.dismiss();
                     }
                 });
@@ -518,7 +528,9 @@ public class JayActivity extends AppCompatActivity
         mUserIcon.setOnClickListener(this);
         mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
-        mUserNameTv.setText(R.string.default_user_name);
+
+        mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
+
         mUserNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -687,5 +699,10 @@ public class JayActivity extends AppCompatActivity
         }
 
         return mCategoryColors[index % mCategoryColors.length];
+    }
+
+    private void closeKeyboard(EditText editText) {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow
+                (editText.getWindowToken(), 0);
     }
 }
