@@ -102,4 +102,6 @@
     <string name="select_img">修改头像</string>
     <string name="default_user_name">Jay Zhao</string>
     <string name="modify_name_tips">键入昵称</string>
+    <string name="about_content">version:1.0.0 author:zhaojiabao email:1760064052@qq.com</string>
+    <string name="modify_name_title">修改昵称</string>
 </resources>

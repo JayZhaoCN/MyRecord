@@ -64,7 +64,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
             final List<Category> categories = new ArrayList<>();
             final CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
             while ((line = reader.readLine()) != null) {
-                if(!line.equals(BackupTask.FILE_DIVIDER)) {
+                if (!line.equals(BackupTask.FILE_DIVIDER)) {
                     Category category = Category.fromJSONString(line);
                     categories.add(category);
                 } else {
@@ -83,7 +83,6 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
             JayDaoManager.getInstance().getDaoSession().runInTx(new Runnable() {
                 @Override
                 public void run() {
-
                     recordDao.deleteAll();
                     categoryDao.deleteAll();
                     userDao.deleteAll();

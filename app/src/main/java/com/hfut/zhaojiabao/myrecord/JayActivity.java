@@ -39,6 +39,7 @@ import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
+import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
@@ -275,7 +276,7 @@ public class JayActivity extends AppCompatActivity
         View content = View.inflate(this, R.layout.dialog_modify_name, null);
         final EditText nameEdit = (EditText) content.findViewById(R.id.edit_name);
         builder.setContent(content)
-                .setTitleText("修改昵称")
+                .setTitleText(getString(R.string.modify_name_title))
                 .setLeftText(getString(R.string.cancel))
                 .setRightText(getString(R.string.confirm))
                 .setLeftListener(new View.OnClickListener() {
@@ -290,12 +291,12 @@ public class JayActivity extends AppCompatActivity
                         String userName = nameEdit.getText().toString();
                         if (!userName.equals("")) {
                             mUserNameTv.setText(userName);
-                            User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
+                            UserDao userDao = JayDaoManager.getInstance().getDaoSession().getUserDao();
+                            User user = userDao.loadAll().get(0);
                             user.setUserName(userName);
-                            JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
+                            userDao.insertOrReplace(user);
                             closeKeyboard(nameEdit);
                         }
-
                         dialog.dismiss();
                     }
                 });
@@ -495,7 +496,7 @@ public class JayActivity extends AppCompatActivity
         final CommonDialog aboutDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
         TextView textView = new TextView(this);
-        textView.setText("version:1.0.0\nauthor:zhaojiabao\nemail:1760064052@qq.com");
+        textView.setText(R.string.about_content);
         builder.setContent(textView)
                 .setTitleText(getString(R.string.about))
                 .setLeftTextVisible(false)
@@ -528,9 +529,7 @@ public class JayActivity extends AppCompatActivity
         mUserIcon.setOnClickListener(this);
         mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
-
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
-
         mUserNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -540,7 +539,6 @@ public class JayActivity extends AppCompatActivity
     }
 
     private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
-
         @Override
         public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false);
