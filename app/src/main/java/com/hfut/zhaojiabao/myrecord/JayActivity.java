@@ -442,6 +442,8 @@ public class JayActivity extends AppCompatActivity
         }
     }
 
+    /*
+    //暂时先隐藏toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -463,6 +465,7 @@ public class JayActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
