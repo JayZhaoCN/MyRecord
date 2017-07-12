@@ -94,7 +94,8 @@
                 android:hint="@string/input_sum"
                 android:inputType="number"
                 android:paddingEnd="5dp"
-                android:paddingStart="5dp"/>
+                android:paddingStart="5dp"
+                android:textSize="15sp"/>
 
             <ImageView
                 android:id="@+id/calculator_img"
@@ -273,6 +274,7 @@
             android:layout_marginTop="10dp"
             android:hint="@string/add_remark"
             android:singleLine="true"
+            android:textSize="15sp"
             tools:ignore="Deprecated"/>
 
         <View
