@@ -105,4 +105,6 @@
     <string name="about_content">version:1.0.0\nauthor:zhaojiabao\nemail:1760064052@qq.com</string>
     <string name="modify_name_title">修改昵称</string>
     <string name="empty_data_tips">暂时没有记账数据，快去添加吧！</string>
+    <string name="income_or_expend">收入还是支出？</string>
+    <string name="delete_succes">成功删除一条记录</string>
 </resources>

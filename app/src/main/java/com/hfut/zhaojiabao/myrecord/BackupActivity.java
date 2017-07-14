@@ -30,5 +30,4 @@ public class BackupActivity extends AppCompatActivity {
             }
         });
     }
-
 }
