@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/indicator_tv"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/common_click_bg"
+    android:gravity="center"
+    tools:text="2017-07-15"/>
+

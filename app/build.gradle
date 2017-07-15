@@ -25,6 +25,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(path: ':database')
+
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
@@ -32,9 +34,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.zhihu.android:matisse:0.4.3'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-
     testCompile 'junit:junit:4.12'
-
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 }
