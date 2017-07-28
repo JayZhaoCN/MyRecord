@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/grapefruit</color>
-    <color name="colorPrimaryDark">@color/grapefruit</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/stp_bg_month_best</color>
+    <color name="colorPrimaryDark">@color/stp_bg_month_best</color>
+    <color name="colorAccent">@color/stp_bg_month_best</color>
 
     <!--copied from mifit3-->
     <color name="gray">#33000000</color>

@@ -96,7 +96,6 @@ public class JayActivity extends AppCompatActivity
         loadRecords();
         //请求读取存储权限
         verifyStoragePermissions(this);
-        startActivity(new Intent(this, DetailActivity.class));
     }
 
     private void initTime() {
