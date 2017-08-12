@@ -17,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -122,6 +124,9 @@ public class JayActivity extends AppCompatActivity
         mDateTv = (TextView) findViewById(R.id.date_tv);
         mTimeTv = (TextView) findViewById(R.id.time_tv);
         mSumEdit = (EditText) findViewById(R.id.sum_edit);
+        //修复无法输入小数点的问题
+        mSumEdit.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL) ;
+        mSumEdit.setKeyListener(new DigitsKeyListener(false, true)) ;
         mRemarkEdit = (EditText) findViewById(R.id.remark_edit);
 
         mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
