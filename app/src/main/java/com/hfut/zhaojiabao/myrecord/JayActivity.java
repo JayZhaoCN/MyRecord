@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -565,7 +566,22 @@ public class JayActivity extends AppCompatActivity
                             .setRightListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    float sum = Float.valueOf(editSum.getText().toString());
+                                    float sum;
+                                    try {
+                                        sum = Float.valueOf(editSum.getText().toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        showWarningDialog(getString(R.string.warning_title), getString(R.string.warning_input_not_match));
+                                        Log.e(TAG, "please input correct number!");
+                                        commonDialog.dismiss();
+                                        return;
+                                    }
+                                    if (sum == 0) {
+                                        showWarningDialog(getString(R.string.warning_title), getString(R.string.warning_input_zero));
+                                        Log.e(TAG, "sum cannot be zero!");
+                                        commonDialog.dismiss();
+                                        return;
+                                    }
                                     record.setSum(sum);
                                     JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
                                     mList.remove(position);
@@ -723,5 +739,27 @@ public class JayActivity extends AppCompatActivity
     private void closeKeyboard(EditText editText) {
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow
                 (editText.getWindowToken(), 0);
+    }
+
+    private void showWarningDialog(String title, String content) {
+        final CommonDialog commonDialog = new CommonDialog();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        TextView textView = new TextView(this);
+        textView.setText(content);
+        if (!TextUtils.isEmpty(title)) {
+            builder.setTitleText(title);
+        }
+        builder.setLeftTextVisible(false)
+                .setRightText(getString(R.string.confirm))
+                .setRightTextVisible(true)
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        commonDialog.dismiss();
+                    }
+                });
+        builder.setContent(textView);
+        commonDialog.setBuilder(builder);
+        commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
     }
 }

@@ -110,4 +110,7 @@
     <string name="delete_succes">成功删除一条记录</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="detail">详情</string>
+    <string name="warning_input_zero">金额不得输入0</string>
+    <string name="warning_input_not_match">金额输入不匹配</string>
+    <string name="warning_title">警告</string>
 </resources>
