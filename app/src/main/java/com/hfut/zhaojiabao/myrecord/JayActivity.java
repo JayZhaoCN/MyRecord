@@ -125,8 +125,8 @@ public class JayActivity extends AppCompatActivity
         mTimeTv = (TextView) findViewById(R.id.time_tv);
         mSumEdit = (EditText) findViewById(R.id.sum_edit);
         //修复无法输入小数点的问题
-        mSumEdit.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL) ;
-        mSumEdit.setKeyListener(new DigitsKeyListener(false, true)) ;
+        mSumEdit.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        mSumEdit.setKeyListener(new DigitsKeyListener(false, true));
         mRemarkEdit = (EditText) findViewById(R.id.remark_edit);
 
         mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
@@ -541,6 +541,45 @@ public class JayActivity extends AppCompatActivity
             holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
             holder.typeDot.setColor(getCategoryColor(record.getCategory()));
+
+            holder.titleTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final CommonDialog commonDialog = new CommonDialog();
+                    View content = View.inflate(JayActivity.this, R.layout.layout_edit_sum, null);
+                    final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
+                    editSum.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    editSum.setKeyListener(new DigitsKeyListener(false, true));
+                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+                    builder.setTitleText(getString(R.string.edit_sum))
+                            .setLeftTextVisible(true)
+                            .setLeftText(getString(R.string.cancel))
+                            .setRightText(getString(R.string.confirm))
+                            .setLeftListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    commonDialog.dismiss();
+                                }
+                            })
+                            .setRightTextVisible(true)
+                            .setRightListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    float sum = Float.valueOf(editSum.getText().toString());
+                                    record.setSum(sum);
+                                    JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                                    mList.remove(position);
+                                    mList.add(position, record);
+                                    notifyDataSetChanged();
+                                    commonDialog.dismiss();
+                                }
+                            });
+                    builder.setContent(content);
+                    commonDialog.setBuilder(builder);
+                    commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
+                }
+            });
+
             holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
