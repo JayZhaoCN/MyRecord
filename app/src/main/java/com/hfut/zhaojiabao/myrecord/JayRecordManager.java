@@ -175,8 +175,6 @@ public class JayRecordManager {
     private void showWarningDialog(String title, String content) {
         final CommonDialog commonDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-        TextView textView = new TextView(mContext);
-        textView.setText(content);
         if (!TextUtils.isEmpty(title)) {
             builder.setTitleText(title);
         }
@@ -188,8 +186,8 @@ public class JayRecordManager {
                     public void onClick(View v) {
                         commonDialog.dismiss();
                     }
-                });
-        builder.setContent(textView);
+                })
+                .setContentText(content);
         commonDialog.setBuilder(builder);
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }

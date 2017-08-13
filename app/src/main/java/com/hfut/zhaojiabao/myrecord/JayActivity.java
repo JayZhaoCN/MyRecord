@@ -482,9 +482,7 @@ public class JayActivity extends AppCompatActivity
     private void showAboutDialog() {
         final CommonDialog aboutDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-        TextView textView = new TextView(this);
-        textView.setText(R.string.about_content);
-        builder.setContent(textView)
+        builder.setContentText(getString(R.string.about_content))
                 .setTitleText(getString(R.string.about))
                 .setLeftTextVisible(false)
                 .setRightText(getString(R.string.confirm))
