@@ -38,7 +38,7 @@ public class JayRecordManager {
         final CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_remark, null);
         final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(mContext.getString(R.string.edit_sum))
                 .setLeftTextVisible(true)
                 .setLeftText(mContext.getString(R.string.cancel))
@@ -73,7 +73,7 @@ public class JayRecordManager {
         final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
         editSum.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSum.setKeyListener(new DigitsKeyListener(false, true));
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(mContext.getString(R.string.edit_sum))
                 .setLeftTextVisible(true)
                 .setLeftText(mContext.getString(R.string.cancel))
@@ -126,7 +126,7 @@ public class JayRecordManager {
 
     public void editType(final Record record, final int position) {
         final CommonDialog commonDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(mContext.getString(R.string.income_or_expend))
                 .setLeftTextVisible(false)
                 .setRightTextVisible(false);
@@ -174,7 +174,7 @@ public class JayRecordManager {
 
     private void showWarningDialog(String title, String content) {
         final CommonDialog commonDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         if (!TextUtils.isEmpty(title)) {
             builder.setTitleText(title);
         }

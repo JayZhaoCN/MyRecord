@@ -81,7 +81,7 @@ public class RecoveryActivity extends AppCompatActivity {
 
         private void showDeleteConfirmDialog(final int position) {
             final CommonDialog dialog = new CommonDialog();
-            CommonDialog.CommonBuilder  builder = new CommonDialog.CommonBuilder();
+            CommonDialog.CommonBuilder  builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
             builder.setTitleText("确认删除该备份文件吗？")
                     .setLeftText(getString(R.string.cancel))
                     .setLeftListener(new View.OnClickListener() {

@@ -1,8 +1,10 @@
 package com.hfut.zhaojiabao.myrecord.dialogs;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -96,6 +98,12 @@ public class CommonDialog extends DialogFragment {
         private View.OnClickListener leftListener;
         private View.OnClickListener rightListener;
 
+        private Context mContext;
+
+        public CommonBuilder(Context context) {
+            mContext = context;
+        }
+
         public CommonBuilder setTitleVisible(boolean visible) {
             titleVisible = visible;
             return this;
@@ -116,8 +124,18 @@ public class CommonDialog extends DialogFragment {
             return this;
         }
 
+        public CommonBuilder setTitleText(@StringRes int titleTextRes) {
+            setTitleText(mContext.getString(titleTextRes));
+            return this;
+        }
+
         public CommonBuilder setLeftText(String leftText) {
             this.leftText = leftText;
+            return this;
+        }
+
+        public CommonBuilder setLeftText(@StringRes int leftTextRes) {
+            setLeftText(mContext.getString(leftTextRes));
             return this;
         }
 
@@ -126,8 +144,18 @@ public class CommonDialog extends DialogFragment {
             return this;
         }
 
+        public CommonBuilder setRightText(@StringRes int rightTextRes) {
+            setRightText(mContext.getString(rightTextRes));
+            return this;
+        }
+
         public CommonBuilder setContentText(String contentText) {
             this.contentText = contentText;
+            return this;
+        }
+
+        public CommonBuilder setContentText(@StringRes int contentTextRes) {
+            setContentText(mContext.getString(contentTextRes));
             return this;
         }
 

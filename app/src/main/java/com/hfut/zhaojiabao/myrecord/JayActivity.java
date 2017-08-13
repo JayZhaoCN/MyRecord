@@ -270,7 +270,7 @@ public class JayActivity extends AppCompatActivity
                 dialog.dismiss();
             }
         });
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         builder.setTitleText(getString(R.string.select_img))
                 .setLeftTextVisible(false)
                 .setRightTextVisible(false)
@@ -281,7 +281,7 @@ public class JayActivity extends AppCompatActivity
 
     private void showModifyNameDialog() {
         final CommonDialog dialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         View content = View.inflate(this, R.layout.dialog_modify_name, null);
         final EditText nameEdit = (EditText) content.findViewById(R.id.edit_name);
         builder.setContent(content)
@@ -481,7 +481,7 @@ public class JayActivity extends AppCompatActivity
 
     private void showAboutDialog() {
         final CommonDialog aboutDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         builder.setContentText(getString(R.string.about_content))
                 .setTitleText(getString(R.string.about))
                 .setLeftTextVisible(false)
