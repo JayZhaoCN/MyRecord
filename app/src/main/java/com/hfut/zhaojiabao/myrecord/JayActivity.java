@@ -90,6 +90,8 @@ public class JayActivity extends AppCompatActivity
     //存放裁剪后临时图片的Uri
     private Uri mDestinationUri;
 
+    private JayRecordManager mRecordManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +173,7 @@ public class JayActivity extends AppCompatActivity
         });
 
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
+        mRecordManager = new JayRecordManager(this, mAdapter, mList);
     }
 
     @Override
@@ -522,7 +525,7 @@ public class JayActivity extends AppCompatActivity
         });
     }
 
-    private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
+    public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
         @Override
         public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false);
@@ -547,88 +550,13 @@ public class JayActivity extends AppCompatActivity
             holder.titleTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final CommonDialog commonDialog = new CommonDialog();
-                    View content = View.inflate(JayActivity.this, R.layout.layout_edit_sum, null);
-                    final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
-                    editSum.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    editSum.setKeyListener(new DigitsKeyListener(false, true));
-                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-                    builder.setTitleText(getString(R.string.edit_sum))
-                            .setLeftTextVisible(true)
-                            .setLeftText(getString(R.string.cancel))
-                            .setRightText(getString(R.string.confirm))
-                            .setLeftListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    commonDialog.dismiss();
-                                }
-                            })
-                            .setRightTextVisible(true)
-                            .setRightListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    float sum;
-                                    try {
-                                        sum = Float.valueOf(editSum.getText().toString());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        showWarningDialog(getString(R.string.warning_title), getString(R.string.warning_input_not_match));
-                                        Log.e(TAG, "please input correct number!");
-                                        commonDialog.dismiss();
-                                        return;
-                                    }
-                                    if (sum == 0) {
-                                        showWarningDialog(getString(R.string.warning_title), getString(R.string.warning_input_zero));
-                                        Log.e(TAG, "sum cannot be zero!");
-                                        commonDialog.dismiss();
-                                        return;
-                                    }
-                                    record.setSum(sum);
-                                    JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                                    mList.remove(position);
-                                    mList.add(position, record);
-                                    notifyDataSetChanged();
-                                    commonDialog.dismiss();
-                                }
-                            });
-                    builder.setContent(content);
-                    commonDialog.setBuilder(builder);
-                    commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
+                   mRecordManager.editSum(position, record);
                 }
             });
             holder.remarkTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final CommonDialog commonDialog = new CommonDialog();
-                    View content = View.inflate(JayActivity.this, R.layout.layout_edit_remark, null);
-                    final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
-                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-                    builder.setTitleText(getString(R.string.edit_sum))
-                            .setLeftTextVisible(true)
-                            .setLeftText(getString(R.string.cancel))
-                            .setRightText(getString(R.string.confirm))
-                            .setLeftListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    commonDialog.dismiss();
-                                }
-                            })
-                            .setRightTextVisible(true)
-                            .setRightListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String remark = editRemark.getText().toString();
-                                    mList.remove(position);
-                                    mList.add(position, record);
-                                    notifyDataSetChanged();
-                                    Log.i(TAG, "edit remark: " + remark);
-                                    record.setRemark(remark);
-                                    commonDialog.dismiss();
-                                }
-                            });
-                    builder.setContent(content);
-                    commonDialog.setBuilder(builder);
-                    commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
+                    mRecordManager.editRemark(position, record);
                 }
             });
             holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
@@ -774,27 +702,5 @@ public class JayActivity extends AppCompatActivity
     private void closeKeyboard(EditText editText) {
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow
                 (editText.getWindowToken(), 0);
-    }
-
-    private void showWarningDialog(String title, String content) {
-        final CommonDialog commonDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-        TextView textView = new TextView(this);
-        textView.setText(content);
-        if (!TextUtils.isEmpty(title)) {
-            builder.setTitleText(title);
-        }
-        builder.setLeftTextVisible(false)
-                .setRightText(getString(R.string.confirm))
-                .setRightTextVisible(true)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        commonDialog.dismiss();
-                    }
-                });
-        builder.setContent(textView);
-        commonDialog.setBuilder(builder);
-        commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
     }
 }
