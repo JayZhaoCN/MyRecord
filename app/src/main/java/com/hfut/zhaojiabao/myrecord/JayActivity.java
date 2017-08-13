@@ -553,74 +553,34 @@ public class JayActivity extends AppCompatActivity
                    mRecordManager.editSum(position, record);
                 }
             });
+
             holder.remarkTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mRecordManager.editRemark(position, record);
                 }
             });
+
             holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
+
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    JayDaoManager.getInstance().getDaoSession().delete(record);
-                    mList.remove(record);
-                    notifyDataSetChanged();
-                    ToastUtil.showToast(JayApp.getInstance(), getString(R.string.delete_succes), Toast.LENGTH_SHORT);
+                    mRecordManager.deleteRecord(record);
                 }
             });
+
             holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final CommonDialog commonDialog = new CommonDialog();
-                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
-                    builder.setTitleText(getString(R.string.income_or_expend))
-                            .setLeftTextVisible(false)
-                            .setRightTextVisible(false);
-
-                    View content = View.inflate(JayActivity.this, R.layout.layout_select_income, null);
-                    content.findViewById(R.id.income_tv).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            record.setIncome(true);
-                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                            mList.remove(position);
-                            mList.add(position, record);
-                            notifyDataSetChanged();
-                            commonDialog.dismiss();
-                        }
-                    });
-                    content.findViewById(R.id.expend_tv).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            record.setIncome(false);
-                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                            mList.remove(position);
-                            mList.add(position, record);
-                            notifyDataSetChanged();
-                            commonDialog.dismiss();
-                        }
-                    });
-                    builder.setContent(content);
-                    commonDialog.setBuilder(builder);
-                    commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
+                    mRecordManager.editType(record, position);
                 }
             });
+
             holder.typeContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CategoryDialog categoryDialog = new CategoryDialog();
-                    categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
-                        @Override
-                        public void onSelect(String category) {
-                            record.setCategory(category);
-                            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                            mList.remove(position);
-                            mList.add(position, record);
-                            notifyDataSetChanged();
-                        }
-                    });
-                    categoryDialog.show(getFragmentManager(), "categoryDialog");
+                    mRecordManager.editCategory(record, position);
                 }
             });
         }
