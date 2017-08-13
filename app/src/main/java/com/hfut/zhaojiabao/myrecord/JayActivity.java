@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -595,7 +596,41 @@ public class JayActivity extends AppCompatActivity
                     commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
                 }
             });
-
+            holder.remarkTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final CommonDialog commonDialog = new CommonDialog();
+                    View content = View.inflate(JayActivity.this, R.layout.layout_edit_remark, null);
+                    final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
+                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder();
+                    builder.setTitleText(getString(R.string.edit_sum))
+                            .setLeftTextVisible(true)
+                            .setLeftText(getString(R.string.cancel))
+                            .setRightText(getString(R.string.confirm))
+                            .setLeftListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    commonDialog.dismiss();
+                                }
+                            })
+                            .setRightTextVisible(true)
+                            .setRightListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String remark = editRemark.getText().toString();
+                                    mList.remove(position);
+                                    mList.add(position, record);
+                                    notifyDataSetChanged();
+                                    Log.i(TAG, "edit remark: " + remark);
+                                    record.setRemark(remark);
+                                    commonDialog.dismiss();
+                                }
+                            });
+                    builder.setContent(content);
+                    commonDialog.setBuilder(builder);
+                    commonDialog.show(getSupportFragmentManager(), "selectIncomeDialog");
+                }
+            });
             holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
