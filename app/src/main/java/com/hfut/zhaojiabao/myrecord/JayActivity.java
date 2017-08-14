@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -534,7 +535,11 @@ public class JayActivity extends AppCompatActivity
             nf.setGroupingUsed(false);
 
             holder.titleTV.setText(nf.format(sum));
-            holder.remarkTv.setText(record.getRemark());
+            String remark = record.getRemark();
+            if (TextUtils.isEmpty(remark)) {
+                remark = getString(R.string.remark_empty);
+            }
+            holder.remarkTv.setText(remark);
             holder.typeTv.setText(getCategory(record.getCategory()));
             holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
             holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
