@@ -55,10 +55,11 @@ class JayRecordManager {
                         closeKeyboard(editRemark);
                         String remark = editRemark.getText().toString();
                         mList.remove(position);
+                        record.setRemark(remark);
+                        JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
                         mList.add(position, record);
                         mAdapter.notifyDataSetChanged();
                         Log.i(TAG, "edit remark: " + remark);
-                        record.setRemark(remark);
                         commonDialog.dismiss();
                     }
                 });
@@ -135,6 +136,7 @@ class JayRecordManager {
             @Override
             public void onClick(View v) {
                 record.setIncome(true);
+                JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
                 mList.remove(position);
                 mList.add(position, record);
                 mAdapter.notifyDataSetChanged();
@@ -145,6 +147,7 @@ class JayRecordManager {
             @Override
             public void onClick(View v) {
                 record.setIncome(false);
+                JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
                 mList.remove(position);
                 mList.add(position, record);
                 mAdapter.notifyDataSetChanged();
