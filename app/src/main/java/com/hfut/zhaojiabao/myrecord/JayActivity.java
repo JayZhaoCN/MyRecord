@@ -406,7 +406,9 @@ public class JayActivity extends AppCompatActivity
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+        //保存完成后将所有信息还原
         mSumEdit.setText("");
+        mRemarkEdit.setText("");
         initTime();
         mCategoryTv.setText(mDefaultCategory);
     }
