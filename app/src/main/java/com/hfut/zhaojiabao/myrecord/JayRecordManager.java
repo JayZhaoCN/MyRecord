@@ -1,9 +1,11 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ class JayRecordManager {
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        closeKeyboard(editRemark);
                         String remark = editRemark.getText().toString();
                         mList.remove(position);
                         mList.add(position, record);
@@ -83,6 +86,7 @@ class JayRecordManager {
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        closeKeyboard(editSum);
                         float sum;
                         try {
                             sum = Float.valueOf(editSum.getText().toString());
@@ -185,5 +189,14 @@ class JayRecordManager {
                 .setContentText(content);
         commonDialog.setBuilder(builder);
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
+    }
+
+    /**
+     * 强制关闭软键盘
+     * 详见: http://blog.csdn.net/h7870181/article/details/8332991
+     * */
+    private void closeKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
