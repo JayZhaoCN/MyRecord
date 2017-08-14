@@ -150,7 +150,12 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void loadRecords() {
-        mList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
+        long[] bounds = TimeFormatter.getTodayBounds();
+        mList = JayDaoManager.getInstance().getDaoSession().getRecordDao()
+                .queryBuilder()
+                .where(RecordDao.Properties.ConsumeTime.ge(bounds[0]))
+                .where(RecordDao.Properties.ConsumeTime.le(bounds[1]))
+                .list();
         if (mAdapter != null) {
             mAdapter.setData(mList);
         }

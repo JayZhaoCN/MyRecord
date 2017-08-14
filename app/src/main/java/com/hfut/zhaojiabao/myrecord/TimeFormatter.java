@@ -89,4 +89,22 @@ public class TimeFormatter {
             return recordYear + "-" + recordMonth + "-" + recordDay;
         }
     }
+
+    public static long[] getTodayBounds() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long startMillis = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        long endMillis = calendar.getTimeInMillis() - 1;
+
+        long[] bounds = new long[2];
+        bounds[0] = startMillis;
+        bounds[1] = endMillis;
+
+        return bounds;
+    }
 }
