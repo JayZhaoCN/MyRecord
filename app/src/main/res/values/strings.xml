@@ -107,6 +107,7 @@
     <string name="empty_data_tips">暂时没有记账数据，快去添加吧！</string>
     <string name="income_or_expend">收入还是支出？</string>
     <string name="edit_sum">编辑数值</string>
+    <string name="edit_remark">编辑备注</string>
     <string name="delete_succes">成功删除一条记录</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="detail">详情</string>

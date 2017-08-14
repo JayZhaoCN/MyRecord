@@ -38,7 +38,7 @@ class JayRecordManager {
         View content = View.inflate(mContext, R.layout.layout_edit_remark, null);
         final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(mContext.getString(R.string.edit_sum))
+        builder.setTitleText(mContext.getString(R.string.edit_remark))
                 .setLeftTextVisible(true)
                 .setLeftText(mContext.getString(R.string.cancel))
                 .setRightText(mContext.getString(R.string.confirm))
