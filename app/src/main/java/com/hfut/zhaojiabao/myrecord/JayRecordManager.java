@@ -1,9 +1,7 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -70,8 +68,6 @@ class JayRecordManager {
         final CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_sum, null);
         final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
-        editSum.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        editSum.setKeyListener(new DigitsKeyListener(false, true));
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(mContext.getString(R.string.edit_sum))
                 .setLeftTextVisible(true)

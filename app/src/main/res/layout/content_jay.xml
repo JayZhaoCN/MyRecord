@@ -86,6 +86,11 @@
             android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
+            <!--
+            number: 数字，不能输入小数点
+            numberDecimal: 数字，可以输入小数点
+            -->
+
             <EditText
                 android:id="@+id/sum_edit"
                 android:layout_width="0dp"
@@ -93,7 +98,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:hint="@string/input_sum"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
                 android:textSize="15sp"/>
