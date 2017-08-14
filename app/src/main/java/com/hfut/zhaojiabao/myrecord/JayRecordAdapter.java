@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +23,14 @@ import java.util.List;
  *         用在首页和详情界面
  */
 
-public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
+class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
     private Context mContext;
     private List<Record> mList;
     private JayRecordManager mRecordManager;
     private List<Category> mCategoryList;
     private static int[] mCategoryColors;
 
-    public JayRecordAdapter(Context context, List<Record> list) {
+    JayRecordAdapter(Context context, List<Record> list) {
         mContext = context;
         mList = list;
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
@@ -39,27 +38,27 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
 
     @Override
     public JayRecordAdapter.RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false);
-        return new RecordViewHolder(v);
+        return new RecordViewHolder
+                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false));
     }
 
     @Override
     public void onBindViewHolder(JayRecordAdapter.RecordViewHolder holder, final int position) {
         final Record record = mList.get(position);
 
-        float sum = record.getSum();
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
         nf.setGroupingUsed(false);
+        holder.titleTV.setText(nf.format(record.getSum()));
 
-        holder.titleTV.setText(nf.format(sum));
         String remark = record.getRemark();
-        if (TextUtils.isEmpty(remark)) {
-            remark = mContext.getString(R.string.remark_empty);
-        }
-        holder.remarkTv.setText(remark);
+        holder.remarkTv.setText(TextUtils.isEmpty(remark) ? mContext.getString(R.string.remark_empty) : remark);
+
         holder.typeTv.setText(getCategory(record.getCategory()));
+
         holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(mContext, record.getConsumeTime()));
+
         holder.incomeTv.setText(mContext.getString(record.getIncome() ? R.string.income : R.string.expend));
+
         holder.typeDot.setColor(getCategoryColor(mContext, record.getCategory()));
 
         holder.titleTV.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +113,7 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
         return mContext.getString(R.string.no_category);
     }
 
-    public void setRecordManager(JayRecordManager recordManager) {
+    void setRecordManager(JayRecordManager recordManager) {
         mRecordManager = recordManager;
     }
 

@@ -41,8 +41,16 @@ public class DetailActivity extends AppCompatActivity {
     private void initDatas() {
         //TODO 后面考虑做成static的，因为图表界面也会用到一样的数据，不必加载两次
         List<DayRecord> dayRecord = ValueTransfer.getDayRecords();
-        //如果这一天没有消费，也没有支出，就不必展示出来
+        //剔除掉没有任何记录的日期
         mDayRecords = new ArrayList<>();
+        if (dayRecord == null) {
+            //当下还没有数据, 则展示无数据提示UI
+            findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
+            findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
+            findViewById(R.id.divider).setVisibility(View.GONE);
+            findViewById(R.id.detail_recyler).setVisibility(View.GONE);
+            return;
+        }
         for (DayRecord record : dayRecord) {
             if (record.incomeSum > 0 || record.expendSum > 0) {
                 mDayRecords.add(record);
