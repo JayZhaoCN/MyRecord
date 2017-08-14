@@ -28,6 +28,8 @@ public class DetailActivity extends AppCompatActivity {
     private List<Record> mRecordList;
     private List<Record> mCertainDayRecords = new ArrayList<>();
 
+    private TextView mSummaryTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +48,6 @@ public class DetailActivity extends AppCompatActivity {
             mDayRecords = new ArrayList<>();
         }
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
-        if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
-            getDateFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
-        }
     }
 
     private JayRecordAdapter mRecordAdapter;
@@ -61,6 +60,11 @@ public class DetailActivity extends AppCompatActivity {
         detailList.setLayoutManager(new LinearLayoutManager(this));
         detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mRecordList));
         mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mRecordList));
+        mSummaryTv = (TextView) findViewById(R.id.summary_tv);
+        if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
+            setDetailSummary(mDayRecords.get(0));
+            getDateFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
+        }
     }
 
     private void getDateFromCertainDay(int year, int month, int day) {
@@ -68,7 +72,6 @@ public class DetailActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         for (Record record : mRecordList) {
             calendar.setTimeInMillis(record.getConsumeTime());
-            Log.i("JayLog", "add record: " + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.DATE));
             if (calendar.get(Calendar.YEAR) == year
                     && (calendar.get(Calendar.MONTH) + 1) == month
                     && calendar.get(Calendar.DATE) == day) {
@@ -91,6 +94,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DayRecord dayRecord = mDayRecords.get(position);
+                    setDetailSummary(dayRecord);
                     getDateFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
                     mRecordAdapter.notifyDataSetChanged();
                 }
@@ -110,5 +114,17 @@ public class DetailActivity extends AppCompatActivity {
                 indicatorTv = (TextView) itemView.findViewById(R.id.indicator_tv);
             }
         }
+    }
+
+    private void setDetailSummary(DayRecord record) {
+        float incomeSum = record.incomeSum;
+        if (incomeSum < 0) {
+            incomeSum = 0;
+        }
+        float expendSum = record.expendSum;
+        if (expendSum < 0) {
+            expendSum = 0;
+        }
+        mSummaryTv.setText(getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
     }
 }

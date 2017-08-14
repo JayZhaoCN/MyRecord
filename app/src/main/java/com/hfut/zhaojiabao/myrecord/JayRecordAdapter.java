@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
 
 /**
  * @author zhaojiabao 2017/8/14
+ *         用在首页和详情界面
  */
 
 public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
@@ -114,6 +116,10 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
 
     public void setRecordManager(JayRecordManager recordManager) {
         mRecordManager = recordManager;
+    }
+
+    public void setData(List<Record> data) {
+        mList = data;
     }
 
     class RecordViewHolder extends RecyclerView.ViewHolder {

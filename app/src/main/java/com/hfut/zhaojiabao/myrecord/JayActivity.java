@@ -151,6 +151,9 @@ public class JayActivity extends AppCompatActivity
 
     private void loadRecords() {
         mList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
+        if (mAdapter != null) {
+            mAdapter.setData(mList);
+        }
         Collections.sort(mList, new Comparator<Record>() {
             @Override
             public int compare(Record o1, Record o2) {
