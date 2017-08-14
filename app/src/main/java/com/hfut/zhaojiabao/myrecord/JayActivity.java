@@ -1,16 +1,13 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,22 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
-import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
@@ -44,7 +36,6 @@ import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
-import com.hfut.zhaojiabao.myrecord.views.DotView;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
