@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private RecordAdapter mRecordAdapter;
+    private JayRecordAdapter mRecordAdapter;
 
     private void initUI() {
         RecyclerView indicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
@@ -59,7 +59,8 @@ public class DetailActivity extends AppCompatActivity {
         indicatorList.setAdapter(new IndicatorAdapter());
         RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
         detailList.setLayoutManager(new LinearLayoutManager(this));
-        detailList.setAdapter(mRecordAdapter = new RecordAdapter());
+        detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mRecordList));
+        mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mRecordList));
     }
 
     private void getDateFromCertainDay(int year, int month, int day) {
@@ -107,75 +108,6 @@ public class DetailActivity extends AppCompatActivity {
             IndicatorViewHolder(View itemView) {
                 super(itemView);
                 indicatorTv = (TextView) itemView.findViewById(R.id.indicator_tv);
-            }
-        }
-    }
-
-    private class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
-        @Override
-        public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new RecordAdapter.RecordViewHolder
-                    (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecordViewHolder holder, int position) {
-            final Record record = mCertainDayRecords.get(position);
-
-            float sum = record.getSum();
-            java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
-            nf.setGroupingUsed(false);
-
-            holder.titleTV.setText(nf.format(sum));
-            holder.remarkTv.setText(record.getRemark());
-            holder.timeTv.setText(TimeFormatter.getInstance()
-                    .niceFormat(DetailActivity.this, record.getConsumeTime()));
-            holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
-            holder.incomeDot.setColor(ContextCompat.getColor(DetailActivity.this,
-                    record.getIncome() ? R.color.colorAccent : R.color.mint));
-            holder.deleteImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-            holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-            holder.typeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mCertainDayRecords.size();
-        }
-
-        class RecordViewHolder extends RecyclerView.ViewHolder {
-            TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
-            ImageView deleteImg;
-            DotView incomeDot, typeDot;
-            ViewGroup typeContainer, incomeContainer;
-
-            RecordViewHolder(View itemView) {
-                super(itemView);
-                titleTV = (TextView) itemView.findViewById(R.id.title_tv);
-                remarkTv = (TextView) itemView.findViewById(R.id.remark_tv);
-                typeTv = (TextView) itemView.findViewById(R.id.type_tv);
-                timeTv = (TextView) itemView.findViewById(R.id.time_tv);
-                incomeTv = (TextView) itemView.findViewById(R.id.income_tv);
-                deleteImg = (ImageView) itemView.findViewById(R.id.delete_img);
-
-                incomeDot = (DotView) itemView.findViewById(R.id.income_dot);
-                typeDot = (DotView) itemView.findViewById(R.id.type_dot);
-
-                typeContainer = (ViewGroup) itemView.findViewById(R.id.type_container);
-                incomeContainer = (ViewGroup) itemView.findViewById(R.id.income_container);
             }
         }
     }
