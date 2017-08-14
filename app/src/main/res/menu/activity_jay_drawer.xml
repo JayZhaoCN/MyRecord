@@ -18,6 +18,11 @@
             android:id="@+id/nav_pie_chart"
             android:icon="@drawable/ic_pie_chart"
             android:title="@string/pie"/>
+
+        <item
+            android:id="@+id/nav_detail"
+            android:icon="@drawable/ic_subject"
+            android:title="@string/nav_detail"/>
     </group>
 
     <item android:title="@string/more">

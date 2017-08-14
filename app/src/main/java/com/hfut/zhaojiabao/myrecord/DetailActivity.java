@@ -46,6 +46,9 @@ public class DetailActivity extends AppCompatActivity {
             mDayRecords = new ArrayList<>();
         }
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
+        if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
+            getDateFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
+        }
     }
 
     private RecordAdapter mRecordAdapter;
@@ -87,7 +90,6 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DayRecord dayRecord = mDayRecords.get(position);
-                    Log.i("JayLog", "onClick: " + dayRecord.toString());
                     getDateFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
                     mRecordAdapter.notifyDataSetChanged();
                 }

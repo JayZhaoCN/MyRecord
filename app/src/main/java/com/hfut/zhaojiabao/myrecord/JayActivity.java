@@ -463,6 +463,9 @@ public class JayActivity extends AppCompatActivity
             case R.id.nav_histogram:
                 startActivity(new Intent(this, RecordChartActivity.class));
                 break;
+            case R.id.nav_detail:
+                startActivity(new Intent(this, DetailActivity.class));
+                break;
             case R.id.nav_about:
                 showAboutDialog();
                 break;
