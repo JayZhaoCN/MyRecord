@@ -71,4 +71,22 @@ public class TimeFormatter {
             return yearThen + "/" + monthThen + "/" + dayThen + " " + hourThenStr + ":" + minuteThenStr;
         }
     }
+
+    public String formatDate(long time) {
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+
+        calendar.setTimeInMillis(time);
+
+        int recordYear = calendar.get(Calendar.YEAR);
+        int recordMonth = calendar.get(Calendar.MONTH) + 1;
+        int recordDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if (year == recordYear) {
+            return recordMonth + "-" + recordDay;
+        } else {
+            return recordYear + "-" + recordMonth + "-" + recordDay;
+        }
+    }
 }

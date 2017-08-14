@@ -6,17 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
-import com.hfut.zhaojiabao.myrecord.views.DotView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,28 +40,35 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initDatas() {
         //TODO 后面考虑做成static的，因为图表界面也会用到一样的数据，不必加载两次
-        mDayRecords = ValueTransfer.getDayRecords();
-        if (mDayRecords == null) {
-            mDayRecords = new ArrayList<>();
+        List<DayRecord> dayRecord = ValueTransfer.getDayRecords();
+        //如果这一天没有消费，也没有支出，就不必展示出来
+        mDayRecords = new ArrayList<>();
+        for (DayRecord record : dayRecord) {
+            if (record.incomeSum > 0 || record.expendSum > 0) {
+                mDayRecords.add(record);
+            }
         }
+
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
     }
 
     private JayRecordAdapter mRecordAdapter;
 
     private void initUI() {
+        mSummaryTv = (TextView) findViewById(R.id.summary_tv);
         RecyclerView indicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
+        RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
+
         indicatorList.setLayoutManager(new LinearLayoutManager(this));
         indicatorList.setAdapter(new IndicatorAdapter());
-        RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
         detailList.setLayoutManager(new LinearLayoutManager(this));
-        detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mRecordList));
-        mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mRecordList));
-        mSummaryTv = (TextView) findViewById(R.id.summary_tv);
+
         if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
             setDetailSummary(mDayRecords.get(0));
             getDateFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
         }
+        detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mCertainDayRecords));
+        mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mCertainDayRecords));
     }
 
     private void getDateFromCertainDay(int year, int month, int day) {
@@ -81,6 +85,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.IndicatorViewHolder> {
+        private TextView slectedTv;
+
         @Override
         public IndicatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new IndicatorViewHolder(LayoutInflater.from(parent.getContext())
@@ -89,13 +95,27 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(IndicatorViewHolder holder, final int position) {
-            holder.indicatorTv.setText(mDayRecords.get(position).date);
+            holder.indicatorTv.setText(TimeFormatter.getInstance().formatDate(mDayRecords.get(position).timeMillis));
+
+            //第一次进来选中的是第一个
+            if (position == 0) {
+                slectedTv = holder.indicatorTv;
+                slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+            }
+
             holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (slectedTv != null) {
+                        slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
+                    }
+
+                    slectedTv = (TextView) v;
+                    slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
                     DayRecord dayRecord = mDayRecords.get(position);
                     setDetailSummary(dayRecord);
                     getDateFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
+                    mRecordAdapter.setData(mCertainDayRecords);
                     mRecordAdapter.notifyDataSetChanged();
                 }
             });
