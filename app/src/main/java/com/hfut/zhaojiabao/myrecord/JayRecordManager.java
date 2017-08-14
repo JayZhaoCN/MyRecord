@@ -7,7 +7,6 @@ import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
@@ -21,20 +20,20 @@ import java.util.List;
  * @author zhaojiabao 2017/8/13
  */
 
-public class JayRecordManager {
+class JayRecordManager {
     private static final String TAG = "JayRecordManager";
 
     private AppCompatActivity mContext;
     private List<Record> mList;
     private JayActivity.RecordAdapter mAdapter;
 
-    public JayRecordManager(AppCompatActivity context, JayActivity.RecordAdapter adapter, List<Record> list) {
+    JayRecordManager(AppCompatActivity context, JayActivity.RecordAdapter adapter, List<Record> list) {
         mContext = context;
         mAdapter = adapter;
         mList = list;
     }
 
-    public void editRemark(final int position, final Record record) {
+    void editRemark(final int position, final Record record) {
         final CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_remark, null);
         final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
@@ -67,7 +66,7 @@ public class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
-    public void editSum(final int position, final Record record) {
+    void editSum(final int position, final Record record) {
         final CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_sum, null);
         final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
@@ -117,14 +116,14 @@ public class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
-    public void deleteRecord(Record record) {
+    void deleteRecord(Record record) {
         JayDaoManager.getInstance().getDaoSession().delete(record);
         mList.remove(record);
         mAdapter.notifyDataSetChanged();
         ToastUtil.showToast(JayApp.getInstance(), mContext.getString(R.string.delete_succes), Toast.LENGTH_SHORT);
     }
 
-    public void editType(final Record record, final int position) {
+    void editType(final Record record, final int position) {
         final CommonDialog commonDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(mContext.getString(R.string.income_or_expend))
@@ -157,7 +156,7 @@ public class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
-    public void editCategory(final Record record, final int position) {
+    void editCategory(final Record record, final int position) {
         CategoryDialog categoryDialog = new CategoryDialog();
         categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
             @Override
@@ -191,5 +190,4 @@ public class JayRecordManager {
         commonDialog.setBuilder(builder);
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
-
 }

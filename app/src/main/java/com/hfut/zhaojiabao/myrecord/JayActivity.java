@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,7 +18,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -523,7 +521,7 @@ public class JayActivity extends AppCompatActivity
         });
     }
 
-    public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
+    class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
         @Override
         public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false);
