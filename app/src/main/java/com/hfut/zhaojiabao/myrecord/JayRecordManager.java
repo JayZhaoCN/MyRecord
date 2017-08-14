@@ -25,9 +25,9 @@ class JayRecordManager {
 
     private AppCompatActivity mContext;
     private List<Record> mList;
-    private JayActivity.RecordAdapter mAdapter;
+    private JayRecordAdapter mAdapter;
 
-    JayRecordManager(AppCompatActivity context, JayActivity.RecordAdapter adapter, List<Record> list) {
+    JayRecordManager(AppCompatActivity context, JayRecordAdapter adapter, List<Record> list) {
         mContext = context;
         mAdapter = adapter;
         mList = list;

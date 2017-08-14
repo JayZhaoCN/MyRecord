@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -76,12 +77,10 @@ public class JayActivity extends AppCompatActivity
     private TextView mUserNameTv;
 
     private List<Record> mList;
-    private List<Category> mCategoryList;
     private String mDefaultCategory;
-    private int[] mCategoryColors;
 
     private Calendar mCalendar;
-    private RecordAdapter mAdapter;
+    private JayRecordAdapter mAdapter;
 
     private File mCaptureFile;
     //存放裁剪后临时图片的Uri
@@ -94,9 +93,9 @@ public class JayActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jay);
         initToolbarAndDrawer();
+        loadRecords();
         initUI();
         initTime();
-        loadRecords();
         //请求读取存储权限
         verifyStoragePermissions(this);
     }
@@ -142,7 +141,9 @@ public class JayActivity extends AppCompatActivity
 
         RecyclerView recordList = (RecyclerView) findViewById(R.id.today_record);
         recordList.setLayoutManager(new LinearLayoutManager(this));
-        recordList.setAdapter(mAdapter = new RecordAdapter());
+        recordList.setAdapter(mAdapter = new JayRecordAdapter(this, mList));
+        mRecordManager = new JayRecordManager(this, mAdapter, mList);
+        mAdapter.setRecordManager(mRecordManager);
         recordList.setNestedScrollingEnabled(false);
 
         PopLayout popLayout = (PopLayout) findViewById(R.id.pop_Layout);
@@ -165,9 +166,6 @@ public class JayActivity extends AppCompatActivity
                 return o2.getRecordTime().compareTo(o1.getRecordTime());
             }
         });
-
-        mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
-        mRecordManager = new JayRecordManager(this, mAdapter, mList);
     }
 
     @Override
@@ -520,144 +518,6 @@ public class JayActivity extends AppCompatActivity
                 showModifyNameDialog();
             }
         });
-    }
-
-    class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
-        @Override
-        public RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_record, parent, false);
-            return new RecordViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecordViewHolder holder, final int position) {
-            final Record record = mList.get(position);
-
-            float sum = record.getSum();
-            java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
-            nf.setGroupingUsed(false);
-
-            holder.titleTV.setText(nf.format(sum));
-            String remark = record.getRemark();
-            if (TextUtils.isEmpty(remark)) {
-                remark = getString(R.string.remark_empty);
-            }
-            holder.remarkTv.setText(remark);
-            holder.typeTv.setText(getCategory(record.getCategory()));
-            holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(JayActivity.this, record.getConsumeTime()));
-            holder.incomeTv.setText(getString(record.getIncome() ? R.string.income : R.string.expend));
-            holder.typeDot.setColor(getCategoryColor(record.getCategory()));
-
-            holder.titleTV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                   mRecordManager.editSum(position, record);
-                }
-            });
-
-            holder.remarkTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mRecordManager.editRemark(position, record);
-                }
-            });
-
-            holder.incomeDot.setColor(ContextCompat.getColor(JayActivity.this, record.getIncome() ? R.color.colorAccent : R.color.mint));
-
-            holder.deleteImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mRecordManager.deleteRecord(record);
-                }
-            });
-
-            holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mRecordManager.editType(record, position);
-                }
-            });
-
-            holder.typeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mRecordManager.editCategory(record, position);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mList.size();
-        }
-
-        private String getCategory(String categoryStr) {
-            for (Category category : mCategoryList) {
-                if (category.getCategory().equals(categoryStr)) {
-                    return categoryStr;
-                }
-            }
-            return getString(R.string.no_category);
-        }
-
-        class RecordViewHolder extends RecyclerView.ViewHolder {
-            TextView titleTV, remarkTv, typeTv, timeTv, incomeTv;
-            ImageView deleteImg;
-            DotView incomeDot, typeDot;
-            ViewGroup typeContainer, incomeContainer;
-
-            RecordViewHolder(View itemView) {
-                super(itemView);
-                titleTV = (TextView) itemView.findViewById(R.id.title_tv);
-                remarkTv = (TextView) itemView.findViewById(R.id.remark_tv);
-                typeTv = (TextView) itemView.findViewById(R.id.type_tv);
-                timeTv = (TextView) itemView.findViewById(R.id.time_tv);
-                incomeTv = (TextView) itemView.findViewById(R.id.income_tv);
-                deleteImg = (ImageView) itemView.findViewById(R.id.delete_img);
-
-                incomeDot = (DotView) itemView.findViewById(R.id.income_dot);
-                typeDot = (DotView) itemView.findViewById(R.id.type_dot);
-
-                typeContainer = (ViewGroup) itemView.findViewById(R.id.type_container);
-                incomeContainer = (ViewGroup) itemView.findViewById(R.id.income_container);
-            }
-        }
-    }
-
-    private int getCategoryColor(String categoryStr) {
-        if (categoryStr.equals(getString(R.string.no_category))) {
-            return Color.BLACK;
-        }
-        if (mCategoryColors == null) {
-            mCategoryColors = new int[]{
-                    ContextCompat.getColor(this, R.color.grapefruit),
-                    ContextCompat.getColor(this, R.color.bittersweet),
-                    ContextCompat.getColor(this, R.color.sunflower),
-                    ContextCompat.getColor(this, R.color.grass),
-                    ContextCompat.getColor(this, R.color.mint),
-                    ContextCompat.getColor(this, R.color.aqua),
-                    ContextCompat.getColor(this, R.color.blue_jeans),
-                    ContextCompat.getColor(this, R.color.lavender),
-                    ContextCompat.getColor(this, R.color.pink_rose),
-                    ContextCompat.getColor(this, R.color.light_gray),
-                    ContextCompat.getColor(this, R.color.dark_gray)
-            };
-        }
-
-        List<Category> categories = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
-        int index = -1;
-
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getCategory().equals(categoryStr)) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            return Color.BLACK;
-        }
-
-        return mCategoryColors[index % mCategoryColors.length];
     }
 
     private void closeKeyboard(EditText editText) {
