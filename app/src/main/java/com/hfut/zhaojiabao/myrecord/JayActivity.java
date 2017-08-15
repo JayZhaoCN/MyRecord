@@ -409,6 +409,7 @@ public class JayActivity extends AppCompatActivity
         mRemarkEdit.setText("");
         initTime();
         mCategoryTv.setText(mDefaultCategory);
+        JayRecordManager.closeKeyboard(mSumEdit, this);
     }
 
     @Override

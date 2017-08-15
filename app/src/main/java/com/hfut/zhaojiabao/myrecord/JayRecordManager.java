@@ -52,7 +52,7 @@ class JayRecordManager {
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        closeKeyboard(editRemark);
+                        closeKeyboard(editRemark, mContext);
                         String remark = editRemark.getText().toString();
                         mList.remove(position);
                         record.setRemark(remark);
@@ -87,7 +87,7 @@ class JayRecordManager {
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        closeKeyboard(editSum);
+                        closeKeyboard(editSum, mContext);
                         float sum;
                         try {
                             sum = Float.valueOf(editSum.getText().toString());
@@ -108,6 +108,7 @@ class JayRecordManager {
                         JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
                         mList.remove(position);
                         mList.add(position, record);
+                        mAdapter.setData(mList);
                         mAdapter.notifyDataSetChanged();
                         commonDialog.dismiss();
                     }
@@ -120,6 +121,7 @@ class JayRecordManager {
     void deleteRecord(Record record) {
         JayDaoManager.getInstance().getDaoSession().delete(record);
         mList.remove(record);
+        mAdapter.setData(mList);
         mAdapter.notifyDataSetChanged();
         ToastUtil.showToast(JayApp.getInstance(), mContext.getString(R.string.delete_succes), Toast.LENGTH_SHORT);
     }
@@ -198,8 +200,8 @@ class JayRecordManager {
      * 强制关闭软键盘
      * 详见: http://blog.csdn.net/h7870181/article/details/8332991
      * */
-    private void closeKeyboard(EditText editText) {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void closeKeyboard(EditText editText, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
