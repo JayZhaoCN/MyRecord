@@ -24,4 +24,12 @@ public class NumberUtils {
         BigDecimal bigDecimal = new BigDecimal(value);
         return bigDecimal.setScale(scale, RoundingMode.HALF_UP).floatValue();
     }
+
+    public static String getFormattedNumber(double number) {
+        int numberInt = (int) number;
+        if (numberInt == number) {
+            return String.valueOf(numberInt);
+        }
+        return String.valueOf(number);
+    }
 }

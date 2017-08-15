@@ -337,7 +337,7 @@ public class JayActivity extends AppCompatActivity
         if (requestCode != REQUEST_CODE_COMPUTE) {
             return;
         }
-        mSumEdit.setText(String.valueOf(intent.getDoubleExtra("result", 0)));
+        mSumEdit.setText(NumberUtils.getFormattedNumber(intent.getDoubleExtra("result", 0)));
     }
 
     //获取裁剪完的图片，更新到UI

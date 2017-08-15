@@ -195,8 +195,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.equal:
                 mResult = ArithmeticHelper.calculate(mScreenContentStr);
-                mScreenTv.setText(String.valueOf(mResult));
-                mScreenContentStr = String.valueOf(mResult);
+                mScreenContentStr = NumberUtils.getFormattedNumber(mResult);
                 mHasResult = true;
                 break;
             case R.id.clean_btn:
