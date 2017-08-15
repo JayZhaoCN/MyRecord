@@ -31,6 +31,7 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
+import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
@@ -45,6 +46,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import de.greenrobot.event.EventBus;
 
 import static com.hfut.zhaojiabao.myrecord.file_operation.BackupTask.verifyStoragePermissions;
 
@@ -89,6 +92,20 @@ public class JayActivity extends AppCompatActivity
         initTime();
         //请求读取存储权限
         verifyStoragePermissions(this);
+
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void onEventMainThread(RecordRecoveryEvent event) {
+        Log.i(TAG, "recovery success: " + event.success);
+
+        loadRecords();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initTime() {

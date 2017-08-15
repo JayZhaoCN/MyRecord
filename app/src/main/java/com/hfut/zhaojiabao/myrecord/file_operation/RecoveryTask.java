@@ -11,6 +11,7 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
@@ -21,6 +22,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * @author zhaojiabao 2017/6/17
@@ -114,5 +117,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
         Log.i(TAG, "backup success: " + success);
         ToastUtil.showToast(JayApp.getInstance(), mContext.getString
                 (success ? R.string.recovery_done : R.string.recovery_fail), Toast.LENGTH_SHORT);
+
+        EventBus.getDefault().postSticky(new RecordRecoveryEvent(success));
     }
 }

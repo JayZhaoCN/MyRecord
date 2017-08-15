@@ -119,6 +119,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
 
     public void setData(List<Record> data) {
         mList = data;
+        notifyDataSetChanged();
     }
 
     class RecordViewHolder extends RecyclerView.ViewHolder {
