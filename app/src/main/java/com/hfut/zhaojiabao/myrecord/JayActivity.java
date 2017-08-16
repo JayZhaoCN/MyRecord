@@ -83,7 +83,7 @@ public class JayActivity extends AppCompatActivity
     //存放裁剪后临时图片的Uri
     private Uri mDestinationUri;
 
-    private JayRecordManager mRecordManager;
+    private JayDialogManager mRecordManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class JayActivity extends AppCompatActivity
         RecyclerView recordList = (RecyclerView) findViewById(R.id.today_record);
         recordList.setLayoutManager(new LinearLayoutManager(this));
         recordList.setAdapter(mAdapter = new JayRecordAdapter(this, mList));
-        mRecordManager = new JayRecordManager(this, mAdapter, mList);
+        mRecordManager = new JayDialogManager(this, mAdapter, mList);
         mAdapter.setRecordManager(mRecordManager);
         recordList.setNestedScrollingEnabled(false);
 
@@ -230,7 +230,7 @@ public class JayActivity extends AppCompatActivity
                 ToastUtil.showToast(JayApp.getInstance(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
                 break;
             case R.id.type_container:
-                mRecordManager.showManageCategoryDialog(new JayRecordManager.OnCategorySelectedListener() {
+                mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
                     @Override
                     public void onSelect(String category) {
                         mCategoryTv.setText(category);
@@ -456,7 +456,7 @@ public class JayActivity extends AppCompatActivity
         mRemarkEdit.setText("");
         initTime();
         mCategoryTv.setText(mDefaultCategory);
-        JayRecordManager.closeKeyboard(mSumEdit, this);
+        JayDialogManager.closeKeyboard(mSumEdit, this);
     }
 
     @Override

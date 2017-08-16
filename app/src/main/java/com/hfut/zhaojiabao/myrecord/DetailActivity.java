@@ -148,7 +148,7 @@ public class DetailActivity extends AppCompatActivity {
             getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
         }
         detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mCertainDayRecords));
-        mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mCertainDayRecords));
+        mRecordAdapter.setRecordManager(new JayDialogManager(this, mRecordAdapter, mCertainDayRecords));
     }
 
     private void getDataFromCertainDay(int year, int month, int day) {

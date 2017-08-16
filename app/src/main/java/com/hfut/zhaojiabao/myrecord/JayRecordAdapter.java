@@ -29,7 +29,7 @@ import de.greenrobot.event.EventBus;
 class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
     private Context mContext;
     private List<Record> mList;
-    private JayRecordManager mRecordManager;
+    private JayDialogManager mRecordManager;
     private List<Category> mCategoryList;
     private static int[] mCategoryColors;
 
@@ -39,7 +39,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         invalidateCategoryList();
     }
 
-    public void invalidateCategoryList() {
+    void invalidateCategoryList() {
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
     }
 
@@ -102,7 +102,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         holder.typeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.showManageCategoryDialog(new JayRecordManager.OnCategorySelectedListener() {
+                mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
                     @Override
                     public void onSelect(String category) {
                         record.setCategory(category);
@@ -130,7 +130,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         return mContext.getString(R.string.no_category);
     }
 
-    void setRecordManager(JayRecordManager recordManager) {
+    void setRecordManager(JayDialogManager recordManager) {
         mRecordManager = recordManager;
     }
 

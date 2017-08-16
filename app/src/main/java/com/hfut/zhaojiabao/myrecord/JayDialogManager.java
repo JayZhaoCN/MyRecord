@@ -25,16 +25,17 @@ import java.util.List;
 
 /**
  * @author zhaojiabao 2017/8/13
+ *         首页对话框管理类
  */
 
-class JayRecordManager {
+class JayDialogManager {
     private static final String TAG = "JayRecordManager";
 
     private AppCompatActivity mContext;
     private List<Record> mList;
     private JayRecordAdapter mAdapter;
 
-    JayRecordManager(AppCompatActivity context, JayRecordAdapter adapter, List<Record> list) {
+    JayDialogManager(AppCompatActivity context, JayRecordAdapter adapter, List<Record> list) {
         mContext = context;
         mAdapter = adapter;
         mList = list;
@@ -166,6 +167,9 @@ class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
+    /**
+     * 展示警告框
+     */
     private void showWarningDialog(String title, String content) {
         final CommonDialog commonDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
@@ -186,6 +190,9 @@ class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
+    /**
+     * 展示选择类别对话框
+     */
     void showManageCategoryDialog(OnCategorySelectedListener listener) {
         final CommonDialog commonDialog = new CommonDialog();
 
@@ -195,11 +202,10 @@ class JayRecordManager {
         categoryList.setAdapter(new CategoryAdapter(JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll(), commonDialog, listener));
 
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(R.string.manage_category)
+        builder.setTitleText(R.string.select_category)
                 .setLeftTextVisible(false)
-                .setLeftText(R.string.cancel)
                 .setRightTextVisible(true)
-                .setRightText(R.string.confirm)
+                .setRightText(R.string.manage_category)
                 .setRightListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,10 +218,12 @@ class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectCategoryDialog");
     }
 
+    /**
+     * 选择类别的Adapter
+     */
     private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
         private List<Category> categories;
         private CommonDialog dialog;
-
         private OnCategorySelectedListener listener;
 
         CategoryAdapter(List<Category> categories, CommonDialog dialog, OnCategorySelectedListener listener) {
@@ -259,16 +267,16 @@ class JayRecordManager {
         }
     }
 
+    interface OnCategorySelectedListener {
+        void onSelect(String category);
+    }
+
     /**
      * 强制关闭软键盘
      * 详见: http://blog.csdn.net/h7870181/article/details/8332991
      */
-    public static void closeKeyboard(EditText editText, Context context) {
+    static void closeKeyboard(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-    }
-
-    interface OnCategorySelectedListener {
-        void onSelect(String category);
     }
 }
