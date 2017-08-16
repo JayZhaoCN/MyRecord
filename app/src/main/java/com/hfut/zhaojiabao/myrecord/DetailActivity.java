@@ -1,6 +1,8 @@
 package com.hfut.zhaojiabao.myrecord;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
     private List<Record> mCertainDayRecords = new ArrayList<>();
 
     private TextView mSummaryTv;
+    private RecyclerView mIndicatorList;
+    private View mSelectedView;
 
     private JayRecordAdapter mRecordAdapter;
     private IndicatorAdapter mIndicatorAdapter;
@@ -74,6 +78,9 @@ public class DetailActivity extends AppCompatActivity {
         if (dayRecord == null) {
             //如果当前日期的数据被删完了，获取列表中第一个日期的数据。
             dayRecord = mDayRecords.get(0);
+            mSelectedView.setBackgroundColor(Color.WHITE);
+            mSelectedView = mIndicatorList.getChildAt(0);
+            mSelectedView.setBackgroundColor(ContextCompat.getColor(this, R.color.aqua));
             mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
         }
         //更新Toolbar上的Summary
@@ -117,11 +124,21 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initUI() {
         mSummaryTv = (TextView) findViewById(R.id.summary_tv);
-        RecyclerView indicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
+        mIndicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
         RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
 
-        indicatorList.setLayoutManager(new LinearLayoutManager(this));
-        indicatorList.setAdapter(mIndicatorAdapter = new IndicatorAdapter());
+        mIndicatorList.setLayoutManager(new LinearLayoutManager(this));
+        mIndicatorList.setAdapter(mIndicatorAdapter = new IndicatorAdapter());
+
+        //这里需要在post里才能拿到RecyclerView.childView
+        mIndicatorList.post(new Runnable() {
+            @Override
+            public void run() {
+                mSelectedView = mIndicatorList.getChildAt(0);
+                mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+            }
+        });
+
         detailList.setLayoutManager(new LinearLayoutManager(this));
 
         if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
@@ -148,6 +165,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.IndicatorViewHolder> {
+
         @Override
         public IndicatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new IndicatorViewHolder(LayoutInflater.from(parent.getContext())
@@ -161,6 +179,9 @@ public class DetailActivity extends AppCompatActivity {
             holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mSelectedView.setBackgroundColor(Color.WHITE);
+                    mSelectedView = v;
+                    mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
                     DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
                     setDetailSummary(dayRecord);
                     mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
