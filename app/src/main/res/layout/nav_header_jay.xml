@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@drawable/side_nav_bar"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     tools:ignore="contentDescription">

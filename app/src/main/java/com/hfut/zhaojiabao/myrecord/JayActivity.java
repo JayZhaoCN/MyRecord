@@ -506,7 +506,8 @@ public class JayActivity extends AppCompatActivity
                 startActivity(new Intent(this, SectorActivity.class));
                 break;
             case R.id.nav_histogram:
-                startActivity(new Intent(this, RecordChartActivity.class));
+                ToastUtil.showToast(JayActivity.this, "柱状图实现的不太好，先不展示了，后面再优化优化~", Toast.LENGTH_SHORT);
+                //startActivity(new Intent(this, RecordChartActivity.class));
                 break;
             case R.id.nav_detail:
                 startActivity(new Intent(this, DetailActivity.class));
