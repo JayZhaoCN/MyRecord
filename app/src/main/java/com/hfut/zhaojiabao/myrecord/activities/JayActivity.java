@@ -78,7 +78,8 @@ public class JayActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private CircleImageView mUserIcon;
     private TextView mUserNameTv;
-    private TextView mTodaySummaryTv;
+    private TextView mIncomeSumTv;
+    private TextView mExpendSumTv;
 
     private List<Record> mList;
     private String mDefaultCategory;
@@ -186,7 +187,8 @@ public class JayActivity extends AppCompatActivity
 
         findViewById(R.id.calculator_img).setOnClickListener(this);
 
-        mTodaySummaryTv = (TextView) findViewById(R.id.today_summary_tv);
+        mIncomeSumTv = (TextView) findViewById(R.id.income_sum_tv);
+        mExpendSumTv = (TextView) findViewById(R.id.expend_sum_tv);
         updateTodaySummary();
     }
 
@@ -199,11 +201,8 @@ public class JayActivity extends AppCompatActivity
                 expendSummary += record.getSum();
             }
         }
-        String todaySummary = getString(R.string.total_summary,
-                NumberUtils.getFormattedNumber(incomeSummary),
-                NumberUtils.getFormattedNumber(expendSummary),
-                NumberUtils.getFormattedNumber(incomeSummary - expendSummary));
-        mTodaySummaryTv.setText(todaySummary);
+        mIncomeSumTv.setText(NumberUtils.getFormattedNumber(incomeSummary));
+        mExpendSumTv.setText(NumberUtils.getFormattedNumber(expendSummary));
     }
 
     private void loadRecords() {

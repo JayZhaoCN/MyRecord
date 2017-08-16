@@ -292,13 +292,62 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            <TextView
-                android:id="@+id/today_summary_tv"
-                style="@style/MainTextStyle"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:text="@string/today"/>
+            <LinearLayout
+                android:id="@+id/today_summary_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/today_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/today"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/income_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:text="入: "
+                    android:textColor="@color/blue_jeans"
+                    android:textSize="12sp"/>
+
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:id="@+id/income_sum_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:textColor="@color/blue_jeans"
+                    android:textSize="16sp"
+                    tools:text="100"/>
+
+                <TextView
+                    android:id="@+id/expend_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="出: "
+                    android:textColor="@color/origin100"
+                    android:textSize="12sp"/>
+
+                <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:id="@+id/expend_sum_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:textColor="@color/origin100"
+                    android:textSize="16sp"
+                    tools:text="100"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/save_btn"
