@@ -9,13 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
-import com.hfut.zhaojiabao.myrecord.dialogs.EditCategoryDialog;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
@@ -39,16 +39,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
         findViewById(R.id.edit_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditCategoryDialog dialog = new EditCategoryDialog();
-                dialog.show(getFragmentManager(), "EditCategoryDialog");
-                dialog.setOnCategoryAddedListener(new EditCategoryDialog.OnCategoryAddedListener() {
-                    @Override
-                    public void onCategoryAdded() {
-                        updateCategories();
-                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
+                showAddCategoryDialog();
             }
         });
 
@@ -132,5 +123,39 @@ public class ManageCategoryActivity extends AppCompatActivity {
                 deleteImg = (AppCompatImageView) itemView.findViewById(R.id.delete_img);
             }
         }
+    }
+
+    private void showAddCategoryDialog() {
+        final CommonDialog dialog = new CommonDialog();
+
+        View content = View.inflate(this, R.layout.edit_dialog, null);
+        final EditText addEdit = (EditText) content.findViewById(R.id.add_edit);
+
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
+        builder.setTitleText(R.string.add_category)
+                .setLeftTextVisible(true)
+                .setLeftText(R.string.cancel)
+                .setLeftListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .setRightTextVisible(true)
+                .setRightText(R.string.confirm)
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Category category = new Category();
+                        category.setCategory(addEdit.getText().toString());
+                        JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
+                        updateCategories();
+                        mAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                })
+                .setContent(content);
+        dialog.setBuilder(builder);
+        dialog.show(getSupportFragmentManager(), "addCategoryDialog");
     }
 }
