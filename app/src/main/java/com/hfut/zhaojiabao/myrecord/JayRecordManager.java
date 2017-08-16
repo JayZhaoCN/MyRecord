@@ -1,15 +1,22 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
+import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
@@ -159,21 +166,6 @@ class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
-    void editCategory(final Record record, final int position) {
-        CategoryDialog categoryDialog = new CategoryDialog();
-        categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
-            @Override
-            public void onSelect(String category) {
-                record.setCategory(category);
-                JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                mList.remove(position);
-                mList.add(position, record);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-        categoryDialog.show(mContext.getFragmentManager(), "categoryDialog");
-    }
-
     private void showWarningDialog(String title, String content) {
         final CommonDialog commonDialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
@@ -194,12 +186,89 @@ class JayRecordManager {
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
     }
 
+    void showManageCategoryDialog(OnCategorySelectedListener listener) {
+        final CommonDialog commonDialog = new CommonDialog();
+
+        View contentView = View.inflate(mContext, R.layout.layout_category_dialog, null);
+        RecyclerView categoryList = (RecyclerView) contentView.findViewById(R.id.category_list);
+        categoryList.setLayoutManager(new LinearLayoutManager(mContext));
+        categoryList.setAdapter(new CategoryAdapter(JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll(), commonDialog, listener));
+
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
+        builder.setTitleText(R.string.manage_category)
+                .setLeftTextVisible(false)
+                .setLeftText(R.string.cancel)
+                .setRightTextVisible(true)
+                .setRightText(R.string.confirm)
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mContext.startActivity(new Intent(mContext, ManageCategoryActivity.class));
+                        commonDialog.dismiss();
+                    }
+                })
+                .setContent(contentView);
+        commonDialog.setBuilder(builder);
+        commonDialog.show(mContext.getSupportFragmentManager(), "selectCategoryDialog");
+    }
+
+    private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+        private List<Category> categories;
+        private CommonDialog dialog;
+
+        private OnCategorySelectedListener listener;
+
+        CategoryAdapter(List<Category> categories, CommonDialog dialog, OnCategorySelectedListener listener) {
+            this.categories = categories;
+            this.dialog = dialog;
+            this.listener = listener;
+        }
+
+        @Override
+        public CategoryAdapter.CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_select_category, parent, false);
+            return new CategoryAdapter.CategoryViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(final CategoryAdapter.CategoryViewHolder holder, int position) {
+            holder.categoryTv.setText(categories.get(position).getCategory());
+            holder.categoryTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onSelect(categories.get(holder.getAdapterPosition()).getCategory());
+                    }
+                    dialog.dismiss();
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return categories.size();
+        }
+
+        class CategoryViewHolder extends RecyclerView.ViewHolder {
+            TextView categoryTv;
+
+            CategoryViewHolder(View itemView) {
+                super(itemView);
+                categoryTv = (TextView) itemView.findViewById(R.id.category_tv);
+            }
+        }
+    }
+
     /**
      * 强制关闭软键盘
      * 详见: http://blog.csdn.net/h7870181/article/details/8332991
-     * */
+     */
     public static void closeKeyboard(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    interface OnCategorySelectedListener {
+        void onSelect(String category);
     }
 }

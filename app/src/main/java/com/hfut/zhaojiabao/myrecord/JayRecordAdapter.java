@@ -102,7 +102,16 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         holder.typeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.editCategory(record, holder.getAdapterPosition());
+                mRecordManager.showManageCategoryDialog(new JayRecordManager.OnCategorySelectedListener() {
+                    @Override
+                    public void onSelect(String category) {
+                        record.setCategory(category);
+                        JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                        mList.remove(holder.getAdapterPosition());
+                        mList.add(holder.getAdapterPosition(), record);
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
     }

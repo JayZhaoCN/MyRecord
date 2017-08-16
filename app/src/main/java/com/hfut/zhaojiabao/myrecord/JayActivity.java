@@ -230,14 +230,12 @@ public class JayActivity extends AppCompatActivity
                 ToastUtil.showToast(JayApp.getInstance(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
                 break;
             case R.id.type_container:
-                final CategoryDialog categoryDialog = new CategoryDialog();
-                categoryDialog.setOnCategorySelectedListener(new CategoryDialog.OnCategorySelectedListener() {
+                mRecordManager.showManageCategoryDialog(new JayRecordManager.OnCategorySelectedListener() {
                     @Override
                     public void onSelect(String category) {
                         mCategoryTv.setText(category);
                     }
                 });
-                categoryDialog.show(getFragmentManager(), "categoryDialog");
                 break;
             case R.id.date_container:
                 PickDateDialog pickDateDialog = new PickDateDialog();
