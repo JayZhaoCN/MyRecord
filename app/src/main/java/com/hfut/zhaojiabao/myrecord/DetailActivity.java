@@ -143,7 +143,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.IndicatorViewHolder> {
-        private TextView selectedTv;
 
         @Override
         public IndicatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -155,21 +154,9 @@ public class DetailActivity extends AppCompatActivity {
         public void onBindViewHolder(final IndicatorViewHolder holder, int position) {
             holder.indicatorTv.setText(TimeFormatter.getInstance().formatDate(mDayRecords.get(position).timeMillis));
 
-            //第一次进来选中的是第一个
-            if (position == 0) {
-                selectedTv = holder.indicatorTv;
-                selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
-            }
-
             holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (selectedTv != null) {
-                        selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
-                    }
-
-                    selectedTv = (TextView) v;
-                    selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
                     DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
                     setDetailSummary(dayRecord);
                     mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
@@ -203,7 +190,7 @@ public class DetailActivity extends AppCompatActivity {
         if (expendSum < 0) {
             expendSum = 0;
         }
-        mSummaryTv.setText(getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
+        mSummaryTv.setText(record.date + " " + getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
     }
 
     private class SelectDate {
