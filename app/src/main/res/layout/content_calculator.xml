@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,8 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:gravity="center_vertical|end"
-        android:text="1"
-        android:textSize="40sp"/>
+        android:text="0"
+        android:textSize="40sp"
+        tools:ignore="HardcodedText"/>
 
     <TableLayout
         android:layout_width="match_parent"
