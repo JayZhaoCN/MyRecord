@@ -215,7 +215,7 @@ public class DetailActivity extends AppCompatActivity {
         if (expendSum < 0) {
             expendSum = 0;
         }
-        mSummaryTv.setText(record.date + " " + getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
+        mSummaryTv.setText(getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
     }
 
     private class SelectDate {
