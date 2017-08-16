@@ -32,7 +32,7 @@ public class IOUtils {
                 .append(File.separator)
                 .append(BACKUP_FOLDER_NAME)
                 .append(File.separator)
-                .append(System.currentTimeMillis())
+                .append(TimeFormatter.getInstance().format(System.currentTimeMillis()))
                 .append(RECORD_FILE_SUFFIX_NAME);
         return sb.toString();
     }

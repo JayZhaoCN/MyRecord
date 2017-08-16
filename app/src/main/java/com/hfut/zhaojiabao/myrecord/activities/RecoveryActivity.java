@@ -65,7 +65,7 @@ public class RecoveryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecoveryItemHolder holder, final int position) {
             final File file = mRecoveryItem.get(position);
-            holder.titleTv.setText(mRecoveryItem.get(position).toString());
+            holder.titleTv.setText(mRecoveryItem.get(position).getName());
             holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
