@@ -33,6 +33,10 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
     JayRecordAdapter(Context context, List<Record> list) {
         mContext = context;
         mList = list;
+        invalidateCategoryList();
+    }
+
+    public void invalidateCategoryList() {
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
     }
 

@@ -31,6 +31,7 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
+import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
@@ -100,6 +101,12 @@ public class JayActivity extends AppCompatActivity
         Log.i(TAG, "recovery success: " + event.success);
 
         loadRecords();
+    }
+
+    public void onEventMainThread(CategoryUpdateEvent event) {
+        if (mAdapter != null) {
+            mAdapter.invalidateCategoryList();
+        }
     }
 
     @Override

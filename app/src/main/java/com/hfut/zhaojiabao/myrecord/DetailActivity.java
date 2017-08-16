@@ -14,10 +14,13 @@ import android.widget.TextView;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
+import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -26,6 +29,8 @@ public class DetailActivity extends AppCompatActivity {
     private List<Record> mCertainDayRecords = new ArrayList<>();
 
     private TextView mSummaryTv;
+
+    private JayRecordAdapter mRecordAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,20 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         initDatas();
         initUI();
+
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(CategoryUpdateEvent event) {
+        if (mRecordAdapter != null) {
+            mRecordAdapter.invalidateCategoryList();
+        }
     }
 
     private void initDatas() {
@@ -59,8 +78,6 @@ public class DetailActivity extends AppCompatActivity {
 
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
     }
-
-    private JayRecordAdapter mRecordAdapter;
 
     private void initUI() {
         mSummaryTv = (TextView) findViewById(R.id.summary_tv);

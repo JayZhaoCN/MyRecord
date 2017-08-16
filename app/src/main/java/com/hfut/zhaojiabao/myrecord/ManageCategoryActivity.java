@@ -15,11 +15,14 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.util.List;
 
-public class ManagerCategoryActivity extends AppCompatActivity {
+import de.greenrobot.event.EventBus;
+
+public class ManageCategoryActivity extends AppCompatActivity {
 
     private List<Category> mCategories;
     private ManageCategoryAdapter mAdapter;
@@ -41,6 +44,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
                     @Override
                     public void onCategoryAdded() {
                         updateCategories();
+                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
                         mAdapter.notifyDataSetChanged();
                     }
                 });
@@ -81,7 +85,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     final CommonDialog dialog = new CommonDialog();
-                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManagerCategoryActivity.this);
+                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManageCategoryActivity.this);
                     builder.setTitleText(getString(R.string.confirm_delete))
                             .setRightText(getString(R.string.confirm))
                             .setLeftText(getString(R.string.cancel))
@@ -96,6 +100,7 @@ public class ManagerCategoryActivity extends AppCompatActivity {
                                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
                                     updateCategories();
                                     notifyDataSetChanged();
+                                    EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
                                     dialog.dismiss();
                                 }
                             })

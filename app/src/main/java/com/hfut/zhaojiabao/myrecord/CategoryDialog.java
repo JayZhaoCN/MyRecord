@@ -40,7 +40,7 @@ public class CategoryDialog extends DialogFragment {
         v.findViewById(R.id.manage_category).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ManagerCategoryActivity.class));
+                startActivity(new Intent(getActivity(), ManageCategoryActivity.class));
                 dismiss();
             }
         });
