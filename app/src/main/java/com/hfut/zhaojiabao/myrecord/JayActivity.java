@@ -33,6 +33,7 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
+import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
@@ -70,6 +71,7 @@ public class JayActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private CircleImageView mUserIcon;
     private TextView mUserNameTv;
+    private TextView mTodaySummaryTv;
 
     private List<Record> mList;
     private String mDefaultCategory;
@@ -99,7 +101,6 @@ public class JayActivity extends AppCompatActivity
 
     public void onEventMainThread(RecordRecoveryEvent event) {
         Log.i(TAG, "recovery success: " + event.success);
-
         loadRecords();
     }
 
@@ -107,6 +108,12 @@ public class JayActivity extends AppCompatActivity
         if (mAdapter != null) {
             mAdapter.invalidateCategoryList();
         }
+    }
+
+    public void onEventMainThread(RecordUpdateEvent event) {
+        Log.i(TAG, "RecordUpdateEvent");
+        loadRecords();
+        updateTodaySummary();
     }
 
     @Override
@@ -171,6 +178,25 @@ public class JayActivity extends AppCompatActivity
         findViewById(R.id.item_3).setOnClickListener(this);
 
         findViewById(R.id.calculator_img).setOnClickListener(this);
+
+        mTodaySummaryTv = (TextView) findViewById(R.id.today_summary_tv);
+        updateTodaySummary();
+    }
+
+    private void updateTodaySummary() {
+        float incomeSummary = 0, expendSummary = 0;
+        for (Record record : mList) {
+            if (record.getIncome()) {
+                incomeSummary += record.getSum();
+            } else {
+                expendSummary += record.getSum();
+            }
+        }
+        String todaySummary = getString(R.string.total_summary,
+                NumberUtils.getFormattedNumber(incomeSummary),
+                NumberUtils.getFormattedNumber(expendSummary),
+                NumberUtils.getFormattedNumber(incomeSummary - expendSummary));
+        mTodaySummaryTv.setText(todaySummary);
     }
 
     private void loadRecords() {
@@ -419,15 +445,14 @@ public class JayActivity extends AppCompatActivity
 
         long time = mCalendar.getTimeInMillis();
 
+        Record record;
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
-        recordDao.insert(new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
+        recordDao.insert(record = new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
         //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
         ToastUtil.showToast(JayApp.getInstance(), getString(R.string.new_record), Toast.LENGTH_SHORT);
 
-        loadRecords();
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
+        EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_ADD));
+
         //保存完成后将所有信息还原
         mSumEdit.setText("");
         mRemarkEdit.setText("");

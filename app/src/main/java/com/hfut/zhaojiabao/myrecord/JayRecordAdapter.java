@@ -14,9 +14,12 @@ import android.widget.TextView;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * @author zhaojiabao 2017/8/14
@@ -85,6 +88,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
             @Override
             public void onClick(View v) {
                 mRecordManager.deleteRecord(record);
+                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
             }
         });
 

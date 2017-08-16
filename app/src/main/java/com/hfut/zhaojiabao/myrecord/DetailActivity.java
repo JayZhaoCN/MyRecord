@@ -90,13 +90,13 @@ public class DetailActivity extends AppCompatActivity {
 
         if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
             setDetailSummary(mDayRecords.get(0));
-            getDateFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
+            getDataFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
         }
         detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mCertainDayRecords));
         mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mCertainDayRecords));
     }
 
-    private void getDateFromCertainDay(int year, int month, int day) {
+    private void getDataFromCertainDay(int year, int month, int day) {
         mCertainDayRecords.clear();
         Calendar calendar = Calendar.getInstance();
         for (Record record : mRecordList) {
@@ -139,7 +139,7 @@ public class DetailActivity extends AppCompatActivity {
                     selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
                     DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
                     setDetailSummary(dayRecord);
-                    getDateFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
+                    getDataFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
                     mRecordAdapter.setData(mCertainDayRecords);
                 }
             });
