@@ -118,9 +118,15 @@ public class ValueTransfer {
 
             if (dayRecord.year == year && dayRecord.month == (month + 1) && dayRecord.day == day) {
                 if (record.getIncome()) {
+                    if (dayRecord.incomeSum == -1) {
+                        dayRecord.incomeSum = 0;
+                    }
                     dayRecord.incomeSum += record.getSum();
                     dayRecord.sum += record.getSum();
                 } else {
+                    if (dayRecord.expendSum == -1) {
+                        dayRecord.expendSum = 0;
+                    }
                     dayRecord.expendSum += record.getSum();
                     dayRecord.sum -= record.getSum();
                 }

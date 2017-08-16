@@ -19,9 +19,12 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * @author zhaojiabao 2017/8/13
@@ -117,6 +120,7 @@ class JayDialogManager {
                         mList.remove(position);
                         mList.add(position, record);
                         mAdapter.setData(mList);
+                        EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
                         commonDialog.dismiss();
                     }
                 });
@@ -148,6 +152,7 @@ class JayDialogManager {
                 mList.remove(position);
                 mList.add(position, record);
                 mAdapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
                 commonDialog.dismiss();
             }
         });
@@ -159,6 +164,7 @@ class JayDialogManager {
                 mList.remove(position);
                 mList.add(position, record);
                 mAdapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
                 commonDialog.dismiss();
             }
         });
