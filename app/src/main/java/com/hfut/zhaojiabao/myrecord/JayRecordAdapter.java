@@ -43,7 +43,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
     }
 
     @Override
-    public void onBindViewHolder(JayRecordAdapter.RecordViewHolder holder, final int position) {
+    public void onBindViewHolder(final JayRecordAdapter.RecordViewHolder holder, int position) {
         final Record record = mList.get(position);
 
         java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
@@ -64,14 +64,14 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         holder.titleTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.editSum(position, record);
+                mRecordManager.editSum(holder.getAdapterPosition(), record);
             }
         });
 
         holder.remarkTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.editRemark(position, record);
+                mRecordManager.editRemark(holder.getAdapterPosition(), record);
             }
         });
 
@@ -87,14 +87,14 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.editType(record, position);
+                mRecordManager.editType(record, holder.getAdapterPosition());
             }
         });
 
         holder.typeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.editCategory(record, position);
+                mRecordManager.editCategory(record, holder.getAdapterPosition());
             }
         });
     }
@@ -145,7 +145,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         }
     }
 
-    public static int getCategoryColor(Context context, String categoryStr) {
+    private static int getCategoryColor(Context context, String categoryStr) {
         if (categoryStr.equals(context.getString(R.string.no_category))) {
             return Color.BLACK;
         }

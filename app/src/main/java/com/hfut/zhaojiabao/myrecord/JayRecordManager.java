@@ -109,7 +109,6 @@ class JayRecordManager {
                         mList.remove(position);
                         mList.add(position, record);
                         mAdapter.setData(mList);
-                        mAdapter.notifyDataSetChanged();
                         commonDialog.dismiss();
                     }
                 });
@@ -122,7 +121,6 @@ class JayRecordManager {
         JayDaoManager.getInstance().getDaoSession().delete(record);
         mList.remove(record);
         mAdapter.setData(mList);
-        mAdapter.notifyDataSetChanged();
         ToastUtil.showToast(JayApp.getInstance(), mContext.getString(R.string.delete_succes), Toast.LENGTH_SHORT);
     }
 

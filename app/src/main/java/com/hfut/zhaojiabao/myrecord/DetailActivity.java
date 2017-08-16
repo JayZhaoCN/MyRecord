@@ -93,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.IndicatorViewHolder> {
-        private TextView slectedTv;
+        private TextView selectedTv;
 
         @Override
         public IndicatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -102,29 +102,28 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(IndicatorViewHolder holder, final int position) {
+        public void onBindViewHolder(final IndicatorViewHolder holder, int position) {
             holder.indicatorTv.setText(TimeFormatter.getInstance().formatDate(mDayRecords.get(position).timeMillis));
 
             //第一次进来选中的是第一个
             if (position == 0) {
-                slectedTv = holder.indicatorTv;
-                slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+                selectedTv = holder.indicatorTv;
+                selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
             }
 
             holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (slectedTv != null) {
-                        slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
+                    if (selectedTv != null) {
+                        selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.white));
                     }
 
-                    slectedTv = (TextView) v;
-                    slectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
-                    DayRecord dayRecord = mDayRecords.get(position);
+                    selectedTv = (TextView) v;
+                    selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+                    DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
                     setDetailSummary(dayRecord);
                     getDateFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
                     mRecordAdapter.setData(mCertainDayRecords);
-                    mRecordAdapter.notifyDataSetChanged();
                 }
             });
         }
