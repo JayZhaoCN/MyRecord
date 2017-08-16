@@ -22,7 +22,6 @@ import com.hfut.zhaojiabao.myrecord.R;
 public class CommonDialog extends DialogFragment {
     private static final String TAG = "CommonFragment";
 
-    private LayoutInflater mInflater;
     private FrameLayout mContentContainer;
     private TextView mTitleTv;
     private TextView mLeftTv;
@@ -35,7 +34,6 @@ public class CommonDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View content = inflater.inflate(R.layout.dialog_common_dialog, container, false);
-        mInflater = inflater;
         init(content);
         return content;
     }
@@ -47,6 +45,7 @@ public class CommonDialog extends DialogFragment {
         mRightTv = (TextView) content.findViewById(R.id.right_tv);
         mContentTv = (TextView) content.findViewById(R.id.content_tv);
 
+        setCancelable(mBuilder.cancelable);
         if (!mBuilder.titleVisible) {
             mTitleTv.setVisibility(View.GONE);
         } else {
@@ -85,15 +84,16 @@ public class CommonDialog extends DialogFragment {
     }
 
     public static class CommonBuilder {
-        public String titleText;
-        public String leftText;
-        public String rightText;
-        public String contentText;
+        String titleText;
+        String leftText;
+        String rightText;
+        String contentText;
         public View content;
-        public CommonDialog dialog;
-        public boolean titleVisible = true;
-        public boolean leftTextVisible = true;
-        public boolean rightTextVisible = true;
+        boolean titleVisible = true;
+        boolean leftTextVisible = true;
+        boolean rightTextVisible = true;
+        //Dialog默认是可以取消的
+        boolean cancelable = true;
 
         private View.OnClickListener leftListener;
         private View.OnClickListener rightListener;
@@ -161,6 +161,11 @@ public class CommonDialog extends DialogFragment {
 
         public CommonBuilder setContent(View content) {
             this.content = content;
+            return this;
+        }
+
+        public CommonBuilder setCancelable(boolean cancelable) {
+            this.cancelable = cancelable;
             return this;
         }
 
