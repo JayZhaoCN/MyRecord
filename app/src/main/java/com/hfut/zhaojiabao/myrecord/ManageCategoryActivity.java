@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.dialogs.EditCategoryDialog;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 

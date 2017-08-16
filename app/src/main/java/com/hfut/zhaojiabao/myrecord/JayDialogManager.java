@@ -28,7 +28,7 @@ import java.util.List;
  *         首页对话框管理类
  */
 
-class JayDialogManager {
+class JayDialogManager {w
     private static final String TAG = "JayRecordManager";
 
     private AppCompatActivity mContext;

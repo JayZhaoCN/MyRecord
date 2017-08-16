@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
+import com.hfut.zhaojiabao.myrecord.R;
 
 /**
  * @author zhaojiabao 2017/5/20
