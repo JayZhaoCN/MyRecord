@@ -3,6 +3,7 @@ package com.hfut.zhaojiabao.myrecord;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
 
@@ -27,13 +29,13 @@ import de.greenrobot.event.EventBus;
  */
 
 class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
-    private Context mContext;
+    private AppCompatActivity mContext;
     private List<Record> mList;
     private JayDialogManager mRecordManager;
     private List<Category> mCategoryList;
     private static int[] mCategoryColors;
 
-    JayRecordAdapter(Context context, List<Record> list) {
+    JayRecordAdapter(AppCompatActivity context, List<Record> list) {
         mContext = context;
         mList = list;
         invalidateCategoryList();
@@ -87,8 +89,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         holder.deleteImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordManager.deleteRecord(record);
-                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
+                showDeleteConfirmDialog(record);
             }
         });
 
@@ -196,5 +197,32 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         }
 
         return mCategoryColors[index % mCategoryColors.length];
+    }
+
+    private void showDeleteConfirmDialog(final Record record) {
+        final CommonDialog dialog = new CommonDialog();
+
+        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
+        builder.setTitleText(R.string.delete_confirm)
+                .setLeftTextVisible(true)
+                .setLeftText(R.string.cancel)
+                .setLeftListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .setRightTextVisible(true)
+                .setRightText(R.string.confirm)
+                .setRightListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRecordManager.deleteRecord(record);
+                        EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
+                        dialog.dismiss();
+                    }
+                });
+        dialog.setBuilder(builder);
+        dialog.show(mContext.getSupportFragmentManager(), "deleteConfirmDialog");
     }
 }

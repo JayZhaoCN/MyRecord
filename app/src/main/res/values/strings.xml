@@ -118,4 +118,5 @@
     <string name="warning_title">警告</string>
     <string name="day_summary">收入: %1$s 支出: %2$s</string>
     <string name="total_summary">今日 入: %1$s 出: %2$s 总: %3$s</string>
+    <string name="delete_confirm">确认删除这条记录吗？</string>
 </resources>
