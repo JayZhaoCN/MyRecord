@@ -1,7 +1,9 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.utils;
 
 
 import android.content.Context;
+
+import com.hfut.zhaojiabao.myrecord.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

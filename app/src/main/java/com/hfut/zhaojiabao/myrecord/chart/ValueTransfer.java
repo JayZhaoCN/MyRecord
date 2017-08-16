@@ -1,12 +1,10 @@
 package com.hfut.zhaojiabao.myrecord.chart;
 
-import android.util.Log;
-
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.DayRecord;
-import com.hfut.zhaojiabao.myrecord.NumberUtils;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 
 import java.util.ArrayList;

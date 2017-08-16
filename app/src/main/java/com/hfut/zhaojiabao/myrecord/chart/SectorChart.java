@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.Utils;
+import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.List;
 

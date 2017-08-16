@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".JayActivity"
+            android:name=".activities.JayActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -25,38 +25,38 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CalculatorActivity"
+            android:name=".activities.CalculatorActivity"
             android:label="@string/title_activity_calculator"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".ManageCategoryActivity"
+            android:name=".activities.ManageCategoryActivity"
             android:label="@string/title_activity_manager_category"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".RecordChartActivity"
+            android:name=".activities.RecordChartActivity"
             android:label="@string/title_activity_record_chart"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".SectorActivity"
+            android:name=".activities.SectorActivity"
             android:label="@string/title_activity_sector"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".RecoveryActivity"
+            android:name=".activities.RecoveryActivity"
             android:label="@string/title_activity_recovery"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".BackupActivity"
+            android:name=".activities.BackupActivity"
             android:label="@string/title_activity_backup"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
         <activity
-            android:name=".DetailActivity"
+            android:name=".activities.DetailActivity"
             android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

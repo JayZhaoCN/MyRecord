@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
+import com.hfut.zhaojiabao.myrecord.JayApp;
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;

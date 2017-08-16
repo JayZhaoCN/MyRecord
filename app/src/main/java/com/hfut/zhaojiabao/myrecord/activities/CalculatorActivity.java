@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
 
 public class CalculatorActivity extends AppCompatActivity implements View.OnClickListener {

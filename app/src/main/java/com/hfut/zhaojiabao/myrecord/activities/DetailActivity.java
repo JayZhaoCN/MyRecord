@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +14,11 @@ import android.widget.TextView;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.DayRecord;
+import com.hfut.zhaojiabao.myrecord.JayDialogManager;
+import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
+import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;

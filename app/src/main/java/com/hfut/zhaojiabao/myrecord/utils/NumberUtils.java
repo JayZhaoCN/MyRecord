@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

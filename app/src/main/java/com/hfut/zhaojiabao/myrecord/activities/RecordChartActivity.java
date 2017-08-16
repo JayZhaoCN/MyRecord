@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.DayRecord;
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.RecordChart;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 

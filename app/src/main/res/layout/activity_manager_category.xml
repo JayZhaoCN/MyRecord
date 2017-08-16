@@ -6,7 +6,7 @@
     tools:ignore="contentDescription"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hfut.zhaojiabao.myrecord.ManageCategoryActivity">
+    tools:context="com.hfut.zhaojiabao.myrecord.activities.ManageCategoryActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

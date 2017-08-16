@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.SectorChart;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 

@@ -17,6 +17,7 @@ import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
 
 import java.util.List;
@@ -28,20 +29,20 @@ import de.greenrobot.event.EventBus;
  *         用在首页和详情界面
  */
 
-class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
+public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewHolder> {
     private AppCompatActivity mContext;
     private List<Record> mList;
     private JayDialogManager mRecordManager;
     private List<Category> mCategoryList;
     private static int[] mCategoryColors;
 
-    JayRecordAdapter(AppCompatActivity context, List<Record> list) {
+    public JayRecordAdapter(AppCompatActivity context, List<Record> list) {
         mContext = context;
         mList = list;
         invalidateCategoryList();
     }
 
-    void invalidateCategoryList() {
+    public void invalidateCategoryList() {
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
     }
 
@@ -131,7 +132,7 @@ class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.RecordViewH
         return mContext.getString(R.string.no_category);
     }
 
-    void setRecordManager(JayDialogManager recordManager) {
+    public void setRecordManager(JayDialogManager recordManager) {
         mRecordManager = recordManager;
     }
 

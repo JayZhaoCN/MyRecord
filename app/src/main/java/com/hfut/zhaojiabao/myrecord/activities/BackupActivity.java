@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
 
 public class BackupActivity extends AppCompatActivity {

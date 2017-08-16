@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.views;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -18,6 +17,9 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
+
+import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.ArrayList;
 

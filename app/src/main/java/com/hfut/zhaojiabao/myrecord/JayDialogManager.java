@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
+import com.hfut.zhaojiabao.myrecord.activities.ManageCategoryActivity;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
@@ -31,14 +32,14 @@ import de.greenrobot.event.EventBus;
  *         首页对话框管理类
  */
 
-class JayDialogManager {
+public class JayDialogManager {
     private static final String TAG = "JayRecordManager";
 
     private AppCompatActivity mContext;
     private List<Record> mList;
     private JayRecordAdapter mAdapter;
 
-    JayDialogManager(AppCompatActivity context, JayRecordAdapter adapter, List<Record> list) {
+    public JayDialogManager(AppCompatActivity context, JayRecordAdapter adapter, List<Record> list) {
         mContext = context;
         mAdapter = adapter;
         mList = list;
@@ -199,7 +200,7 @@ class JayDialogManager {
     /**
      * 展示选择类别对话框
      */
-    void showManageCategoryDialog(OnCategorySelectedListener listener) {
+    public void showManageCategoryDialog(OnCategorySelectedListener listener) {
         final CommonDialog commonDialog = new CommonDialog();
 
         View contentView = View.inflate(mContext, R.layout.layout_category_dialog, null);
@@ -273,7 +274,7 @@ class JayDialogManager {
         }
     }
 
-    interface OnCategorySelectedListener {
+    public interface OnCategorySelectedListener {
         void onSelect(String category);
     }
 
@@ -281,7 +282,7 @@ class JayDialogManager {
      * 强制关闭软键盘
      * 详见: http://blog.csdn.net/h7870181/article/details/8332991
      */
-    static void closeKeyboard(EditText editText, Context context) {
+    public static void closeKeyboard(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }

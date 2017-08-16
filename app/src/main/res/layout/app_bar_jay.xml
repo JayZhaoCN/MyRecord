@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hfut.zhaojiabao.myrecord.JayActivity">
+    tools:context="com.hfut.zhaojiabao.myrecord.activities.JayActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
     <include layout="@layout/content_jay"/>
 
     <!--TODO 这个控件需要重构-->
-    <com.hfut.zhaojiabao.myrecord.PopLayout
+    <com.hfut.zhaojiabao.myrecord.views.PopLayout
         android:visibility="gone"
         android:id="@+id/pop_Layout"
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_marginEnd="20dp"
         app:animation_type="scale">
 
-        <com.hfut.zhaojiabao.myrecord.CircleShadowView
+        <com.hfut.zhaojiabao.myrecord.views.CircleShadowView
             android:id="@+id/item_1"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -42,7 +42,7 @@
             app:tint="@color/sunflower"
             app:icon="@drawable/ic_view_column"/>
 
-        <com.hfut.zhaojiabao.myrecord.CircleShadowView
+        <com.hfut.zhaojiabao.myrecord.views.CircleShadowView
             android:id="@+id/item_2"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -50,7 +50,7 @@
             app:tint="@color/sunflower"
             app:icon="@drawable/ic_pie_chart"/>
 
-        <com.hfut.zhaojiabao.myrecord.CircleShadowView
+        <com.hfut.zhaojiabao.myrecord.views.CircleShadowView
             android:id="@+id/item_3"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -58,12 +58,12 @@
             app:tint="@color/sunflower"
             app:icon="@drawable/ic_show_chart"/>
 
-        <com.hfut.zhaojiabao.myrecord.CrossBottomView
+        <com.hfut.zhaojiabao.myrecord.views.CrossBottomView
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:background_color="@color/stp_blue"
             app:cross_color="@color/sunflower"/>
 
-    </com.hfut.zhaojiabao.myrecord.PopLayout>
+    </com.hfut.zhaojiabao.myrecord.views.PopLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  */
 
 public class Utils {
-    static float sp2px(Context context, float sp) {
+    public static float sp2px(Context context, float sp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }

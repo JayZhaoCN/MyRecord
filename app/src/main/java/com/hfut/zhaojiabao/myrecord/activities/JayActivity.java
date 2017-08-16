@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord;
+package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,6 +28,13 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
+import com.hfut.zhaojiabao.myrecord.JayApp;
+import com.hfut.zhaojiabao.myrecord.JayDialogManager;
+import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
+import com.hfut.zhaojiabao.myrecord.views.PopLayout;
+import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
