@@ -1,7 +1,6 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +23,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class DetailActivity extends AppCompatActivity {
+    private static final String TAG = "DetailActivity";
 
     private List<DayRecord> mDayRecords;
     private List<Record> mRecordList;
@@ -32,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mSummaryTv;
 
     private JayRecordAdapter mRecordAdapter;
+    private IndicatorAdapter mIndicatorAdapter;
 
     private SelectDate mSelectDate;
 
@@ -64,16 +65,22 @@ public class DetailActivity extends AppCompatActivity {
         //当记录发生变化，重新加载一遍
         initDatas();
         if (mDayRecords == null) {
+            //所有记录都删完了，直接返回
             return;
         }
+        //日期栏数据变化
         mIndicatorAdapter.notifyDataSetChanged();
         DayRecord dayRecord = getCertainDayRecord(mSelectDate);
         if (dayRecord == null) {
+            //如果当前日期的数据被删完了，获取列表中第一个日期的数据。
             dayRecord = mDayRecords.get(0);
             mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
         }
+        //更新Toolbar上的Summary
         setDetailSummary(getCertainDayRecord(mSelectDate));
+        //更新详情栏数据
         getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
+        //通知详情栏数据变化
         mRecordAdapter.setData(mCertainDayRecords);
     }
 
@@ -87,7 +94,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initDatas() {
-        //TODO 后面考虑做成static的，因为图表界面也会用到一样的数据，不必加载两次
         List<DayRecord> dayRecord = ValueTransfer.getDayRecords();
         //剔除掉没有任何记录的日期
         mDayRecords = new ArrayList<>();
@@ -105,10 +111,9 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
+        //取所有记录数据
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
     }
-
-    private IndicatorAdapter mIndicatorAdapter;
 
     private void initUI() {
         mSummaryTv = (TextView) findViewById(R.id.summary_tv);
@@ -143,7 +148,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.IndicatorViewHolder> {
-
         @Override
         public IndicatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new IndicatorViewHolder(LayoutInflater.from(parent.getContext())
