@@ -107,7 +107,7 @@ public class ValueTransfer {
             return result;
         }
 
-        for (int i = 0; i < records.size(); i++) {
+        for (int i = 1; i < records.size(); i++) {
             Record record = records.get(i);
             calender.setTimeInMillis(record.getConsumeTime());
             year = calender.get(Calendar.YEAR);
