@@ -15,6 +15,7 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mSummaryTv;
 
     private JayRecordAdapter mRecordAdapter;
+
+    private SelectDate mSelectDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,32 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    public void onEventMainThread(RecordUpdateEvent event) {
+        //当记录发生变化，重新加载一遍
+        initDatas();
+        if (mDayRecords == null) {
+            return;
+        }
+        mIndicatorAdapter.notifyDataSetChanged();
+        DayRecord dayRecord = getCertainDayRecord(mSelectDate);
+        if (dayRecord == null) {
+            dayRecord = mDayRecords.get(0);
+            mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
+        }
+        setDetailSummary(getCertainDayRecord(mSelectDate));
+        getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
+        mRecordAdapter.setData(mCertainDayRecords);
+    }
+
+    private DayRecord getCertainDayRecord(SelectDate date) {
+        for (DayRecord dayRecord : mDayRecords) {
+            if (dayRecord.year == date.year && dayRecord.month == date.month && dayRecord.day == date.day) {
+                return dayRecord;
+            }
+        }
+        return null;
+    }
+
     private void initDatas() {
         //TODO 后面考虑做成static的，因为图表界面也会用到一样的数据，不必加载两次
         List<DayRecord> dayRecord = ValueTransfer.getDayRecords();
@@ -79,18 +108,22 @@ public class DetailActivity extends AppCompatActivity {
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
     }
 
+    private IndicatorAdapter mIndicatorAdapter;
+
     private void initUI() {
         mSummaryTv = (TextView) findViewById(R.id.summary_tv);
         RecyclerView indicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
         RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
 
         indicatorList.setLayoutManager(new LinearLayoutManager(this));
-        indicatorList.setAdapter(new IndicatorAdapter());
+        indicatorList.setAdapter(mIndicatorAdapter = new IndicatorAdapter());
         detailList.setLayoutManager(new LinearLayoutManager(this));
 
         if (mDayRecords.size() > 0 && mRecordList.size() > 0) {
+            //初次进入，选中第一个
             setDetailSummary(mDayRecords.get(0));
-            getDataFromCertainDay(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
+            mSelectDate = new SelectDate(mDayRecords.get(0).year, mDayRecords.get(0).month, mDayRecords.get(0).day);
+            getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
         }
         detailList.setAdapter(mRecordAdapter = new JayRecordAdapter(this, mCertainDayRecords));
         mRecordAdapter.setRecordManager(new JayRecordManager(this, mRecordAdapter, mCertainDayRecords));
@@ -139,7 +172,8 @@ public class DetailActivity extends AppCompatActivity {
                     selectedTv.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
                     DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
                     setDetailSummary(dayRecord);
-                    getDataFromCertainDay(dayRecord.year, dayRecord.month, dayRecord.day);
+                    mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
+                    getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
                     mRecordAdapter.setData(mCertainDayRecords);
                 }
             });
@@ -170,5 +204,19 @@ public class DetailActivity extends AppCompatActivity {
             expendSum = 0;
         }
         mSummaryTv.setText(getString(R.string.day_summary, String.valueOf(incomeSum), String.valueOf(expendSum)));
+    }
+
+    private class SelectDate {
+        int year, month, day;
+
+        SelectDate(int year, int month, int day) {
+            set(year, month, day);
+        }
+
+        void set(int year, int month, int day) {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+        }
     }
 }
