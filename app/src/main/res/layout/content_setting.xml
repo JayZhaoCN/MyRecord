@@ -10,5 +10,9 @@
     tools:context="com.hfut.zhaojiabao.myrecord.activities.SettingActivity"
     tools:showIn="@layout/activity_setting">
 
+    <com.hfut.zhaojiabao.myrecord.views.JayItemView
+        android:id="@+id/test_item"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"/>
 
 </LinearLayout>

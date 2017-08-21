@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.views.JayItemView;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -18,8 +19,14 @@ public class SettingActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("设置");
         setSupportActionBar(toolbar);
+
+        initViews();
     }
 
-
+    private void initViews() {
+        JayItemView itemView = (JayItemView) findViewById(R.id.test_item);
+        itemView.setTitle("Title");
+        itemView.setSubTitle("SubTitle");
+    }
 
 }
