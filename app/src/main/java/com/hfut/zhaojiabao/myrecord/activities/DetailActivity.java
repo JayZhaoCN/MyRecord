@@ -140,7 +140,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 mSelectedView = mIndicatorList.getChildAt(0);
-                mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+                if (mSelectedView != null) {
+                    mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+                }
             }
         });
 
