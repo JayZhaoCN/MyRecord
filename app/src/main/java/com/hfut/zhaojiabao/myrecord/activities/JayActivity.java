@@ -518,6 +518,9 @@ public class JayActivity extends AppCompatActivity
             case R.id.nav_detail:
                 startActivity(new Intent(this, DetailActivity.class));
                 break;
+            case R.id.nav_setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
             case R.id.nav_about:
                 showAboutDialog();
                 break;

@@ -88,6 +88,7 @@
     <string name="histogram">柱状图</string>
     <string name="pie">饼图</string>
     <string name="nav_detail">支出/收入详情</string>
+    <string name="nav_setting">设置</string>
     <string name="line_chart">折线图</string>
     <string name="no_remark">无备注</string>
     <string name="today_item">今天</string>
@@ -121,4 +122,5 @@
     <string name="day_summary">收入: %1$s 支出: %2$s</string>
     <string name="total_summary">今日 入: %1$s 出: %2$s 总: %3$s</string>
     <string name="delete_confirm">确认删除这条记录吗？</string>
+    <string name="title_activity_setting">SettingActivity</string>
 </resources>
