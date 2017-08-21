@@ -94,4 +94,6 @@
 
     <!--color for sector chart-->
 
+    <color name="red">#FF0000</color>
+
 </resources>

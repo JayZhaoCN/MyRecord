@@ -347,6 +347,15 @@
                     android:textSize="16sp"
                     tools:text="100"/>
 
+                <TextView
+                    android:id="@+id/balance_warning_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/red"
+                    tools:text="balance"/>
+
             </LinearLayout>
 
             <Button

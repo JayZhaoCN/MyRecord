@@ -80,6 +80,7 @@ public class JayActivity extends AppCompatActivity
     private TextView mUserNameTv;
     private TextView mIncomeSumTv;
     private TextView mExpendSumTv;
+    private TextView mBalanceWarningTv;
 
     private List<Record> mList;
     private String mDefaultCategory;
@@ -189,6 +190,7 @@ public class JayActivity extends AppCompatActivity
 
         mIncomeSumTv = (TextView) findViewById(R.id.income_sum_tv);
         mExpendSumTv = (TextView) findViewById(R.id.expend_sum_tv);
+        mBalanceWarningTv = (TextView) findViewById(R.id.balance_warning_tv);
         updateTodaySummary();
     }
 
@@ -203,6 +205,10 @@ public class JayActivity extends AppCompatActivity
         }
         mIncomeSumTv.setText(NumberUtils.getFormattedNumber(incomeSummary));
         mExpendSumTv.setText(NumberUtils.getFormattedNumber(expendSummary));
+
+        float balance = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getBalance();
+        float remain = balance + incomeSummary - expendSummary;
+        mBalanceWarningTv.setText("今日还可以花：" + NumberUtils.getFormattedNumber(remain) + "元");
     }
 
     private void loadRecords() {
