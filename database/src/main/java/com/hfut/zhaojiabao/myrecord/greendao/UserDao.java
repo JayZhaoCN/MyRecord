@@ -26,6 +26,8 @@ public class UserDao extends AbstractDao<User, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UserName = new Property(1, String.class, "userName", false, "USER_NAME");
+        public final static Property Budget = new Property(2, Float.class, "budget", false, "BUDGET");
+        public final static Property Balance = new Property(3, Float.class, "balance", false, "BALANCE");
     }
 
 
@@ -42,7 +44,9 @@ public class UserDao extends AbstractDao<User, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"USER_NAME\" TEXT);"); // 1: userName
+                "\"USER_NAME\" TEXT," + // 1: userName
+                "\"BUDGET\" REAL," + // 2: budget
+                "\"BALANCE\" REAL);"); // 3: balance
     }
 
     /** Drops the underlying database table. */
@@ -64,6 +68,16 @@ public class UserDao extends AbstractDao<User, Long> {
         if (userName != null) {
             stmt.bindString(2, userName);
         }
+ 
+        Float budget = entity.getBudget();
+        if (budget != null) {
+            stmt.bindDouble(3, budget);
+        }
+ 
+        Float balance = entity.getBalance();
+        if (balance != null) {
+            stmt.bindDouble(4, balance);
+        }
     }
 
     @Override
@@ -79,6 +93,16 @@ public class UserDao extends AbstractDao<User, Long> {
         if (userName != null) {
             stmt.bindString(2, userName);
         }
+ 
+        Float budget = entity.getBudget();
+        if (budget != null) {
+            stmt.bindDouble(3, budget);
+        }
+ 
+        Float balance = entity.getBalance();
+        if (balance != null) {
+            stmt.bindDouble(4, balance);
+        }
     }
 
     @Override
@@ -90,7 +114,9 @@ public class UserDao extends AbstractDao<User, Long> {
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // userName
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // userName
+            cursor.isNull(offset + 2) ? null : cursor.getFloat(offset + 2), // budget
+            cursor.isNull(offset + 3) ? null : cursor.getFloat(offset + 3) // balance
         );
         return entity;
     }
@@ -99,6 +125,8 @@ public class UserDao extends AbstractDao<User, Long> {
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setBudget(cursor.isNull(offset + 2) ? null : cursor.getFloat(offset + 2));
+        entity.setBalance(cursor.isNull(offset + 3) ? null : cursor.getFloat(offset + 3));
      }
     
     @Override

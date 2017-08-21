@@ -13,10 +13,21 @@ public class User {
     @Id
     private Long id;
     private String userName;
-    @Generated(hash = 152095471)
-    public User(Long id, String userName) {
+    /**
+     * 每月预算
+     */
+    private Float budget = 2000f;
+    /**
+     * 余额
+     */
+    private Float balance = 2000f;
+
+    @Generated(hash = 1508505750)
+    public User(Long id, String userName, Float budget, Float balance) {
         this.id = id;
         this.userName = userName;
+        this.budget = budget;
+        this.balance = balance;
     }
     @Generated(hash = 586692638)
     public User() {
@@ -27,6 +38,8 @@ public class User {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", id);
             jsonObject.put("userName", userName);
+            jsonObject.put("budget", budget);
+            jsonObject.put("balance", balance);
             return jsonObject.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,6 +57,8 @@ public class User {
             User user = new User();
             user.setId(jsonObject.getLong("id"));
             user.setUserName(jsonObject.getString("userName"));
+            user.setBudget((float) jsonObject.getDouble("budget"));
+            user.setBalance((float) jsonObject.getDouble("balance"));
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,5 +77,17 @@ public class User {
     }
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    public Float getBudget() {
+        return this.budget;
+    }
+    public void setBudget(Float budget) {
+        this.budget = budget;
+    }
+    public Float getBalance() {
+        return this.balance;
+    }
+    public void setBalance(Float balance) {
+        this.balance = balance;
     }
 }
