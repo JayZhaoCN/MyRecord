@@ -27,6 +27,7 @@ public class SettingActivity extends AppCompatActivity {
         JayItemView itemView = (JayItemView) findViewById(R.id.test_item);
         itemView.setTitle("Title");
         itemView.setSubTitle("SubTitle");
+        itemView.setDividerVisible(true);
     }
 
 }

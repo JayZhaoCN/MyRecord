@@ -3,6 +3,7 @@ package com.hfut.zhaojiabao.myrecord.views;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,9 @@ public class JayItemView extends FrameLayout {
 
     private TextView mTitleTv;
     private TextView mSubTitleTv;
+    private TextView mSummaryTv;
+
+    private View mDivider;
 
     public JayItemView(Context context) {
         this(context, null);
@@ -35,6 +39,9 @@ public class JayItemView extends FrameLayout {
     private void initViews() {
         mTitleTv = (TextView) findViewById(R.id.title_tv);
         mSubTitleTv = (TextView) findViewById(R.id.sub_title_tv);
+        mSummaryTv = (TextView) findViewById(R.id.summary_tv);
+
+        mDivider = findViewById(R.id.divider);
     }
 
     public void setTitle(String titleStr) {
@@ -51,5 +58,17 @@ public class JayItemView extends FrameLayout {
 
     public void setSubTitle(@StringRes int subTitleRes) {
         setSubTitle(mContext.getString(subTitleRes));
+    }
+
+    public void setSummaryText(String summaryStr) {
+        mSummaryTv.setText(summaryStr);
+    }
+
+    public void setSummaryText(@StringRes int summaryRes) {
+        setSummaryText(mContext.getString(summaryRes));
+    }
+
+    public void setDividerVisible(boolean visible) {
+        mDivider.setVisibility(visible ? VISIBLE : GONE);
     }
 }
