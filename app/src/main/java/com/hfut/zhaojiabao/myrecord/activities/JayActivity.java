@@ -562,8 +562,8 @@ public class JayActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
-        mUserIcon.setOnClickListener(this);
-        mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
+        //mUserIcon.setOnClickListener(this);
+        //mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
         mUserNameTv.setOnClickListener(new View.OnClickListener() {
