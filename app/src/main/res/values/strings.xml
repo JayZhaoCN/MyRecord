@@ -123,4 +123,11 @@
     <string name="total_summary">今日 入: %1$s 出: %2$s 总: %3$s</string>
     <string name="delete_confirm">确认删除这条记录吗？</string>
     <string name="title_activity_setting">SettingActivity</string>
+    <string name="edit_budget">修改每月预算</string>
+    <string name="budget_cannot_be_zero">预算不可为0</string>
+    <string name="balance_cannot_be_zero">初始值不可为0</string>
+    <string name="set_budget">设置每月预算</string>
+    <string name="edit_balance">修改初始值</string>
+    <string name="set_balance">设置账户初始值</string>
+    <string name="setting">设置</string>
 </resources>
