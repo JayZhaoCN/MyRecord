@@ -125,8 +125,8 @@ public class JayActivity extends AppCompatActivity
 
     public void onEventMainThread(RecordUpdateEvent event) {
         Log.i(TAG, "RecordUpdateEvent");
-        //如果不是今日的记录变化，则无需更新今日Summary
         long[] todayBounds = TimeFormatter.getTodayBounds();
+        //如果不是今日的记录变化，则无需更新今日Summary
         if (todayBounds[0] > event.record.getConsumeTime() || todayBounds[1] < event.record.getConsumeTime()) {
             Log.i(TAG, "not today's record change, so return.");
             return;

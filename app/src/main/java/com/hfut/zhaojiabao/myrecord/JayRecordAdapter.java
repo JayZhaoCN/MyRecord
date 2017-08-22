@@ -44,6 +44,7 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
 
     public void invalidateCategoryList() {
         mCategoryList = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll();
+        this.notifyDataSetChanged();
     }
 
     @Override
