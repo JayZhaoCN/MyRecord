@@ -32,4 +32,12 @@ public class NumberUtils {
         }
         return String.valueOf(number);
     }
+
+    public static String getFormattedNumber(float number) {
+        int numberInt = (int) number;
+        if (numberInt == number) {
+            return String.valueOf(numberInt);
+        }
+        return String.valueOf(number);
+    }
 }

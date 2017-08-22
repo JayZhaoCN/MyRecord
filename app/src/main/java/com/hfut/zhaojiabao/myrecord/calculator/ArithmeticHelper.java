@@ -118,6 +118,7 @@ public class ArithmeticHelper {
         }
     }
 
+    //TODO 这个方法要做修改
     private static ArrayList<Element> getElements(String infix) {
         ArrayList<Element> elements = new ArrayList<>();
         String str = "";

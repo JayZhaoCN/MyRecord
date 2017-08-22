@@ -194,10 +194,11 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 }
                 mScreenContentStr += ".";
                 mCanInputDot = false;
+                mCanInputOperator = false;
                 break;
             case R.id.equal:
                 mResult = ArithmeticHelper.calculate(mScreenContentStr);
-                mScreenContentStr = NumberUtils.getFormattedNumber(mResult);
+                mScreenContentStr = NumberUtils.getFormattedNumber((float) mResult);
                 mHasResult = true;
                 break;
             case R.id.clean_btn:
