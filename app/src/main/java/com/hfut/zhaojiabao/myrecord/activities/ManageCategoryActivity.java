@@ -53,7 +53,6 @@ public class ManageCategoryActivity extends AppCompatActivity {
         RecyclerView categoryList = (RecyclerView) findViewById(R.id.category_list);
         categoryList.setLayoutManager(new LinearLayoutManager(this));
         categoryList.setAdapter(mAdapter = new ManageCategoryAdapter());
-
     }
 
     private void updateCategories() {
@@ -152,7 +151,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
                         category.setCategory(addEdit.getText().toString());
                         JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
                         updateCategories();
-                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
+                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
                         mAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }

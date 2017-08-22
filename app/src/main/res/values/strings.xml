@@ -105,7 +105,7 @@
     <string name="default_user_name">Jay Zhao</string>
     <string name="modify_name_tips">键入昵称</string>
     <string name="about_content">版本:1.0.0\n作者:赵家宝\n邮箱:1760064052@qq.com\nbug肯定是有的哈，大大的有，发现了就联系我，有奖励哦~\n咳咳，还有，有点简陋哈，签名都没弄，所以要是你手机里的杀毒软件说俺是病毒，直接忽略就行啦~
-    对啦，源码都在我的Github主页上，欢迎访问\n:https://github.com/JayZhaoCN
+    对啦，源码都在我的Github主页上，欢迎访问:\nhttps://github.com/JayZhaoCN
     </string>
     <string name="modify_name_title">修改昵称</string>
     <string name="empty_data_tips">暂时没有记账数据，快去添加吧！</string>
