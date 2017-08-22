@@ -11,8 +11,8 @@
     tools:showIn="@layout/activity_setting">
 
     <com.hfut.zhaojiabao.myrecord.views.JayItemView
-        app:itemTitle="@string/set_balance"
-        android:id="@+id/balance_item"
+        app:itemTitle="@string/remain_sum"
+        android:id="@+id/remain_sum_item"
         android:layout_width="match_parent"
         android:layout_height="60dp"/>
 

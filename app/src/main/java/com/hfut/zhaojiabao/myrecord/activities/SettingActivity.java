@@ -12,6 +12,7 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
@@ -21,7 +22,7 @@ import com.hfut.zhaojiabao.myrecord.views.JayItemView;
 import de.greenrobot.event.EventBus;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
-    private JayItemView mBalanceItem;
+    private JayItemView mRemainSumItem;
     private JayItemView mBudgetItem;
 
     @Override
@@ -36,13 +37,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initViews() {
-        mBalanceItem = (JayItemView) findViewById(R.id.balance_item);
-        //mBalanceItem.setTitle(R.string.set_balance);
-        mBalanceItem.setDividerVisible(true);
-        mBalanceItem.setOnClickListener(this);
+        mRemainSumItem = (JayItemView) findViewById(R.id.remain_sum_item);
+        mRemainSumItem.setDividerVisible(true);
+        mRemainSumItem.setOnClickListener(this);
 
         mBudgetItem = (JayItemView) findViewById(R.id.budget_item);
-        //mBudgetItem.setTitle(R.string.set_budget);
         mBudgetItem.setDividerVisible(true);
         mBudgetItem.setOnClickListener(this);
 
@@ -51,15 +50,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private void updateItemSummary() {
         User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
-        mBalanceItem.setSummaryText(NumberUtils.getFormattedNumber(user.getBalance()) + "元");
         mBudgetItem.setSummaryText(NumberUtils.getFormattedNumber(user.getBudget()) + "元");
+        updateRemainSum();
+    }
+
+    private void updateRemainSum() {
+        float remainSum = ValueTransfer.getRemainSum();
+        mRemainSumItem.setSummaryText(NumberUtils.getFormattedNumber(remainSum) + "元");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.balance_item:
-                showEditBalanceDialog();
+            case R.id.remain_sum_item:
                 break;
             case R.id.budget_item:
                 showEditBudgetDialog();
@@ -67,53 +70,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 break;
         }
-    }
-
-    /**
-     * 修改初始值
-     */
-    private void showEditBalanceDialog() {
-        final EditText editText = new EditText(this);
-        editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        final CommonDialog dialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setTitleText(R.string.edit_balance)
-                .setCancelable(false)
-                .setLeftTextVisible(true)
-                .setLeftText(R.string.cancel)
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                })
-                .setRightTextVisible(true)
-                .setRightText(R.string.confirm)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        float budget = 0;
-                        try {
-                            budget = Float.valueOf(editText.getText().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        //输入有误(0或非数字)
-                        if (budget == 0) {
-                            ToastUtil.showToast(getString(R.string.balance_cannot_be_zero), Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            return;
-                        }
-                        User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
-                        user.setBalance(budget);
-                        JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
-                        updateItemSummary();
-                        dialog.dismiss();
-                    }
-                })
-                .setContent(editText);
-        dialog.setBuilder(builder);
-        dialog.show(getSupportFragmentManager(), "editBudgetDialog");
     }
 
     /**

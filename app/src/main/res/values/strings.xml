@@ -128,7 +128,7 @@
     <string name="balance_cannot_be_zero">初始值不可为0</string>
     <string name="set_budget">每日预算</string>
     <string name="edit_balance">修改初始值</string>
-    <string name="set_balance">账户初始值</string>
+    <string name="remain_sum">账户余额</string>
     <string name="setting">设置</string>
     <string name="remain_summary">今日还可以花%1$s元</string>
 </resources>

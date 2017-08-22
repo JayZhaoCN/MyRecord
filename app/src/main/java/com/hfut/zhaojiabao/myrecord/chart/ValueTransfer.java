@@ -201,6 +201,20 @@ public class ValueTransfer {
         return result;
     }
 
+    public static float getRemainSum() {
+        List<Record> records = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();
+
+        float remain = 0;
+        for (Record record : records) {
+            if (record.getIncome()) {
+                remain += record.getSum();
+            } else {
+                remain -= record.getSum();
+            }
+        }
+        return remain;
+    }
+
     private static boolean recordContains(List<DayRecord> records, Date date) {
         for (DayRecord record : records) {
             if (record.year == date.getYear() + 1900 && record.month == date.getMonth() + 1 && record.day == date.getDate()) {
