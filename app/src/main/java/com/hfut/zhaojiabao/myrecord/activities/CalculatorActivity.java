@@ -17,6 +17,8 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private String mScreenContentStr = "";
     private boolean mCanInputDot = true;
     private boolean mCanInputOperator = true;
+    //是否可以输入'-'
+    private boolean mCanInputSub = true;
     private boolean mHasResult = false;
     private double mResult;
 
@@ -66,6 +68,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.num_0:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -74,6 +77,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_1:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -82,6 +86,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_2:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -90,6 +95,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_3:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -98,6 +104,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_4:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -106,6 +113,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_5:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -114,6 +122,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_6:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -122,6 +131,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_7:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -130,6 +140,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_8:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -138,6 +149,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.num_9:
                 mCanInputOperator = true;
+                mCanInputSub = true;
                 if (mHasResult) {
                     mScreenContentStr = "";
                     mHasResult = false;
@@ -152,15 +164,25 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputOperator = false;
                 mScreenContentStr += "+";
                 mCanInputDot = true;
+                mCanInputSub = true;
                 break;
             case R.id.operator_subtraction:
-                if (!mCanInputOperator) {
+                if (!mCanInputSub) {
                     return;
                 }
                 mHasResult = false;
                 mCanInputOperator = false;
                 mScreenContentStr += "-";
                 mCanInputDot = true;
+
+                int length = mScreenContentStr.length();
+                if (length == 1) {
+                    mCanInputSub = false;
+                    break;
+                }
+                char aChar = mScreenContentStr.charAt(length - 2);
+                mCanInputSub = !(ArithmeticHelper.isOperator(aChar) && aChar != '-');
+
                 break;
             case R.id.operator_multi:
                 if (!mCanInputOperator) {
@@ -170,6 +192,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputOperator = false;
                 mScreenContentStr += "*";
                 mCanInputDot = true;
+                mCanInputSub = true;
                 break;
             case R.id.operator_division:
                 if (!mCanInputOperator) {
@@ -179,6 +202,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputOperator = false;
                 mScreenContentStr += "/";
                 mCanInputDot = true;
+                mCanInputSub = true;
                 break;
             case R.id.num_dot:
                 if (!mCanInputDot) {
@@ -195,6 +219,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mScreenContentStr += ".";
                 mCanInputDot = false;
                 mCanInputOperator = false;
+                mCanInputSub = false;
                 break;
             case R.id.equal:
                 mResult = ArithmeticHelper.calculate(mScreenContentStr);

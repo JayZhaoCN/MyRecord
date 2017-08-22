@@ -87,7 +87,7 @@ public class ArithmeticHelper {
         }
     }
 
-    private static boolean isOperator(char a) {
+    public static boolean isOperator(char a) {
         return a == '+' || a == '-' || a == '*' || a == '/';
     }
 
@@ -121,13 +121,19 @@ public class ArithmeticHelper {
     //TODO 这个方法要做修改
     private static ArrayList<Element> getElements(String infix) {
         ArrayList<Element> elements = new ArrayList<>();
+
+        //'-'在一定情况下可以看做负号，而不是运算符
+        boolean canBeNumber = true;
+
         String str = "";
         for (int i = 0; i < infix.length(); i++) {
             char a = infix.charAt(i);
-            if (!isOperator(a)) {
+            if (!isOperator(a) || (a == '-' && canBeNumber)) {
                 str += a;
+                canBeNumber = false;
                 continue;
             }
+            canBeNumber = true;
             if (!str.equals("")) {
                 elements.add(new Element(true, Double.parseDouble(str), '?'));
                 str = "";
