@@ -37,12 +37,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initViews() {
         mBalanceItem = (JayItemView) findViewById(R.id.balance_item);
-        mBalanceItem.setTitle(R.string.set_balance);
+        //mBalanceItem.setTitle(R.string.set_balance);
         mBalanceItem.setDividerVisible(true);
         mBalanceItem.setOnClickListener(this);
 
         mBudgetItem = (JayItemView) findViewById(R.id.budget_item);
-        mBudgetItem.setTitle(R.string.set_budget);
+        //mBudgetItem.setTitle(R.string.set_budget);
         mBudgetItem.setDividerVisible(true);
         mBudgetItem.setOnClickListener(this);
 

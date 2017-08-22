@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.View;
@@ -34,6 +35,7 @@ public class JayItemView extends FrameLayout {
         super(context, attrs, defStyleAttr);
         inflate(mContext = context, R.layout.jay_item_view, this);
         initViews();
+        obtainAttrs(attrs, defStyleAttr);
     }
 
     private void initViews() {
@@ -42,6 +44,14 @@ public class JayItemView extends FrameLayout {
         mSummaryTv = (TextView) findViewById(R.id.summary_tv);
 
         mDivider = findViewById(R.id.divider);
+    }
+
+    private void obtainAttrs(AttributeSet attrs, int defStyleAttr) {
+        TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.JayItemView, defStyleAttr, 0);
+        mTitleTv.setText(ta.getString(R.styleable.JayItemView_itemTitle));
+        mSubTitleTv.setText(ta.getString(R.styleable.JayItemView_itemSubTitle));
+        mSummaryTv.setText(ta.getString(R.styleable.JayItemView_itemSummary));
+        ta.recycle();
     }
 
     public void setTitle(String titleStr) {
