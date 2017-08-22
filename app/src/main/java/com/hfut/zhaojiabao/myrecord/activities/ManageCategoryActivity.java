@@ -73,7 +73,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ManageViewHolder holder, final int position) {
+        public void onBindViewHolder(final ManageViewHolder holder, int position) {
             holder.titleTv.setText(mCategories.get(position).getCategory());
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,7 +91,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
                                         ToastUtil.showToast(JayApp.getInstance(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
                                         return;
                                     }
-                                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(position));
+                                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
                                     updateCategories();
                                     notifyDataSetChanged();
                                     EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
@@ -152,6 +152,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
                         category.setCategory(addEdit.getText().toString());
                         JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
                         updateCategories();
+                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
                         mAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }

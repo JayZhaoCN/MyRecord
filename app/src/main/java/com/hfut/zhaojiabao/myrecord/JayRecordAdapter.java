@@ -124,6 +124,7 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
     }
 
     private String getCategory(String categoryStr) {
+
         for (Category category : mCategoryList) {
             if (category.getCategory().equals(categoryStr)) {
                 return categoryStr;
