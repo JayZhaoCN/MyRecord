@@ -114,6 +114,7 @@ public class JayActivity extends AppCompatActivity
     public void onEventMainThread(RecordRecoveryEvent event) {
         Log.i(TAG, "recovery success: " + event.success);
         loadRecords();
+        updateTodaySummary();
     }
 
     public void onEventMainThread(CategoryUpdateEvent event) {
