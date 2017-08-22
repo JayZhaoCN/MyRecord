@@ -1,8 +1,8 @@
 package com.hfut.zhaojiabao.database;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.json.JSONObject;
 
 /**
@@ -14,24 +14,21 @@ public class User {
     private Long id;
     private String userName;
     /**
-     * 每月预算
+     * 每日预算
      */
     private Float budget = 2000f;
-    /**
-     * 余额
-     */
-    private Float balance = 2000f;
 
-    @Generated(hash = 1508505750)
-    public User(Long id, String userName, Float budget, Float balance) {
+    @Generated(hash = 1849956244)
+    public User(Long id, String userName, Float budget) {
         this.id = id;
         this.userName = userName;
         this.budget = budget;
-        this.balance = balance;
     }
+
     @Generated(hash = 586692638)
     public User() {
     }
+
 
     public String toJSONString() {
         try {
@@ -39,7 +36,6 @@ public class User {
             jsonObject.put("id", id);
             jsonObject.put("userName", userName);
             jsonObject.put("budget", budget);
-            jsonObject.put("balance", balance);
             return jsonObject.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +54,6 @@ public class User {
             user.setId(jsonObject.getLong("id"));
             user.setUserName(jsonObject.getString("userName"));
             user.setBudget((float) jsonObject.getDouble("budget"));
-            user.setBalance((float) jsonObject.getDouble("balance"));
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,25 +64,24 @@ public class User {
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getUserName() {
         return this.userName;
     }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public Float getBudget() {
         return this.budget;
     }
+
     public void setBudget(Float budget) {
         this.budget = budget;
-    }
-    public Float getBalance() {
-        return this.balance;
-    }
-    public void setBalance(Float balance) {
-        this.balance = balance;
     }
 }
