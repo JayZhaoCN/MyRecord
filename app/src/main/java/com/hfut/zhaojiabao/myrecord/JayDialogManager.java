@@ -134,7 +134,7 @@ public class JayDialogManager {
         JayDaoManager.getInstance().getDaoSession().delete(record);
         mList.remove(record);
         mAdapter.setData(mList);
-        ToastUtil.showToast(JayApp.getInstance(), mContext.getString(R.string.delete_succes), Toast.LENGTH_SHORT);
+        ToastUtil.showToast(mContext.getString(R.string.delete_succes), Toast.LENGTH_SHORT);
     }
 
     void editType(final Record record, final int position) {

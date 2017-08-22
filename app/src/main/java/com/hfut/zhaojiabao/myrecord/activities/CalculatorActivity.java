@@ -6,10 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
+import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 public class CalculatorActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -222,7 +225,16 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 mCanInputSub = false;
                 break;
             case R.id.equal:
-                mResult = ArithmeticHelper.calculate(mScreenContentStr);
+                try {
+                    mResult = ArithmeticHelper.calculate(mScreenContentStr);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtil.showToast("输入有误", Toast.LENGTH_SHORT);
+                    mScreenContentStr = "";
+                    mScreenTv.setText(mScreenContentStr);
+                    mResult = 0;
+                    break;
+                }
                 mScreenContentStr = NumberUtils.getFormattedNumber((float) mResult);
                 mHasResult = true;
                 break;

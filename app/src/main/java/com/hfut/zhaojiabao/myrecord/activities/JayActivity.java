@@ -244,7 +244,7 @@ public class JayActivity extends AppCompatActivity
                 mIncomeBtn.setChecked(!mExpendBtn.isChecked());
                 break;
             case R.id.account_container:
-                ToastUtil.showToast(JayApp.getInstance(), getString(R.string.account_tips), Toast.LENGTH_SHORT);
+                ToastUtil.showToast(getString(R.string.account_tips), Toast.LENGTH_SHORT);
                 break;
             case R.id.type_container:
                 mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
@@ -403,6 +403,7 @@ public class JayActivity extends AppCompatActivity
             return;
         }
         mSumEdit.setText(NumberUtils.getFormattedNumber(intent.getDoubleExtra("result", 0)));
+        mSumEdit.setSelection(mSumEdit.getText().toString().length());
     }
 
     //获取裁剪完的图片，更新到UI
@@ -451,7 +452,7 @@ public class JayActivity extends AppCompatActivity
         try {
             sumFloat = Float.valueOf(sum);
         } catch (Exception e) {
-            ToastUtil.showToast(JayApp.getInstance(), getString(R.string.number_error), Toast.LENGTH_SHORT);
+            ToastUtil.showToast(getString(R.string.number_error), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -464,7 +465,7 @@ public class JayActivity extends AppCompatActivity
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
         recordDao.insert(record = new Record(System.currentTimeMillis(), income, remark, category, time, sumFloat));
         //TODO 这里难道没有异常捕获吗，一定就插入成功了吗？
-        ToastUtil.showToast(JayApp.getInstance(), getString(R.string.new_record), Toast.LENGTH_SHORT);
+        ToastUtil.showToast(getString(R.string.new_record), Toast.LENGTH_SHORT);
 
         EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_ADD));
 
@@ -523,7 +524,7 @@ public class JayActivity extends AppCompatActivity
                 startActivity(new Intent(this, SectorActivity.class));
                 break;
             case R.id.nav_histogram:
-                ToastUtil.showToast(JayActivity.this, "柱状图实现的不太好，先不展示了，后面再优化优化~", Toast.LENGTH_SHORT);
+                ToastUtil.showToast("柱状图实现的不太好，先不展示了，后面再优化优化~", Toast.LENGTH_SHORT);
                 //startActivity(new Intent(this, RecordChartActivity.class));
                 break;
             case R.id.nav_detail:

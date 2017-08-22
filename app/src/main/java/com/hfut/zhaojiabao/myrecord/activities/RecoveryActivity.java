@@ -97,7 +97,7 @@ public class RecoveryActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             if (mRecoveryItem.get(position).delete()) {
                                 mRecoveryItem.remove(position);
-                                ToastUtil.showToast(JayApp.getInstance(), getString(R.string.file_delete_success), Toast.LENGTH_SHORT);
+                                ToastUtil.showToast(getString(R.string.file_delete_success), Toast.LENGTH_SHORT);
                                 notifyDataSetChanged();
                             }
                             dialog.dismiss();

@@ -100,7 +100,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         //输入有误(0或非数字)
                         if (budget == 0) {
-                            ToastUtil.showToast(JayApp.getInstance(), getString(R.string.balance_cannot_be_zero), Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(getString(R.string.balance_cannot_be_zero), Toast.LENGTH_SHORT);
                             dialog.dismiss();
                             return;
                         }
@@ -147,7 +147,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         //输入有误(0或非数字)
                         if (budget == 0) {
-                            ToastUtil.showToast(JayApp.getInstance(), getString(R.string.budget_cannot_be_zero), Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(getString(R.string.budget_cannot_be_zero), Toast.LENGTH_SHORT);
                             dialog.dismiss();
                             return;
                         }

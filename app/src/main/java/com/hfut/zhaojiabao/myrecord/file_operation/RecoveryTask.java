@@ -115,7 +115,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "backup success: " + success);
-        ToastUtil.showToast(JayApp.getInstance(), mContext.getString
+        ToastUtil.showToast(mContext.getString
                 (success ? R.string.recovery_done : R.string.recovery_fail), Toast.LENGTH_SHORT);
 
         EventBus.getDefault().postSticky(new RecordRecoveryEvent(success));

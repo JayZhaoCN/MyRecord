@@ -87,7 +87,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     if (!checkCanDelete()) {
-                                        ToastUtil.showToast(JayApp.getInstance(), getString(R.string.at_least_one), Toast.LENGTH_SHORT);
+                                        ToastUtil.showToast(getString(R.string.at_least_one), Toast.LENGTH_SHORT);
                                         return;
                                     }
                                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
