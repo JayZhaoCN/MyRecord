@@ -31,6 +31,7 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
+import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
 import com.hfut.zhaojiabao.myrecord.R;
@@ -125,6 +126,10 @@ public class JayActivity extends AppCompatActivity
         updateTodaySummary();
     }
 
+    public void onEventMainThread(BudgetChangedEvent event) {
+        updateTodaySummary();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -206,9 +211,9 @@ public class JayActivity extends AppCompatActivity
         mIncomeSumTv.setText(NumberUtils.getFormattedNumber(incomeSummary));
         mExpendSumTv.setText(NumberUtils.getFormattedNumber(expendSummary));
 
-        float balance = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getBalance();
-        float remain = balance + incomeSummary - expendSummary;
-        mBalanceWarningTv.setText("今日还可以花：" + NumberUtils.getFormattedNumber(remain) + "元");
+        float remain = JayDaoManager.getInstance().getDaoSession().getUserDao()
+                .loadAll().get(0).getBudget() + incomeSummary - expendSummary;
+        mBalanceWarningTv.setText(getString(R.string.remain_summary, NumberUtils.getFormattedNumber(remain)));
     }
 
     private void loadRecords() {

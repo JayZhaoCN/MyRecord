@@ -13,10 +13,16 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.JayItemView;
 
+import de.greenrobot.event.EventBus;
+
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+    private JayItemView mBalanceItem;
+    private JayItemView mBudgetItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +36,23 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initViews() {
-        JayItemView balanceItem = (JayItemView) findViewById(R.id.balance_item);
-        balanceItem.setTitle(R.string.set_balance);
-        balanceItem.setDividerVisible(true);
-        balanceItem.setOnClickListener(this);
+        mBalanceItem = (JayItemView) findViewById(R.id.balance_item);
+        mBalanceItem.setTitle(R.string.set_balance);
+        mBalanceItem.setDividerVisible(true);
+        mBalanceItem.setOnClickListener(this);
 
-        JayItemView budgetItem = (JayItemView) findViewById(R.id.budget_item);
-        budgetItem.setTitle(R.string.set_budget);
-        budgetItem.setDividerVisible(true);
-        budgetItem.setOnClickListener(this);
+        mBudgetItem = (JayItemView) findViewById(R.id.budget_item);
+        mBudgetItem.setTitle(R.string.set_budget);
+        mBudgetItem.setDividerVisible(true);
+        mBudgetItem.setOnClickListener(this);
+
+        updateItemSummary();
+    }
+
+    private void updateItemSummary() {
+        User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
+        mBalanceItem.setSummaryText(NumberUtils.getFormattedNumber(user.getBalance()) + "元");
+        mBudgetItem.setSummaryText(NumberUtils.getFormattedNumber(user.getBudget()) + "元");
     }
 
     @Override
@@ -93,6 +107,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
                         user.setBalance(budget);
                         JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
+                        updateItemSummary();
                         dialog.dismiss();
                     }
                 })
@@ -139,7 +154,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
                         user.setBudget(budget);
                         JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
+                        EventBus.getDefault().post(new BudgetChangedEvent());
                         dialog.dismiss();
+                        updateItemSummary();
                     }
                 })
                 .setContent(editText);
