@@ -124,6 +124,12 @@ public class JayActivity extends AppCompatActivity
 
     public void onEventMainThread(RecordUpdateEvent event) {
         Log.i(TAG, "RecordUpdateEvent");
+        //如果不是今日的记录变化，则无需更新今日Summary
+        long[] todayBounds = TimeFormatter.getTodayBounds();
+        if (todayBounds[0] > event.record.getConsumeTime() || todayBounds[1] < event.record.getConsumeTime()) {
+            Log.i(TAG, "not today's record change, so return.");
+            return;
+        }
         loadRecords();
         updateTodaySummary();
     }
@@ -201,6 +207,9 @@ public class JayActivity extends AppCompatActivity
         updateTodaySummary();
     }
 
+    /**
+     * 更新今日Summary
+     */
     private void updateTodaySummary() {
         float incomeSummary = 0, expendSummary = 0;
         for (Record record : mList) {
