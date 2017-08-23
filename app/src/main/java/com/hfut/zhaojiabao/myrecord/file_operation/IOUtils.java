@@ -1,4 +1,4 @@
-package com.hfut.zhaojiabao.myrecord.utils;
+package com.hfut.zhaojiabao.myrecord.file_operation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 
 import java.io.File;
 import java.io.FileOutputStream;

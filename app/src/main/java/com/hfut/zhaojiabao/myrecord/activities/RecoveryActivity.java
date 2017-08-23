@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
-import com.hfut.zhaojiabao.myrecord.file_operation.RecoveryTask;
-import com.hfut.zhaojiabao.myrecord.utils.IOUtils;
+import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
+import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.File;
@@ -63,19 +62,19 @@ public class RecoveryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecoveryItemHolder holder, final int position) {
+        public void onBindViewHolder(final RecoveryItemHolder holder, int position) {
             final File file = mRecoveryItem.get(position);
             holder.titleTv.setText(mRecoveryItem.get(position).getName());
             holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new RecoveryTask(RecoveryActivity.this).execute(file.toString());
+                    IOManager.recoveryData(RecoveryActivity.this, file.getPath());
                 }
             });
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showDeleteConfirmDialog(position);
+                    showDeleteConfirmDialog(holder.getAdapterPosition());
                 }
             });
         }
