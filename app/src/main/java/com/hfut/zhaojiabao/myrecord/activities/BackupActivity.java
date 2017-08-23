@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.file_operation.BackupTask;
+import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 
 public class BackupActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class BackupActivity extends AppCompatActivity {
         startBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BackupTask(BackupActivity.this).execute();
+                IOManager.backupFile(BackupActivity.this);
             }
         });
     }

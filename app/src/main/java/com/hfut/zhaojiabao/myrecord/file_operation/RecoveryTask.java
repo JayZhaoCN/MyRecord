@@ -36,7 +36,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
 
     public RecoveryTask(Context context) {
         mContext = context;
-        BackupTask.verifyStoragePermissions(mContext);
+        IOManager.verifyStoragePermissions(mContext);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
             String line;
             //恢复Record数据
             while ((line = reader.readLine()) != null) {
-                if (!line.equals(BackupTask.FILE_DIVIDER)) {
+                if (!line.equals(IOManager.FILE_DIVIDER)) {
                     Record record = Record.fromJSONString(line);
                     records.add(record);
                 } else {
@@ -67,7 +67,7 @@ public class RecoveryTask extends AsyncTask<String, Void, Boolean> {
             final List<Category> categories = new ArrayList<>();
             final CategoryDao categoryDao = JayDaoManager.getInstance().getDaoSession().getCategoryDao();
             while ((line = reader.readLine()) != null) {
-                if (!line.equals(BackupTask.FILE_DIVIDER)) {
+                if (!line.equals(IOManager.FILE_DIVIDER)) {
                     Category category = Category.fromJSONString(line);
                     categories.add(category);
                 } else {

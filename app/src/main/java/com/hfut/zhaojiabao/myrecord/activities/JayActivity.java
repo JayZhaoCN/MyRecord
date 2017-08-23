@@ -61,7 +61,7 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
-import static com.hfut.zhaojiabao.myrecord.file_operation.BackupTask.verifyStoragePermissions;
+import static com.hfut.zhaojiabao.myrecord.file_operation.IOManager.verifyStoragePermissions;
 
 public class JayActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
