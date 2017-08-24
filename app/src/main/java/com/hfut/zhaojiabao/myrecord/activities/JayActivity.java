@@ -221,7 +221,7 @@ public class JayActivity extends AppCompatActivity
         mExpendSumTv.setText(NumberUtils.getFormattedNumber(expendSummary));
 
         float remain = JayDaoManager.getInstance().getDaoSession().getUserDao()
-                .loadAll().get(0).getBudget() + incomeSummary - expendSummary;
+                .loadAll().get(0).getBudget() - expendSummary;
         mBalanceWarningTv.setText(getString(R.string.remain_summary, NumberUtils.getFormattedNumber(remain)));
     }
 

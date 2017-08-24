@@ -146,7 +146,7 @@ public class IOManager {
             writer.newLine();
         }
 
-        //write user name data to sdcard
+        //write user data to sdcard
         //先写入分割标志
         writer.write(FILE_DIVIDER);
         writer.newLine();
