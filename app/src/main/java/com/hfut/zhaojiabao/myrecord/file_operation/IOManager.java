@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.activities.RecoveryActivity;
 import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
@@ -34,6 +36,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -267,6 +270,45 @@ public class IOManager {
 
         reader.close();
         fileReader.close();
+    }
+
+    public static void traverseFile(Action1<List<File>> action1) {
+        Observable.create(new Observable.OnSubscribe<List<File>>() {
+            @Override
+            public void call(Subscriber<? super List<File>> subscriber) {
+                List<File> files = traverseFileInternal();
+                subscriber.onNext(files);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action1);
+    }
+
+    /**
+     * get all backup files
+     * SYNC
+     */
+    private static List<File> traverseFileInternal() {
+        List<File> files = new ArrayList<>();
+
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + IOUtils.BACKUP_FOLDER_NAME);
+        if (!file.exists()) {
+            Log.i(TAG, "file not exist, return.");
+            return files;
+        }
+
+        File[] children = file.listFiles();
+        if (children == null) {
+            return files;
+        }
+
+        for (File child : children) {
+            if (child.getPath().endsWith(".jay")) {
+                files.add(child);
+            }
+        }
+
+        return files;
     }
 
     /**

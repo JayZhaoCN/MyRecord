@@ -1,14 +1,11 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +15,13 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
-import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action1;
 
 public class RecoveryActivity extends AppCompatActivity {
     private static final String TAG = "RecoveryActivity";
@@ -50,7 +47,13 @@ public class RecoveryActivity extends AppCompatActivity {
         recoveryList.setLayoutManager(new LinearLayoutManager(this));
         recoveryList.setAdapter(mAdapter);
 
-        new TraverseTask(this).execute();
+        IOManager.traverseFile(new Action1<List<File>>() {
+            @Override
+            public void call(List<File> files) {
+                mRecoveryItem = files;
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private class RecoveryItemAdapter extends RecyclerView.Adapter<RecoveryItemAdapter.RecoveryItemHolder> {
@@ -126,53 +129,4 @@ public class RecoveryActivity extends AppCompatActivity {
             }
         }
     }
-
-
-    private static class TraverseTask extends AsyncTask<Void, Void, List<File>> {
-        private WeakReference<RecoveryActivity> reference;
-
-        TraverseTask(RecoveryActivity activity) {
-            reference = new WeakReference<>(activity);
-        }
-
-        @Override
-        protected List<File> doInBackground(Void... params) {
-            RecoveryActivity activity = reference.get();
-            //若Activity被回收，则返回
-            if (activity == null) {
-                return null;
-            }
-            List<File> files = new ArrayList<>();
-            File file = new File(Environment.getExternalStorageDirectory() + File.separator + IOUtils.BACKUP_FOLDER_NAME);
-            if (!file.exists()) {
-                Log.i(TAG, "file not exist, return.");
-                return files;
-            }
-
-            File[] children = file.listFiles();
-            if (children == null) {
-                return files;
-            }
-
-            for (File child : children) {
-                if (child.getPath().endsWith(".jay")) {
-                    files.add(child);
-                }
-            }
-
-            return files;
-        }
-
-        @Override
-        protected void onPostExecute(List<File> files) {
-            RecoveryActivity activity = reference.get();
-            if (activity == null) {
-                return;
-            }
-
-            activity.mRecoveryItem = files;
-            activity.mAdapter.notifyDataSetChanged();
-        }
-    }
-
 }
