@@ -28,6 +28,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = "DetailActivity";
@@ -53,7 +56,6 @@ public class DetailActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.detail);
         setSupportActionBar(toolbar);
         initDatas();
-        initUI();
 
         EventBus.getDefault().registerSticky(this);
     }
@@ -106,22 +108,31 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initDatas() {
-        List<DayRecord> dayRecord = ValueTransfer.getDayRecords();
-        //剔除掉没有任何记录的日期
-        mDayRecords = new ArrayList<>();
-        if (dayRecord == null) {
-            //当下还没有数据, 则展示无数据提示UI
-            findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
-            findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
-            findViewById(R.id.divider).setVisibility(View.GONE);
-            findViewById(R.id.detail_recyler).setVisibility(View.GONE);
-            return;
-        }
-        for (DayRecord record : dayRecord) {
-            if (record.incomeSum > 0 || record.expendSum > 0) {
-                mDayRecords.add(record);
-            }
-        }
+        ValueTransfer.getDayRecords()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<DayRecord>>() {
+                    @Override
+                    public void call(List<DayRecord> dayRecord) {
+                        //剔除掉没有任何记录的日期
+                        mDayRecords = new ArrayList<>();
+                        if (dayRecord == null) {
+                            //当下还没有数据, 则展示无数据提示UI
+                            findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
+                            findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
+                            findViewById(R.id.divider).setVisibility(View.GONE);
+                            findViewById(R.id.detail_recyler).setVisibility(View.GONE);
+                            return;
+                        }
+                        for (DayRecord record : dayRecord) {
+                            if (record.incomeSum > 0 || record.expendSum > 0) {
+                                mDayRecords.add(record);
+                            }
+                        }
+
+                        initUI();
+                    }
+                });
 
         //取所有记录数据
         mRecordList = JayDaoManager.getInstance().getDaoSession().getRecordDao().loadAll();

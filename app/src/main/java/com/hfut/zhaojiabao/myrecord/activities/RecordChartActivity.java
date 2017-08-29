@@ -16,6 +16,10 @@ import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 public class RecordChartActivity extends AppCompatActivity {
     private List<DayRecord> mDatas;
 
@@ -45,21 +49,30 @@ public class RecordChartActivity extends AppCompatActivity {
     }
 
     private void initChart() {
-        RecordChart chart = (RecordChart) findViewById(R.id.record_chart);
-        mDatas = ValueTransfer.getDayRecords();
-        List<RecordChart.ChartItem> chartItems = new ArrayList<>();
-        if (mDatas != null) {
-            for (DayRecord record : mDatas) {
-                chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
-            }
-        }
-        chart.provideData(chartItems);
-        chart.setOnColumnSelectedListener(new RecordChart.OnColumnSelectedListener() {
-            @Override
-            public void onColumnSelected(int position) {
-                updateValues(position);
-            }
-        });
+        final RecordChart chart = (RecordChart) findViewById(R.id.record_chart);
+
+        ValueTransfer.getDayRecords()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<DayRecord>>() {
+                    @Override
+                    public void call(List<DayRecord> dayRecords) {
+                        mDatas = dayRecords;
+                        List<RecordChart.ChartItem> chartItems = new ArrayList<>();
+                        if (mDatas != null) {
+                            for (DayRecord record : mDatas) {
+                                chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
+                            }
+                        }
+                        chart.provideData(chartItems);
+                        chart.setOnColumnSelectedListener(new RecordChart.OnColumnSelectedListener() {
+                            @Override
+                            public void onColumnSelected(int position) {
+                                updateValues(position);
+                            }
+                        });
+                    }
+                });
     }
 
     private void updateValues(int position) {

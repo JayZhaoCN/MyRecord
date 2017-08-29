@@ -4,8 +4,8 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.DayRecord;
-import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,13 +15,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
+ * 数值转换工具
+ *
  * @author zhaojiabao 2017/5/24
- *         数值转换工具
  */
 
 public class ValueTransfer {
-    public static void transform(List<RecordChart.ChartItem> data, float height) {
+    static void transform(List<RecordChart.ChartItem> data, float height) {
 
         for (int i = 0; i < data.size(); i++) {
             if (data.get(i).value == 0) {
@@ -57,8 +61,20 @@ public class ValueTransfer {
         }
     }
 
-    //TODO 数据量小的时候，暂且这样做，后面肯定要做完善
-    public static List<DayRecord> getDayRecords() {
+    public static Observable<List<DayRecord>> getDayRecords() {
+        return Observable.create(new Observable.OnSubscribe<List<DayRecord>>() {
+            @Override
+            public void call(Subscriber<? super List<DayRecord>> subscriber) {
+                subscriber.onNext(getDayRecordsInternal());
+            }
+        });
+    }
+
+    /**
+     * get DayRecords
+     * SYNC
+     */
+    private static List<DayRecord> getDayRecordsInternal() {
         List<DayRecord> result = new ArrayList<>();
 
         RecordDao recordDao = JayDaoManager.getInstance().getDaoSession().getRecordDao();
