@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,31 +55,107 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 import static com.hfut.zhaojiabao.myrecord.file_operation.IOManager.verifyStoragePermissions;
 
-public class JayActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class JayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "JayActivity";
 
     private static final int REQUEST_CODE_COMPUTE = 0;
     private static final int REQUEST_CODE_CAPTURE = 1;
 
-    private CheckBox mIncomeBtn;
-    private CheckBox mExpendBtn;
-    private TextView mCategoryTv;
-    private TextView mDateTv;
-    private TextView mTimeTv;
-    private EditText mSumEdit;
-    private EditText mRemarkEdit;
-    private DrawerLayout mDrawerLayout;
+    @BindView(R.id.income_btn) CheckBox mIncomeBtn;
+    @BindView(R.id.expend_btn) CheckBox mExpendBtn;
+    @BindView(R.id.category_tv) TextView mCategoryTv;
+    @BindView(R.id.date_tv) TextView mDateTv;
+    @BindView(R.id.time_tv) TextView mTimeTv;
+    @BindView(R.id.sum_edit) EditText mSumEdit;
+    @BindView(R.id.remark_edit) EditText mRemarkEdit;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.income_sum_tv) TextView mIncomeSumTv;
+    @BindView(R.id.expend_sum_tv) TextView mExpendSumTv;
+    @BindView(R.id.balance_warning_tv) TextView mBalanceWarningTv;
+
+    @OnClick(R.id.income_btn)
+    void income() {
+        mExpendBtn.setChecked(!mIncomeBtn.isChecked());
+    }
+
+    @OnClick(R.id.expend_btn)
+    void expend() {
+        mIncomeBtn.setChecked(!mExpendBtn.isChecked());
+    }
+
+    @OnClick(R.id.account_container)
+    void account() {
+        ToastUtil.showToast(getString(R.string.account_tips), Toast.LENGTH_SHORT);
+    }
+
+    @OnClick(R.id.type_container)
+    void type() {
+        mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
+            @Override
+            public void onSelect(String category) {
+                mCategoryTv.setText(category);
+            }
+        });
+    }
+
+    @OnClick(R.id.date_container)
+    void date() {
+        PickDateDialog pickDateDialog = new PickDateDialog();
+        pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
+            @Override
+            public void onDatePick(int year, int month, int day) {
+                mCalendar.set(Calendar.YEAR, year);
+                mCalendar.set(Calendar.MONTH, month);
+                mCalendar.set(Calendar.DAY_OF_MONTH, day);
+                mDateTv.setText(getDateDescription());
+            }
+        });
+        pickDateDialog.show(getSupportFragmentManager(), "pickDateDialog");
+    }
+
+    @OnClick(R.id.time_container)
+    void time() {
+        PickTimeDialog pickTimeDialog = new PickTimeDialog();
+        pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
+            @Override
+            public void onTimePick(int hour, int minute) {
+                mCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                mCalendar.set(Calendar.MINUTE, minute);
+                mTimeTv.setText(getTimeDescription());
+            }
+        });
+        pickTimeDialog.show(getSupportFragmentManager(), "pickTimeDialog");
+    }
+
+    @OnClick(R.id.calculator_img)
+    void calculator() {
+        startActivityForResult(new Intent(this, CalculatorActivity.class), REQUEST_CODE_COMPUTE);
+    }
+
+    @OnClick(R.id.item_1)
+    void item1() {
+        startActivity(new Intent(this, RecordChartActivity.class));
+    }
+
+    @OnClick(R.id.item_2)
+    void item2() {
+        startActivity(new Intent(this, SectorActivity.class));
+    }
+
+    @OnClick(R.id.save_btn)
+    void saveBtn() {
+        save();
+    }
+
     private CircleImageView mUserIcon;
     private TextView mUserNameTv;
-    private TextView mIncomeSumTv;
-    private TextView mExpendSumTv;
-    private TextView mBalanceWarningTv;
 
     private List<Record> mList;
     private String mDefaultCategory;
@@ -98,6 +173,7 @@ public class JayActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jay);
+        ButterKnife.bind(this);
         initToolbarAndDrawer();
         loadRecords();
         initUI();
@@ -159,27 +235,7 @@ public class JayActivity extends AppCompatActivity
     }
 
     private void initUI() {
-        mCategoryTv = (TextView) findViewById(R.id.category_tv);
-
         mCategoryTv.setText(mDefaultCategory = JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll().get(0).getCategory());
-
-        mDateTv = (TextView) findViewById(R.id.date_tv);
-        mTimeTv = (TextView) findViewById(R.id.time_tv);
-        mSumEdit = (EditText) findViewById(R.id.sum_edit);
-        mRemarkEdit = (EditText) findViewById(R.id.remark_edit);
-
-        mIncomeBtn = (CheckBox) findViewById(R.id.income_btn);
-        mExpendBtn = (CheckBox) findViewById(R.id.expend_btn);
-        mIncomeBtn.setOnClickListener(this);
-        mExpendBtn.setOnClickListener(this);
-        mIncomeBtn.setOnCheckedChangeListener(this);
-        mExpendBtn.setOnCheckedChangeListener(this);
-
-        findViewById(R.id.account_container).setOnClickListener(this);
-        findViewById(R.id.type_container).setOnClickListener(this);
-        findViewById(R.id.date_container).setOnClickListener(this);
-        findViewById(R.id.time_container).setOnClickListener(this);
-        findViewById(R.id.save_btn).setOnClickListener(this);
 
         RecyclerView recordList = (RecyclerView) findViewById(R.id.today_record);
         recordList.setLayoutManager(new LinearLayoutManager(this));
@@ -193,15 +249,6 @@ public class JayActivity extends AppCompatActivity
         popLayout.setTips(1, getString(R.string.pie));
         popLayout.setTips(2, getString(R.string.line_chart));
 
-        findViewById(R.id.item_1).setOnClickListener(this);
-        findViewById(R.id.item_2).setOnClickListener(this);
-        findViewById(R.id.item_3).setOnClickListener(this);
-
-        findViewById(R.id.calculator_img).setOnClickListener(this);
-
-        mIncomeSumTv = (TextView) findViewById(R.id.income_sum_tv);
-        mExpendSumTv = (TextView) findViewById(R.id.expend_sum_tv);
-        mBalanceWarningTv = (TextView) findViewById(R.id.balance_warning_tv);
         updateTodaySummary();
     }
 
@@ -241,73 +288,6 @@ public class JayActivity extends AppCompatActivity
                 return o2.getRecordTime().compareTo(o1.getRecordTime());
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.income_btn:
-                mExpendBtn.setChecked(!mIncomeBtn.isChecked());
-                break;
-            case R.id.expend_btn:
-                mIncomeBtn.setChecked(!mExpendBtn.isChecked());
-                break;
-            case R.id.account_container:
-                ToastUtil.showToast(getString(R.string.account_tips), Toast.LENGTH_SHORT);
-                break;
-            case R.id.type_container:
-                mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
-                    @Override
-                    public void onSelect(String category) {
-                        mCategoryTv.setText(category);
-                    }
-                });
-                break;
-            case R.id.date_container:
-                PickDateDialog pickDateDialog = new PickDateDialog();
-                pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
-                    @Override
-                    public void onDatePick(int year, int month, int day) {
-                        mCalendar.set(Calendar.YEAR, year);
-                        mCalendar.set(Calendar.MONTH, month);
-                        mCalendar.set(Calendar.DAY_OF_MONTH, day);
-                        mDateTv.setText(getDateDescription());
-                    }
-                });
-                pickDateDialog.show(getSupportFragmentManager(), "pickDateDialog");
-                break;
-            case R.id.time_container:
-                PickTimeDialog pickTimeDialog = new PickTimeDialog();
-                pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
-                    @Override
-                    public void onTimePick(int hour, int minute) {
-                        mCalendar.set(Calendar.HOUR_OF_DAY, hour);
-                        mCalendar.set(Calendar.MINUTE, minute);
-                        mTimeTv.setText(getTimeDescription());
-                    }
-                });
-                pickTimeDialog.show(getSupportFragmentManager(), "pickTimeDialog");
-                break;
-            case R.id.item_1:
-                startActivity(new Intent(this, RecordChartActivity.class));
-                break;
-            case R.id.item_2:
-                startActivity(new Intent(this, SectorActivity.class));
-                break;
-            case R.id.item_3:
-                break;
-            case R.id.calculator_img:
-                startActivityForResult(new Intent(this, CalculatorActivity.class), REQUEST_CODE_COMPUTE);
-                break;
-            case R.id.save_btn:
-                save();
-                break;
-            case R.id.user_img:
-                showPickImgDialog();
-                break;
-            default:
-                break;
-        }
     }
 
     //调用相机，准备拍照
@@ -493,25 +473,7 @@ public class JayActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (!isChecked) {
-            return;
-        }
-        switch (buttonView.getId()) {
-            case R.id.income_btn:
-                //select income
-                break;
-            case R.id.expend_btn:
-                //select expend
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -577,7 +539,6 @@ public class JayActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.record));
         setSupportActionBar(toolbar);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
@@ -586,8 +547,6 @@ public class JayActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
-        //mUserIcon.setOnClickListener(this);
-        //mUserIcon.setImageBitmap(IOUtils.getAvatar(this));
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
         mUserNameTv.setOnClickListener(new View.OnClickListener() {
