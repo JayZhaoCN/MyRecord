@@ -24,7 +24,6 @@ import java.util.List;
 import rx.functions.Action1;
 
 public class RecoveryActivity extends AppCompatActivity {
-    private static final String TAG = "RecoveryActivity";
 
     private List<File> mRecoveryItem;
     private RecoveryItemAdapter mAdapter;

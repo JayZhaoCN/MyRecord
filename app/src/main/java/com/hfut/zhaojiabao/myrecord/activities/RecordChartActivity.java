@@ -1,7 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +15,8 @@ import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -24,11 +25,11 @@ public class RecordChartActivity extends AppCompatActivity {
     private List<DayRecord> mDatas;
 
     //支出
-    private TextView mIncomeValueTv;
+    @BindView(R.id.income_value_tv) TextView mIncomeValueTv;
     //收入
-    private TextView mExpendValueTv;
+    @BindView(R.id.expend_value_tv) TextView mExpendValueTv;
     //总计
-    private TextView mTotalTv;
+    @BindView(R.id.total_value_tv) TextView mTotalTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +38,8 @@ public class RecordChartActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.chart);
         setSupportActionBar(toolbar);
-
+        ButterKnife.bind(this);
         initChart();
-        initViews();
-    }
-
-    private void initViews() {
-        mIncomeValueTv = (TextView) findViewById(R.id.income_value_tv);
-        mExpendValueTv = (TextView) findViewById(R.id.expend_value_tv);
-        mTotalTv = (TextView) findViewById(R.id.total_value_tv);
     }
 
     private void initChart() {

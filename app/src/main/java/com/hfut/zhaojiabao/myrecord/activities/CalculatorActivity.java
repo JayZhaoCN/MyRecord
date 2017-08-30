@@ -8,15 +8,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.calculator.ArithmeticHelper;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CalculatorActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView mScreenTv;
+    @BindView(R.id.screen_tv) TextView mScreenTv;
     private String mScreenContentStr = "";
     private boolean mCanInputDot = true;
     private boolean mCanInputOperator = true;
@@ -29,7 +31,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
-
+        ButterKnife.bind(this);
         initToolbar();
         initUI();
     }
@@ -56,8 +58,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         findViewById(R.id.clean_btn).setOnClickListener(this);
         findViewById(R.id.delete_btn).setOnClickListener(this);
         findViewById(R.id.confirm_btn).setOnClickListener(this);
-
-        mScreenTv = (TextView) findViewById(R.id.screen_tv);
     }
 
     private void initToolbar() {

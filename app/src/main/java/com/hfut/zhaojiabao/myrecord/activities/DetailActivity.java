@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -39,8 +41,8 @@ public class DetailActivity extends AppCompatActivity {
     private List<Record> mRecordList;
     private List<Record> mCertainDayRecords = new ArrayList<>();
 
-    private TextView mSummaryTv;
-    private RecyclerView mIndicatorList;
+    @BindView(R.id.summary_tv) TextView mSummaryTv;
+    @BindView(R.id.indicator_recycler) RecyclerView mIndicatorList;
     private View mSelectedView;
 
     private JayRecordAdapter mRecordAdapter;
@@ -52,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.detail);
         setSupportActionBar(toolbar);
@@ -139,8 +142,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mSummaryTv = (TextView) findViewById(R.id.summary_tv);
-        mIndicatorList = (RecyclerView) findViewById(R.id.indicator_recycler);
         RecyclerView detailList = (RecyclerView) findViewById(R.id.detail_recyler);
 
         mIndicatorList.setLayoutManager(new LinearLayoutManager(this));

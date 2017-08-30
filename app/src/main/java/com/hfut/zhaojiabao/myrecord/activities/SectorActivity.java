@@ -19,21 +19,23 @@ import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SectorActivity extends AppCompatActivity {
 
     private List<SectorChart.SectorChartItem> mData;
     private List<TypeItem> mTypeData;
 
-    private SectorChart mChart;
-    private Toolbar mToolbar;
+    @BindView(R.id.sector_chart) SectorChart mChart;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
     private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sector);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mChart = (SectorChart) findViewById(R.id.sector_chart);
+        ButterKnife.bind(this);
         updateUI(false);
     }
 
