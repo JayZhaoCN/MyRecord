@@ -21,12 +21,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Subscription;
 import rx.functions.Action1;
 
 public class RecoveryActivity extends AppCompatActivity {
 
     private List<File> mRecoveryItem;
     private RecoveryItemAdapter mAdapter;
+
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,7 @@ public class RecoveryActivity extends AppCompatActivity {
             holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IOManager.recoveryData(RecoveryActivity.this, file.getPath());
+                    mSubscription = IOManager.recoveryData(RecoveryActivity.this, file.getPath());
                 }
             });
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +129,16 @@ public class RecoveryActivity extends AppCompatActivity {
                 divider = itemView.findViewById(R.id.divider);
                 deleteImg = (AppCompatImageView) itemView.findViewById(R.id.delete_img);
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //unsubscribe when activity destroyed, in case memory leak.
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
         }
     }
 }

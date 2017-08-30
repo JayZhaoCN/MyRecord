@@ -9,7 +9,10 @@ import android.widget.Button;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 
+import rx.Subscription;
+
 public class BackupActivity extends AppCompatActivity {
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,18 @@ public class BackupActivity extends AppCompatActivity {
         startBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IOManager.backupFile(BackupActivity.this);
+                mSubscription = IOManager.backupFile(BackupActivity.this);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //unsubscribe when activity destroyed, in case memory leak.
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
     }
 }

@@ -15,7 +15,6 @@ import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.activities.RecoveryActivity;
 import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
@@ -34,6 +33,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -68,22 +68,24 @@ public class IOManager {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public static void backupFile(final AppCompatActivity context) {
+    public static Subscription backupFile(final AppCompatActivity context) {
         final JayLoadingDialog dialog = new JayLoadingDialog();
         final String filePath = IOUtils.getBackupFilePath();
 
-        Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                try {
-                    backupFile(filePath);
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                }
-            }
-        }).subscribeOn(Schedulers.io())
+        return Observable
+                .create(new Observable.OnSubscribe<Void>() {
+                    @Override
+                    public void call(Subscriber<? super Void> subscriber) {
+                        try {
+                            backupFile(filePath);
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            subscriber.onError(e);
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
@@ -161,19 +163,20 @@ public class IOManager {
         fileWriter.close();
     }
 
-    public static void recoveryData(final AppCompatActivity context, final String filePath) {
-        Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                try {
-                    recoveryFile(filePath);
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                }
-            }
-        }).subscribeOn(Schedulers.io())
+    public static Subscription recoveryData(final AppCompatActivity context, final String filePath) {
+        return Observable
+                .create(new Observable.OnSubscribe<Void>() {
+                    @Override
+                    public void call(Subscriber<? super Void> subscriber) {
+                        try {
+                            recoveryFile(filePath);
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            subscriber.onError(e);
+                        }
+                    }
+                }).subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
