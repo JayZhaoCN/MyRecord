@@ -318,6 +318,7 @@
                     android:textSize="12sp"/>
 
                 <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:fontFamily="pt_din"
                     android:id="@+id/income_sum_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -338,6 +339,7 @@
                     android:textSize="12sp"/>
 
                 <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
+                    android:fontFamily="pt_din"
                     android:id="@+id/expend_sum_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
