@@ -66,7 +66,7 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
 
         holder.typeTv.setText(getCategory(record.getCategory()));
 
-        holder.timeTv.setText(TimeFormatter.getInstance().niceFormat(mContext, record.getConsumeTime()));
+        holder.timeTv.setText(TimeFormatter.niceFormat(mContext, record.getConsumeTime()));
 
         holder.incomeTv.setText(mContext.getString(record.getIncome() ? R.string.income : R.string.expend));
 

@@ -193,7 +193,8 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final IndicatorViewHolder holder, int position) {
-            holder.indicatorTv.setText(TimeFormatter.getInstance().formatDate(mDayRecords.get(position).timeMillis));
+            holder.indicatorTv.setText(TimeFormatter.formatDate(mDayRecords.get(position).timeMillis));
+            System.out.println("JayLog, " + TimeFormatter.formatDate(mDayRecords.get(position).timeMillis));
 
             holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
                 @Override
