@@ -6,6 +6,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -81,33 +82,33 @@ public class RecoveryActivity extends AppCompatActivity {
             holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IOManager.recoveryData(RecoveryActivity.this, file.getPath())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<Void>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-                                    mCompositeDisposable.add(d);
-                                    //每次恢复数据之前需要请求读写存储权限
-                                    IOManager.verifyStoragePermissions(RecoveryActivity.this);
-                                }
+                    mCompositeDisposable.add(
+                            IOManager.recoveryData(RecoveryActivity.this, file.getPath())
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnSubscribe(new Consumer<Disposable>() {
+                                        @Override
+                                        public void accept(Disposable disposable) throws Exception {
+                                            //每次恢复数据之前需要请求读写存储权限
+                                            IOManager.verifyStoragePermissions(RecoveryActivity.this);
+                                        }
+                                    })
+                                    .subscribeWith(new DisposableObserver<Void>() {
+                                        @Override
+                                        public void onNext(Void value) {}
 
-                                @Override
-                                public void onNext(Void value) {
-                                }
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            ToastUtil.showToast(getString(R.string.recovery_fail), Toast.LENGTH_SHORT);
+                                            EventBus.getDefault().postSticky(new RecordRecoveryEvent(false));
+                                        }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    ToastUtil.showToast(getString(R.string.recovery_fail), Toast.LENGTH_SHORT);
-                                    EventBus.getDefault().postSticky(new RecordRecoveryEvent(false));
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                    ToastUtil.showToast(getString(R.string.recovery_done), Toast.LENGTH_SHORT);
-                                    EventBus.getDefault().postSticky(new RecordRecoveryEvent(true));
-                                }
-                            });
+                                        @Override
+                                        public void onComplete() {
+                                            ToastUtil.showToast(getString(R.string.recovery_done), Toast.LENGTH_SHORT);
+                                            EventBus.getDefault().postSticky(new RecordRecoveryEvent(true));
+                                        }
+                                    }));
                 }
             });
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +173,7 @@ public class RecoveryActivity extends AppCompatActivity {
 
         //dispose when activity destroyed, in case memory leak.
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
-            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
         }
     }
 }

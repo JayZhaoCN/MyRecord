@@ -12,9 +12,10 @@ import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -40,38 +41,40 @@ public class BackupActivity extends AppCompatActivity {
         startBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IOManager
-                        .backupFile()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Void>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                mDisposable = d;
-                                IOManager.verifyStoragePermissions(BackupActivity.this);
+                mDisposable =
+                        IOManager
+                                .backupFile()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnSubscribe(new Consumer<Disposable>() {
+                                    @Override
+                                    public void accept(Disposable disposable) throws Exception {
+                                        IOManager.verifyStoragePermissions(BackupActivity.this);
 
-                                mDialog.setCancelable(false);
-                                mDialog.showLoading(getString(R.string.back_uping));
-                                mDialog.show(getSupportFragmentManager(), "backup");
+                                        mDialog.setCancelable(false);
+                                        mDialog.showLoading(getString(R.string.back_uping));
+                                        mDialog.show(getSupportFragmentManager(), "backup");
 
-                                Log.i(TAG, "backup filePath: " + IOUtils.getBackupFilePath());
-                            }
+                                        Log.i(TAG, "backup filePath: " + IOUtils.getBackupFilePath());
+                                    }
+                                })
+                                .subscribeWith(new DisposableObserver<Void>() {
+                                    @Override
+                                    public void onNext(Void value) {
+                                    }
 
-                            @Override
-                            public void onNext(Void value) {}
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        mDialog.showError(getString(R.string.backup_fail));
+                                        mDialog.delayClose(1000);
+                                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                mDialog.showError(getString(R.string.backup_fail));
-                                mDialog.delayClose(1000);
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                mDialog.showSuccess(getString(R.string.backup_done));
-                                mDialog.delayClose(1000);
-                            }
-                        });
+                                    @Override
+                                    public void onComplete() {
+                                        mDialog.showSuccess(getString(R.string.backup_done));
+                                        mDialog.delayClose(1000);
+                                    }
+                                });
             }
         });
     }
