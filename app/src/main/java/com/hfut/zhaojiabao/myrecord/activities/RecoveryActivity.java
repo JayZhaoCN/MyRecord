@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
@@ -21,15 +22,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscription;
-import rx.functions.Action1;
+import de.greenrobot.event.EventBus;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class RecoveryActivity extends AppCompatActivity {
 
     private List<File> mRecoveryItem;
+    private CompositeDisposable mCompositeDisposable;
     private RecoveryItemAdapter mAdapter;
-
-    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class RecoveryActivity extends AppCompatActivity {
         toolbar.setTitle(getString(R.string.action_recovery));
         setSupportActionBar(toolbar);
 
+        mCompositeDisposable = new CompositeDisposable();
         initList();
     }
 
@@ -49,13 +56,14 @@ public class RecoveryActivity extends AppCompatActivity {
         recoveryList.setLayoutManager(new LinearLayoutManager(this));
         recoveryList.setAdapter(mAdapter);
 
-        IOManager.traverseFile(new Action1<List<File>>() {
-            @Override
-            public void call(List<File> files) {
-                mRecoveryItem = files;
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+        mCompositeDisposable
+                .add(IOManager.traverseFile(new Consumer<List<File>>() {
+                    @Override
+                    public void accept(List<File> files) throws Exception {
+                        mRecoveryItem = files;
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }));
     }
 
     private class RecoveryItemAdapter extends RecyclerView.Adapter<RecoveryItemAdapter.RecoveryItemHolder> {
@@ -73,7 +81,33 @@ public class RecoveryActivity extends AppCompatActivity {
             holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSubscription = IOManager.recoveryData(RecoveryActivity.this, file.getPath());
+                    IOManager.recoveryData(RecoveryActivity.this, file.getPath())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<Void>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    mCompositeDisposable.add(d);
+                                    //每次恢复数据之前需要请求读写存储权限
+                                    IOManager.verifyStoragePermissions(RecoveryActivity.this);
+                                }
+
+                                @Override
+                                public void onNext(Void value) {
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    ToastUtil.showToast(getString(R.string.recovery_fail), Toast.LENGTH_SHORT);
+                                    EventBus.getDefault().postSticky(new RecordRecoveryEvent(false));
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    ToastUtil.showToast(getString(R.string.recovery_done), Toast.LENGTH_SHORT);
+                                    EventBus.getDefault().postSticky(new RecordRecoveryEvent(true));
+                                }
+                            });
                 }
             });
             holder.deleteImg.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +120,7 @@ public class RecoveryActivity extends AppCompatActivity {
 
         private void showDeleteConfirmDialog(final int position) {
             final CommonDialog dialog = new CommonDialog();
-            CommonDialog.CommonBuilder  builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
+            CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
             builder.setTitleText("确认删除该备份文件吗？")
                     .setLeftText(getString(R.string.cancel))
                     .setLeftListener(new View.OnClickListener() {
@@ -116,7 +150,7 @@ public class RecoveryActivity extends AppCompatActivity {
             return mRecoveryItem.size();
         }
 
-        class RecoveryItemHolder extends  RecyclerView.ViewHolder {
+        class RecoveryItemHolder extends RecyclerView.ViewHolder {
             TextView titleTv;
             TextView recoveryTv;
             View divider;
@@ -136,9 +170,9 @@ public class RecoveryActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        //unsubscribe when activity destroyed, in case memory leak.
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
+        //dispose when activity destroyed, in case memory leak.
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+            mCompositeDisposable.dispose();
         }
     }
 }

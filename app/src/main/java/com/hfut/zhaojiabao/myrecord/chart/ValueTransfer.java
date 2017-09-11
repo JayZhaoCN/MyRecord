@@ -15,8 +15,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * 数值转换工具
@@ -62,10 +63,10 @@ public class ValueTransfer {
     }
 
     public static Observable<List<DayRecord>> getDayRecords() {
-        return Observable.create(new Observable.OnSubscribe<List<DayRecord>>() {
+        return Observable.create(new ObservableOnSubscribe<List<DayRecord>>() {
             @Override
-            public void call(Subscriber<? super List<DayRecord>> subscriber) {
-                subscriber.onNext(getDayRecordsInternal());
+            public void subscribe(ObservableEmitter<List<DayRecord>> e) throws Exception {
+                e.onNext(getDayRecordsInternal());
             }
         });
     }

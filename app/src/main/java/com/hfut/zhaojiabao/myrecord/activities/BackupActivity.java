@@ -3,16 +3,26 @@ package com.hfut.zhaojiabao.myrecord.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
+import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 
-import rx.Subscription;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class BackupActivity extends AppCompatActivity {
-    private Subscription mSubscription;
+    private static final String TAG = "BackupActivity";
+
+    private Disposable mDisposable;
+    private JayLoadingDialog mDialog = new JayLoadingDialog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +40,38 @@ public class BackupActivity extends AppCompatActivity {
         startBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSubscription = IOManager.backupFile(BackupActivity.this);
+                IOManager
+                        .backupFile()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Void>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                mDisposable = d;
+                                IOManager.verifyStoragePermissions(BackupActivity.this);
+
+                                mDialog.setCancelable(false);
+                                mDialog.showLoading(getString(R.string.back_uping));
+                                mDialog.show(getSupportFragmentManager(), "backup");
+
+                                Log.i(TAG, "backup filePath: " + IOUtils.getBackupFilePath());
+                            }
+
+                            @Override
+                            public void onNext(Void value) {}
+
+                            @Override
+                            public void onError(Throwable e) {
+                                mDialog.showError(getString(R.string.backup_fail));
+                                mDialog.delayClose(1000);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                mDialog.showSuccess(getString(R.string.backup_done));
+                                mDialog.delayClose(1000);
+                            }
+                        });
             }
         });
     }
@@ -39,9 +80,9 @@ public class BackupActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        //unsubscribe when activity destroyed, in case memory leak.
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
+        //dispose when activity destroyed, in case memory leak.
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
         }
     }
 }

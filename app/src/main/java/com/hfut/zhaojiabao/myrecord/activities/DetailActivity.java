@@ -30,9 +30,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = "DetailActivity";
@@ -114,12 +114,12 @@ public class DetailActivity extends AppCompatActivity {
         ValueTransfer.getDayRecords()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<DayRecord>>() {
+                .subscribe(new Consumer<List<DayRecord>>() {
                     @Override
-                    public void call(List<DayRecord> dayRecord) {
+                    public void accept(List<DayRecord> dayRecords) throws Exception {
                         //剔除掉没有任何记录的日期
                         mDayRecords = new ArrayList<>();
-                        if (dayRecord == null) {
+                        if (dayRecords == null) {
                             //当下还没有数据, 则展示无数据提示UI
                             findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
                             findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
@@ -127,7 +127,7 @@ public class DetailActivity extends AppCompatActivity {
                             findViewById(R.id.detail_recyler).setVisibility(View.GONE);
                             return;
                         }
-                        for (DayRecord record : dayRecord) {
+                        for (DayRecord record : dayRecords) {
                             if (record.incomeSum > 0 || record.expendSum > 0) {
                                 mDayRecords.add(record);
                             }

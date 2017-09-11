@@ -17,19 +17,22 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class RecordChartActivity extends AppCompatActivity {
     private List<DayRecord> mDatas;
 
     //支出
-    @BindView(R.id.income_value_tv) TextView mIncomeValueTv;
+    @BindView(R.id.income_value_tv)
+    TextView mIncomeValueTv;
     //收入
-    @BindView(R.id.expend_value_tv) TextView mExpendValueTv;
+    @BindView(R.id.expend_value_tv)
+    TextView mExpendValueTv;
     //总计
-    @BindView(R.id.total_value_tv) TextView mTotalTv;
+    @BindView(R.id.total_value_tv)
+    TextView mTotalTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,9 @@ public class RecordChartActivity extends AppCompatActivity {
         ValueTransfer.getDayRecords()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<DayRecord>>() {
+                .subscribe(new Consumer<List<DayRecord>>() {
                     @Override
-                    public void call(List<DayRecord> dayRecords) {
+                    public void accept(List<DayRecord> dayRecords) throws Exception {
                         mDatas = dayRecords;
                         List<RecordChart.ChartItem> chartItems = new ArrayList<>();
                         if (mDatas != null) {

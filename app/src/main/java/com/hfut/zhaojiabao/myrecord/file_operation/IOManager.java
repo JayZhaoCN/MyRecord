@@ -8,19 +8,14 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
-import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
-import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
-import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,14 +25,13 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * all operations about file.
@@ -59,7 +53,7 @@ public class IOManager {
      * .
      */
     //分隔符,表示另一种记录的开始
-    static final String FILE_DIVIDER = "---------";
+    private static final String FILE_DIVIDER = "---------";
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -68,52 +62,13 @@ public class IOManager {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public static Subscription backupFile(final AppCompatActivity context) {
-        final JayLoadingDialog dialog = new JayLoadingDialog();
-        final String filePath = IOUtils.getBackupFilePath();
-
+    public static Observable<Void> backupFile() {
         return Observable
-                .create(new Observable.OnSubscribe<Void>() {
+                .create(new ObservableOnSubscribe<Void>() {
                     @Override
-                    public void call(Subscriber<? super Void> subscriber) {
-                        try {
-                            backupFile(filePath);
-                            subscriber.onCompleted();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        verifyStoragePermissions(context);
-                        dialog.setCancelable(false);
-                        dialog.showLoading(context.getString(R.string.back_uping));
-                        dialog.show(context.getSupportFragmentManager(), "backup");
-
-                        Log.i(TAG, "backup filePath: " + filePath);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Void>() {
-                    @Override
-                    public void onCompleted() {
-                        dialog.showSuccess(context.getString(R.string.backup_done));
-                        dialog.delayClose(1000);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        dialog.showError(context.getString(R.string.backup_fail));
-                        dialog.delayClose(1000);
-                    }
-
-                    @Override
-                    public void onNext(Void aVoid) {
-
+                    public void subscribe(ObservableEmitter<Void> e) throws Exception {
+                        backupFile(IOUtils.getBackupFilePath());
+                        e.onComplete();
                     }
                 });
     }
@@ -163,45 +118,13 @@ public class IOManager {
         fileWriter.close();
     }
 
-    public static Subscription recoveryData(final AppCompatActivity context, final String filePath) {
+    public static Observable<Void> recoveryData(final AppCompatActivity context, final String filePath) {
         return Observable
-                .create(new Observable.OnSubscribe<Void>() {
+                .create(new ObservableOnSubscribe<Void>() {
                     @Override
-                    public void call(Subscriber<? super Void> subscriber) {
-                        try {
-                            recoveryFile(filePath);
-                            subscriber.onCompleted();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
-                    }
-                }).subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        //每次恢复数据之前需要请求读写存储权限
-                        IOManager.verifyStoragePermissions(context);
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Void>() {
-                    @Override
-                    public void onCompleted() {
-                        ToastUtil.showToast(context.getString(R.string.recovery_done), Toast.LENGTH_SHORT);
-                        EventBus.getDefault().postSticky(new RecordRecoveryEvent(true));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showToast(context.getString(R.string.recovery_fail), Toast.LENGTH_SHORT);
-                        EventBus.getDefault().postSticky(new RecordRecoveryEvent(false));
-                    }
-
-                    @Override
-                    public void onNext(Void aVoid) {
-
+                    public void subscribe(ObservableEmitter<Void> e) throws Exception {
+                        recoveryFile(filePath);
+                        e.onComplete();
                     }
                 });
     }
@@ -275,16 +198,18 @@ public class IOManager {
         fileReader.close();
     }
 
-    public static void traverseFile(Action1<List<File>> action1) {
-        Observable.create(new Observable.OnSubscribe<List<File>>() {
-            @Override
-            public void call(Subscriber<? super List<File>> subscriber) {
-                List<File> files = traverseFileInternal();
-                subscriber.onNext(files);
-            }
-        }).subscribeOn(Schedulers.io())
+    public static Disposable traverseFile(Consumer<List<File>> consumer) {
+        return Observable
+                .create(new ObservableOnSubscribe<List<File>>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<List<File>> e) throws Exception {
+                        List<File> files = traverseFileInternal();
+                        e.onNext(files);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action1);
+                .subscribe(consumer);
     }
 
     /**
