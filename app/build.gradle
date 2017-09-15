@@ -33,13 +33,14 @@ dependencies {
     compile rootProject.ext.dependencies.glide
     compile rootProject.ext.dependencies.crop
     compile rootProject.ext.dependencies.eventbus
-    testCompile 'junit:junit:4.12'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
     compile rootProject.ext.dependencies.rxjava
     compile rootProject.ext.dependencies.rxandroid
 
     compile rootProject.ext.dependencies.butterknife
     annotationProcessor rootProject.ext.dependencies.butterknife_compiler
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 }
