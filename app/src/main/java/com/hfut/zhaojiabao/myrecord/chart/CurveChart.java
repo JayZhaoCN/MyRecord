@@ -36,6 +36,8 @@ public class CurveChart extends View {
     private int mBlankX, mBlankY;
     //上方留白
     private int mTopBlankY;
+    //右方留白
+    private int mRightBlankX;
     private DataProvider mDataProvider;
 
     private Context mContext;
@@ -47,6 +49,9 @@ public class CurveChart extends View {
     private Paint mPointPaint;
     private Paint mGradientBgPaint;
     private Paint mAxisPaint;
+    private Paint mTextPaint;
+
+    private Paint.FontMetrics mFontMetrics;
 
     private ValueAnimator mAnimator;
 
@@ -79,7 +84,15 @@ public class CurveChart extends View {
         mAxisPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
         mAxisPaint.setStrokeWidth(4);
 
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(ContextCompat.getColor(mContext, R.color.black60));
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setTextSize(Utils.sp2px(mContext, 14));
+
+        mFontMetrics = mTextPaint.getFontMetrics();
+
         mTopBlankY = (int) Utils.dp2px(mContext, 20);
+        mRightBlankX = (int) Utils.dp2px(mContext, 20);
     }
 
     @Override
@@ -87,7 +100,7 @@ public class CurveChart extends View {
         mWidth = w;
         mHeight = h;
         mDrawAreaHeight = h - (mBlankY = (int) Utils.dp2px(mContext, 20)) - mTopBlankY;
-        mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20));
+        mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20)) - mRightBlankX;
 
         mGradientBgPaint.setShader(
                 new LinearGradient(
@@ -109,19 +122,17 @@ public class CurveChart extends View {
         invalidate();
     }
 
-    private Path mBoundPath;
-
     private void initPath() {
         if (mPath == null) {
             mPath = new Path();
         }
 
-        float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mData.size() - 1);
+        float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mData.datas.size() - 1);
 
         mDataProvider.mPoints = new ArrayList<>();
 
-        for (int i = 0; i < mDataProvider.mData.size(); i++) {
-            mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mData.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
+        for (int i = 0; i < mDataProvider.mData.datas.size(); i++) {
+            mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mData.datas.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
         }
 
         mPath = BezierProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
@@ -129,13 +140,6 @@ public class CurveChart extends View {
         mBgPath.lineTo(mDrawAreaWidth, mDrawAreaHeight);
         mBgPath.lineTo(0, mDrawAreaHeight);
         mBgPath.close();
-
-        mBoundPath = new Path();
-        mBoundPath.moveTo(0, 0);
-        mBoundPath.lineTo(mWidth, 0);
-        mBoundPath.lineTo(mWidth, mHeight);
-        mBoundPath.lineTo(0, mHeight);
-        mBoundPath.close();
 
         invalidate();
     }
@@ -193,6 +197,9 @@ public class CurveChart extends View {
         //y-axis
         canvas.drawLine(mBlankX, mHeight - mBlankY, mBlankX, 0, mAxisPaint);
 
-        canvas.drawPath(mBoundPath, mPaint);
+        //draw x-axis text
+        for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
+            canvas.drawText(mDataProvider.mData.texts.get(i), mDataProvider.mPoints.get(i).x + mBlankX, (mHeight * 2 - mBlankY - mFontMetrics.bottom - mFontMetrics.top) / 2, mTextPaint);
+        }
     }
 }

@@ -182,6 +182,8 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
         verifyStoragePermissions(this);
 
         EventBus.getDefault().registerSticky(this);
+
+        startActivity(new Intent(this, CurveActivity.class));
     }
 
     public void onEventMainThread(RecordRecoveryEvent event) {
