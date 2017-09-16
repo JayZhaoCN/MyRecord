@@ -21,17 +21,17 @@ public class CurveActivity extends AppCompatActivity {
 
         mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
 
-        List<Float> data = new ArrayList<>();
-        data.add(600f);
-        data.add(300f);
-        data.add(100f);
-        data.add(200f);
-        data.add(300f);
-        data.add(600f);
-        data.add(300f);
-        data.add(100f);
-        data.add(200f);
-        data.add(300f);
+        List<Float> datas = new ArrayList<>();
+        datas.add(600f);
+        datas.add(300f);
+        datas.add(100f);
+        datas.add(200f);
+        datas.add(300f);
+        datas.add(600f);
+        datas.add(300f);
+        datas.add(100f);
+        datas.add(200f);
+        datas.add(300f);
 
         List<String> texts = new ArrayList<>();
         texts.add("一月");
@@ -45,7 +45,7 @@ public class CurveActivity extends AppCompatActivity {
         texts.add("九月");
         texts.add("十月");
 
-        DataProvider provider = new DataProvider(new DataProvider.ChartData(data, texts));
+        DataProvider provider = new DataProvider(datas, texts);
         mCurveChart.provideData(provider);
     }
 

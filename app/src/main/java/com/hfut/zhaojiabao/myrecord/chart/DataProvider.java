@@ -13,12 +13,14 @@ public class DataProvider {
     public float mMaxValue = Float.MIN_VALUE;
     public float mMinValue = Float.MAX_VALUE;
 
-    public ChartData mData;
+    public List<Float> mDatas;
+    public List<String> mTexts;
 
-    public DataProvider(ChartData data) {
-        mData = data;
+    public DataProvider(List<Float> datas, List<String> texts) {
+        mDatas = datas;
+        mTexts = texts;
 
-        for (Float aFloat : data.datas) {
+        for (Float aFloat : mDatas) {
             if (aFloat > mMaxValue) {
                 mMaxValue = aFloat;
             }
@@ -28,15 +30,4 @@ public class DataProvider {
             }
         }
     }
-
-    public static class ChartData {
-        public List<Float> datas;
-        public List<String> texts;
-
-        public ChartData(List<Float> datas, List<String> texts) {
-            this.datas = datas;
-            this.texts = texts;
-        }
-    }
-
 }

@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 
 public class CurveChart extends View {
-    private static final int DEFAULT_ANIM_DURATION = 6000;
+    private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
 
     private int mDrawAreaWidth, mDrawAreaHeight;
@@ -69,7 +69,7 @@ public class CurveChart extends View {
         mContext = context;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(ContextCompat.getColor(mContext, R.color.grapefruit));
+        mPaint.setColor(ContextCompat.getColor(mContext, R.color.sunflower));
         mPaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
 
         mPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -127,12 +127,12 @@ public class CurveChart extends View {
             mPath = new Path();
         }
 
-        float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mData.datas.size() - 1);
+        float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mDatas.size() - 1);
 
         mDataProvider.mPoints = new ArrayList<>();
 
-        for (int i = 0; i < mDataProvider.mData.datas.size(); i++) {
-            mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mData.datas.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
+        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
+            mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mDatas.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
         }
 
         mPath = BezierProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
@@ -199,7 +199,7 @@ public class CurveChart extends View {
 
         //draw x-axis text
         for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
-            canvas.drawText(mDataProvider.mData.texts.get(i), mDataProvider.mPoints.get(i).x + mBlankX, (mHeight * 2 - mBlankY - mFontMetrics.bottom - mFontMetrics.top) / 2, mTextPaint);
+            canvas.drawText(mDataProvider.mTexts.get(i), mDataProvider.mPoints.get(i).x + mBlankX, (mHeight * 2 - mBlankY - mFontMetrics.bottom - mFontMetrics.top) / 2, mTextPaint);
         }
     }
 }
