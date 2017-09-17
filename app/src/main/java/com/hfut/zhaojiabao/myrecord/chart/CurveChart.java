@@ -1,5 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.chart;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,9 +12,11 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.graphics.Shader;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -20,6 +24,7 @@ import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 曲线图
@@ -30,6 +35,7 @@ import java.util.ArrayList;
 public class CurveChart extends View {
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
+    private static final String TAG = "CurveChart";
 
     private int mDrawAreaWidth, mDrawAreaHeight;
     private int mWidth, mHeight;
@@ -50,6 +56,9 @@ public class CurveChart extends View {
     private Paint mGradientBgPaint;
     private Paint mAxisPaint;
     private Paint mTextPaint;
+    private Paint mLabelTextPaint;
+
+    private List<Path> mLabelPaths;
 
     private Paint.FontMetrics mFontMetrics;
 
@@ -89,6 +98,11 @@ public class CurveChart extends View {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setTextSize(Utils.sp2px(mContext, 14));
 
+        mLabelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.black60));
+        mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
+        mLabelTextPaint.setTextSize(Utils.sp2px(mContext, 10));
+
         mFontMetrics = mTextPaint.getFontMetrics();
 
         mTopBlankY = (int) Utils.dp2px(mContext, 20);
@@ -101,32 +115,14 @@ public class CurveChart extends View {
         mHeight = h;
         mDrawAreaHeight = h - (mBlankY = (int) Utils.dp2px(mContext, 20)) - mTopBlankY;
         mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20)) - mRightBlankX;
-
-        mGradientBgPaint.setShader(
-                new LinearGradient(
-                        0, 0, 0, mDrawAreaHeight,
-                        ContextCompat.getColor(mContext, R.color.stp_bg_month_best),
-                        ContextCompat.getColor(mContext, R.color.transparent), Shader.TileMode.CLAMP));
-        initPath();
-        startAnim();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        cancelAnim();
-    }
-
-    public void provideData(DataProvider dataProvider) {
+    public void provideData(@NonNull DataProvider dataProvider) {
         mDataProvider = dataProvider;
         invalidate();
     }
 
     private void initPath() {
-        if (mPath == null) {
-            mPath = new Path();
-        }
-
         float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mDatas.size() - 1);
 
         mDataProvider.mPoints = new ArrayList<>();
@@ -135,30 +131,75 @@ public class CurveChart extends View {
             mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mDatas.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
         }
 
-        mPath = BezierProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
-        mBgPath = new Path(mPath);
-        mBgPath.lineTo(mDrawAreaWidth, mDrawAreaHeight);
-        mBgPath.lineTo(0, mDrawAreaHeight);
-        mBgPath.close();
+        mPath = PathProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
+        if (mPath != null) {
+            mBgPath = new Path(mPath);
+            mBgPath.lineTo(mDrawAreaWidth, mDrawAreaHeight);
+            mBgPath.lineTo(0, mDrawAreaHeight);
+            mBgPath.close();
+        }
+
+        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, 20);
 
         invalidate();
     }
 
     public void startAnim() {
-        PathMeasure measure = new PathMeasure(mPath, false);
+        if (mDataProvider.mDatas.size() <= 1) {
+            Log.w(TAG, "data source size should be more than one.");
+            return;
+        }
+
+        mGradientBgPaint.setShader(
+                new LinearGradient(
+                        0, 0, 0, mDrawAreaHeight,
+                        ContextCompat.getColor(mContext, R.color.stp_bg_month_best),
+                        ContextCompat.getColor(mContext, R.color.transparent), Shader.TileMode.CLAMP));
+        initPath();
+
+        final PathMeasure measure = new PathMeasure(mPath, false);
         final float length = measure.getLength();
 
         if (mAnimator == null) {
             mAnimator = ValueAnimator.ofFloat(1, 0);
 
             mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                int count = 1;
+                float lastX = 0;
+                float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mDatas.size() - 1);
+
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    DashPathEffect effect = new DashPathEffect(new float[]{length, length}, length * (float) animation.getAnimatedValue());
+                    float animatedValue = (float) animation.getAnimatedValue();
+                    DashPathEffect effect = new DashPathEffect(new float[]{length, length}, length * animatedValue);
+                    float[] pos = new float[2];
+                    measure.getPosTan(length * (1 - animatedValue), pos, null);
+
+                    if (pos[0] - lastX > xAxisInterval) {
+                        lastX = pos[0];
+                        //动画执行到第count个点
+                        System.out.println("JayLog, x changed." + count++);
+                    }
+
                     mPaint.setPathEffect(effect);
                     postInvalidateOnAnimation();
                 }
             });
+
+            mAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    //动画执行到第1个点
+                    System.out.println("JayLog, x started.");
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    //动画执行到最后一个点
+                    System.out.println("JayLog, x ended.");
+                }
+            });
+
             mAnimator.setInterpolator(new LinearInterpolator());
             mAnimator.setDuration(DEFAULT_ANIM_DURATION);
             mAnimator.setRepeatCount(0);
@@ -177,6 +218,10 @@ public class CurveChart extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if (mPath == null) {
+            return;
+        }
+
         canvas.save();
         canvas.translate(mBlankX, mBlankY);
 
@@ -189,6 +234,12 @@ public class CurveChart extends View {
         canvas.translate(0, DEFAULT_LINE_WIDTH / 2);
         canvas.drawPath(mBgPath, mGradientBgPaint);
         canvas.restore();
+
+        for (int i = 0; i < mLabelPaths.size(); i++) {
+            canvas.drawPath(mLabelPaths.get(i), mAxisPaint);
+            float y = (mDataProvider.mPoints.get(i).y * 2 - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom - mLabelTextPaint.getFontMetrics().top) / 2;
+            canvas.drawText(mDataProvider.mTexts.get(i), mDataProvider.mPoints.get(i).x, y, mLabelTextPaint);
+        }
 
         canvas.restore();
 

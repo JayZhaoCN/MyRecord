@@ -11,9 +11,9 @@
             android:icon="@drawable/recovery"
             android:title="@string/action_recovery"/>
         <item
-            android:id="@+id/nav_histogram"
+            android:id="@+id/nav_curve"
             android:icon="@drawable/ic_view_column"
-            android:title="@string/histogram"/>
+            android:title="@string/curve"/>
         <item
             android:id="@+id/nav_pie_chart"
             android:icon="@drawable/ic_pie_chart"

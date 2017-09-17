@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hfut.zhaojiabao.myrecord.activities.CurveActivity">
+    android:orientation="vertical"
+    tools:context="com.hfut.zhaojiabao.myrecord.activities.CurveChartActivity">
 
     <com.hfut.zhaojiabao.myrecord.chart.CurveChart
         android:id="@+id/curve_chart"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_width="330dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"/>
 
 </LinearLayout>

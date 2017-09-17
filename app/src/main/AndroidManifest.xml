@@ -65,7 +65,7 @@
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activities.CurveActivity">
+        <activity android:name=".activities.CurveChartActivity">
         </activity>
     </application>
 

@@ -182,8 +182,6 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
         verifyStoragePermissions(this);
 
         EventBus.getDefault().registerSticky(this);
-
-        startActivity(new Intent(this, CurveActivity.class));
     }
 
     public void onEventMainThread(RecordRecoveryEvent event) {
@@ -496,9 +494,8 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_pie_chart:
                 startActivity(new Intent(this, SectorActivity.class));
                 break;
-            case R.id.nav_histogram:
-                ToastUtil.showToast("柱状图实现的不太好，先不展示了，后面再优化优化~", Toast.LENGTH_SHORT);
-                //startActivity(new Intent(this, RecordChartActivity.class));
+            case R.id.nav_curve:
+                startActivity(new Intent(this, CurveChartActivity.class));
                 break;
             case R.id.nav_detail:
                 startActivity(new Intent(this, DetailActivity.class));

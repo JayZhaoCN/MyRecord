@@ -10,11 +10,19 @@ import java.util.List;
  * @author zhaojiabao 2017/9/15
  */
 
-public class BezierProvider {
+public class PathProvider {
 
     //TODO 有待优化
     public static Path provideBezierPath(List<PointF> points, float a, float b) {
+        if (points.size() <= 1) {
+            return null;
+        }
         Path path = new Path();
+        if (points.size() == 2) {
+            path.moveTo(points.get(0).x, points.get(0).y);
+            path.lineTo(points.get(1).x, points.get(1).y);
+            return path;
+        }
 
         List<PointF> controls = new ArrayList<>();
 
@@ -41,6 +49,28 @@ public class BezierProvider {
         }
 
         return path;
+    }
+
+    public static List<Path> provideLabelPath(List<PointF> points, int labelWidth) {
+        if (points.size() <= 1) {
+            return null;
+        }
+
+        List<Path> paths = new ArrayList<>();
+        for (PointF point : points) {
+            Path path = new Path();
+            path.moveTo(point.x, point.y);
+            path.lineTo(point.x + 15, point.y - 20);
+            path.lineTo(point.x + 15 + labelWidth, point.y - 20);
+            path.lineTo(point.x + 15 + labelWidth, point.y - 20 - 35);
+            path.lineTo(point.x - 15 - labelWidth, point.y - 20 - 35);
+            path.lineTo(point.x - 15 - labelWidth, point.y - 20);
+            path.lineTo(point.x - 15, point.y - 20);
+            path.close();
+
+            paths.add(path);
+        }
+        return paths;
     }
 
 
