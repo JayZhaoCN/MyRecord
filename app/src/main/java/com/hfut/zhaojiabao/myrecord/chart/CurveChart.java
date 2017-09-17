@@ -32,6 +32,7 @@ import java.util.List;
  * @author zhaojiabao 2017/9/14
  */
 
+//TODO 太长的代码需要分段写
 public class CurveChart extends View {
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
@@ -60,8 +61,6 @@ public class CurveChart extends View {
 
     private List<Path> mLabelPaths;
 
-    private Paint.FontMetrics mFontMetrics;
-
     private ValueAnimator mAnimator;
 
     public CurveChart(Context context) {
@@ -74,8 +73,11 @@ public class CurveChart extends View {
 
     public CurveChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         mContext = context;
+        init();
+    }
+
+    private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(ContextCompat.getColor(mContext, R.color.sunflower));
@@ -99,22 +101,12 @@ public class CurveChart extends View {
         mTextPaint.setTextSize(Utils.sp2px(mContext, 14));
 
         mLabelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.black60));
+        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.white));
         mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
         mLabelTextPaint.setTextSize(Utils.sp2px(mContext, 10));
 
-        mFontMetrics = mTextPaint.getFontMetrics();
-
         mTopBlankY = (int) Utils.dp2px(mContext, 20);
         mRightBlankX = (int) Utils.dp2px(mContext, 20);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mWidth = w;
-        mHeight = h;
-        mDrawAreaHeight = h - (mBlankY = (int) Utils.dp2px(mContext, 20)) - mTopBlankY;
-        mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20)) - mRightBlankX;
     }
 
     public void provideData(@NonNull DataProvider dataProvider) {
@@ -128,7 +120,9 @@ public class CurveChart extends View {
         mDataProvider.mPoints = new ArrayList<>();
 
         for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
-            mDataProvider.mPoints.add(new PointF(xAxisInterval * i, mDrawAreaHeight - mDataProvider.mDatas.get(i) / mDataProvider.mMaxValue * mDrawAreaHeight));
+            float data = mDataProvider.mDatas.get(i);
+            mDataProvider.mPoints.add(new PointF(xAxisInterval * i,
+                    mDrawAreaHeight - data / mDataProvider.mMaxValue * mDrawAreaHeight));
         }
 
         mPath = PathProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
@@ -139,7 +133,14 @@ public class CurveChart extends View {
             mBgPath.close();
         }
 
-        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, 20);
+        List<Integer> labelWidths = new ArrayList<>();
+        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
+            String label = String.valueOf(mDataProvider.mDatas.get(i));
+            //+6是为了让label两边稍微空出一点距离
+            labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
+        }
+
+        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, labelWidths);
 
         invalidate();
     }
@@ -177,7 +178,7 @@ public class CurveChart extends View {
 
                     if (pos[0] - lastX > xAxisInterval) {
                         lastX = pos[0];
-                        //动画执行到第count个点
+                        //TODO 动画执行到第count个点
                         System.out.println("JayLog, x changed." + count++);
                     }
 
@@ -189,13 +190,13 @@ public class CurveChart extends View {
             mAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    //动画执行到第1个点
+                    //TODO 动画执行到第1个点
                     System.out.println("JayLog, x started.");
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    //动画执行到最后一个点
+                    //TODO 动画执行到最后一个点
                     System.out.println("JayLog, x ended.");
                 }
             });
@@ -235,10 +236,14 @@ public class CurveChart extends View {
         canvas.drawPath(mBgPath, mGradientBgPaint);
         canvas.restore();
 
+        //draw labels
         for (int i = 0; i < mLabelPaths.size(); i++) {
             canvas.drawPath(mLabelPaths.get(i), mAxisPaint);
-            float y = (mDataProvider.mPoints.get(i).y * 2 - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom - mLabelTextPaint.getFontMetrics().top) / 2;
-            canvas.drawText(mDataProvider.mTexts.get(i), mDataProvider.mPoints.get(i).x, y, mLabelTextPaint);
+            float baseline = (mDataProvider.mPoints.get(i).y * 2
+                    - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom
+                    - mLabelTextPaint.getFontMetrics().top) / 2;
+            String label = String.valueOf(mDataProvider.mDatas.get(i));
+            canvas.drawText(label, mDataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
         }
 
         canvas.restore();
@@ -250,7 +255,19 @@ public class CurveChart extends View {
 
         //draw x-axis text
         for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
-            canvas.drawText(mDataProvider.mTexts.get(i), mDataProvider.mPoints.get(i).x + mBlankX, (mHeight * 2 - mBlankY - mFontMetrics.bottom - mFontMetrics.top) / 2, mTextPaint);
+            String label = mDataProvider.mTexts.get(i);
+            canvas.drawText(label,
+                    mDataProvider.mPoints.get(i).x + mBlankX,
+                    (mHeight * 2 - mBlankY - mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top) / 2,
+                    mTextPaint);
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mWidth = w;
+        mHeight = h;
+        mDrawAreaHeight = h - (mBlankY = (int) Utils.dp2px(mContext, 20)) - mTopBlankY;
+        mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20)) - mRightBlankX;
     }
 }

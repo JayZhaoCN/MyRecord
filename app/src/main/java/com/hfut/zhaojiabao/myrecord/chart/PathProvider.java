@@ -51,13 +51,17 @@ public class PathProvider {
         return path;
     }
 
-    public static List<Path> provideLabelPath(List<PointF> points, int labelWidth) {
+    //TODO 所有写死的数字需要用常量表示，并且注明含义
+    public static List<Path> provideLabelPath(List<PointF> points, List<Integer> labelWidths) {
         if (points.size() <= 1) {
             return null;
         }
 
         List<Path> paths = new ArrayList<>();
-        for (PointF point : points) {
+        for (int i = 0; i < points.size(); i++) {
+            int labelWidth = (labelWidths.get(i) - 30) / 2;
+
+            PointF point = points.get(i);
             Path path = new Path();
             path.moveTo(point.x, point.y);
             path.lineTo(point.x + 15, point.y - 20);
