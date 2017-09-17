@@ -94,6 +94,7 @@ public class CurveChart extends View {
         mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mAxisPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
         mAxisPaint.setStrokeWidth(4);
+        mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(ContextCompat.getColor(mContext, R.color.black60));
@@ -249,9 +250,10 @@ public class CurveChart extends View {
         canvas.restore();
 
         //x-axis
-        canvas.drawLine(mBlankX, mHeight - mBlankY, mWidth, mHeight - mBlankY, mAxisPaint);
+        canvas.drawLine(mBlankX, mHeight - mBlankY, mWidth - mBlankX, mHeight - mBlankY, mAxisPaint);
         //y-axis
-        canvas.drawLine(mBlankX, mHeight - mBlankY, mBlankX, 0, mAxisPaint);
+        //y轴不画到0是为了让线的终点展示为圆形
+        canvas.drawLine(mBlankX, mHeight - mBlankY, mBlankX, 2, mAxisPaint);
 
         //draw x-axis text
         for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
