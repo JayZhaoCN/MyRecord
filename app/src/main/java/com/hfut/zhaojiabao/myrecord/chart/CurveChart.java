@@ -194,11 +194,6 @@ public class CurveChart extends BaseRectChart {
     }
 
     @Override
-    protected void drawOuter(Canvas canvas) {
-        super.drawOuter(canvas);
-    }
-
-    @Override
     public void drawInner(Canvas canvas) {
         canvas.drawPath(mPath, mCurvePaint);
 
