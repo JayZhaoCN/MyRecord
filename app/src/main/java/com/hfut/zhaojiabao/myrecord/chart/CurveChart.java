@@ -41,8 +41,8 @@ public class CurveChart extends BaseRectChart {
     private Paint mCurvePaint;
     private Paint mPointPaint;
     private Paint mGradientBgPaint;
-    private Paint mAxisPaint;
     private Paint mLabelTextPaint;
+    private Paint mLabelPaint;
 
     private List<Path> mLabelPaths;
 
@@ -75,28 +75,34 @@ public class CurveChart extends BaseRectChart {
 
         mGradientBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mAxisPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
-        mAxisPaint.setStrokeWidth(4);
-        mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
-
         mLabelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.white));
+        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
         mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
         mLabelTextPaint.setTextSize(Utils.sp2px(mContext, 10));
+
+        mLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLabelPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
+        mLabelPaint.setStyle(Paint.Style.STROKE);
+        mLabelPaint.setStrokeWidth(4);
     }
 
-    public void startAnim() {
+    public void initAnim() {
         post(new Runnable() {
             @Override
             public void run() {
-                startAnimInner();
+                if (mBuilder == null) {
+                    throw new IllegalArgumentException("you should init builder first.");
+                }
+
+                initAnimInner();
             }
         });
     }
 
-    private void startAnimInner() {
-        if (mDataProvider.mDatas.size() <= 1) {
+    private void initAnimInner() {
+        final DataProvider dataProvider = mBuilder.dataProvider;
+
+        if (dataProvider.mDatas.size() <= 1) {
             Log.w(TAG, "data source size should be more than one.");
             return;
         }
@@ -108,16 +114,15 @@ public class CurveChart extends BaseRectChart {
                         ContextCompat.getColor(mContext, R.color.transparent), Shader.TileMode.CLAMP));
         initPath();
 
-        final PathMeasure measure = new PathMeasure(mPath, false);
-        final float length = measure.getLength();
-
         if (mAnimator == null) {
             mAnimator = ValueAnimator.ofFloat(1, 0);
 
             mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 int count = 1;
                 float lastX = 0;
-                float xAxisInterval = mWidth / (float) (mDataProvider.mDatas.size() - 1);
+                float xAxisInterval = mWidth / (float) (dataProvider.mDatas.size() - 1);
+                PathMeasure measure = new PathMeasure(mPath, false);
+                float length = measure.getLength();
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -159,17 +164,9 @@ public class CurveChart extends BaseRectChart {
     }
 
     private void initPath() {
-        float xAxisInterval = mWidth / (float) (mDataProvider.mDatas.size() - 1);
+        DataProvider dataProvider = mBuilder.dataProvider;
 
-        mDataProvider.mPoints = new ArrayList<>();
-
-        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
-            float data = mDataProvider.mDatas.get(i);
-            mDataProvider.mPoints.add(new PointF(xAxisInterval * i,
-                    mHeight - data / mDataProvider.mMaxValue * mHeight));
-        }
-
-        mPath = PathProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
+        mPath = PathProvider.provideBezierPath(dataProvider.mPoints, 0.25f, 0.25f);
         if (mPath != null) {
             mBgPath = new Path(mPath);
             mBgPath.lineTo(mWidth, mHeight);
@@ -178,13 +175,13 @@ public class CurveChart extends BaseRectChart {
         }
 
         List<Integer> labelWidths = new ArrayList<>();
-        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
-            String label = String.valueOf(mDataProvider.mDatas.get(i));
+        for (int i = 0; i < dataProvider.mDatas.size(); i++) {
+            String label = String.valueOf(dataProvider.mDatas.get(i));
             //+6是为了让label两边稍微空出一点距离
             labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
         }
 
-        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, labelWidths);
+        mLabelPaths = PathProvider.provideLabelPath(dataProvider.mPoints, labelWidths);
 
         invalidate();
     }
@@ -198,21 +195,16 @@ public class CurveChart extends BaseRectChart {
 
     @Override
     protected void drawOuter(Canvas canvas) {
-        if (mPath == null) {
-            return;
-        }
-
         super.drawOuter(canvas);
     }
 
     @Override
     public void drawInner(Canvas canvas) {
-        if (mPath == null) {
-            return;
-        }
         canvas.drawPath(mPath, mCurvePaint);
 
-        for (PointF point : mDataProvider.mPoints) {
+        DataProvider dataProvider = mBuilder.dataProvider;
+
+        for (PointF point : dataProvider.mPoints) {
             canvas.drawPoint(point.x, point.y, mPointPaint);
         }
         canvas.save();
@@ -222,17 +214,14 @@ public class CurveChart extends BaseRectChart {
 
         //draw labels
         for (int i = 0; i < mLabelPaths.size(); i++) {
-            canvas.drawPath(mLabelPaths.get(i), mAxisPaint);
-            float baseline = (mDataProvider.mPoints.get(i).y * 2
+            canvas.drawPath(mLabelPaths.get(i), mLabelPaint);
+            float baseline = (dataProvider.mPoints.get(i).y * 2
                     - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom
                     - mLabelTextPaint.getFontMetrics().top) / 2;
-            String label = String.valueOf(mDataProvider.mDatas.get(i));
-            canvas.drawText(label, mDataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
+            String label = String.valueOf(dataProvider.mDatas.get(i));
+            canvas.drawText(label, dataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
         }
 
-        //x-axis
-        canvas.drawLine(0, mHeight, mWidth, mHeight, mAxisPaint);
-        //y-axis
-        canvas.drawLine(0, mHeight, 0, 0, mAxisPaint);
+        super.drawInner(canvas);
     }
 }
