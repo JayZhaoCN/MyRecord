@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -113,14 +112,13 @@ public abstract class BaseRectChart extends View {
 
     /**
      * 继承该方法绘制图表外部
-     * 父类默认实现，画x、y轴刻度值
+     * 父类默认实现，画刻度值
      */
     @CallSuper
     protected void drawOuter(Canvas canvas) {
         DataProvider dataProvider = mBuilder.dataProvider;
         //draw x-axis scale
         for (int i = 0; i < dataProvider.mPoints.size(); i++) {
-
             canvas.drawText(dataProvider.mTexts.get(i),
                     dataProvider.mPoints.get(i).x + mBuilder.mLeftBlack,
                     (mRealHeight * 2 - mBuilder.mBottomBlack
@@ -185,8 +183,10 @@ public abstract class BaseRectChart extends View {
          */
         public AxisStyle axisStyle;
 
+        /**
+         * 图表数据
+         */
         public DataProvider dataProvider;
-
 
         public Builder(int leftBlack, int topBlack, int rightBlack, int bottomBlack) {
             mLeftBlack = leftBlack;
