@@ -8,8 +8,8 @@ import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.BaseRectChart;
 import com.hfut.zhaojiabao.myrecord.chart.CurveChart;
 import com.hfut.zhaojiabao.myrecord.chart.DataProvider;
-import com.hfut.zhaojiabao.myrecord.chart.TestChart;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
+import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +27,15 @@ public class CurveChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_curve);
 
-//        ValueTransfer
-//                .getDayRecords()
-//                .subscribeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<List<DayRecord>>() {
-//                    @Override
-//                    public void accept(List<DayRecord> dayRecords) throws Exception {
-//                        provideData(dayRecords);
-//                    }
-//                });
-
-        TestChart chart = (TestChart) findViewById(R.id.test_chart);
-        chart.setBuilder(new BaseRectChart.Builder(30, 150, 0, 150, null));
+        ValueTransfer
+                .getDayRecords()
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<DayRecord>>() {
+                    @Override
+                    public void accept(List<DayRecord> dayRecords) throws Exception {
+                        provideData(dayRecords);
+                    }
+                });
     }
 
     private void provideData(List<DayRecord> dayRecords) {
@@ -54,19 +51,21 @@ public class CurveChartActivity extends AppCompatActivity {
             }
         }
 
-//        mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
-//        mCurveChart.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mCurveChart.provideData(new DataProvider(datas, texts));
-//                mCurveChart.startAnim();
-//            }
-//        });
+        mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
+        int blank = (int) Utils.dp2px(this, 20);
+        mCurveChart.setBuilder(new BaseRectChart.Builder(blank, blank, blank, blank));
+        mCurveChart.post(new Runnable() {
+            @Override
+            public void run() {
+                mCurveChart.provideData(new DataProvider(datas, texts));
+                mCurveChart.startAnim();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mCurveChart.cancelAnim();
+        mCurveChart.cancelAnim();
     }
 }

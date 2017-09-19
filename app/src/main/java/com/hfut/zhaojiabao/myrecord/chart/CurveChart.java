@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.hfut.zhaojiabao.myrecord.R;
@@ -32,19 +31,11 @@ import java.util.List;
  * @author zhaojiabao 2017/9/14
  */
 
-//TODO 太长的代码需要分段写
-public class CurveChart extends View {
+public class CurveChart extends BaseRectChart {
+    private static final String TAG = "CurveChart";
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
-    private static final String TAG = "CurveChart";
 
-    private int mDrawAreaWidth, mDrawAreaHeight;
-    private int mWidth, mHeight;
-    private int mBlankX, mBlankY;
-    //上方留白
-    private int mTopBlankY;
-    //右方留白
-    private int mRightBlankX;
     private DataProvider mDataProvider;
 
     private Context mContext;
@@ -105,45 +96,6 @@ public class CurveChart extends View {
         mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.white));
         mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
         mLabelTextPaint.setTextSize(Utils.sp2px(mContext, 10));
-
-        mTopBlankY = (int) Utils.dp2px(mContext, 20);
-        mRightBlankX = (int) Utils.dp2px(mContext, 20);
-    }
-
-    public void provideData(@NonNull DataProvider dataProvider) {
-        mDataProvider = dataProvider;
-        invalidate();
-    }
-
-    private void initPath() {
-        float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mDatas.size() - 1);
-
-        mDataProvider.mPoints = new ArrayList<>();
-
-        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
-            float data = mDataProvider.mDatas.get(i);
-            mDataProvider.mPoints.add(new PointF(xAxisInterval * i,
-                    mDrawAreaHeight - data / mDataProvider.mMaxValue * mDrawAreaHeight));
-        }
-
-        mPath = PathProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
-        if (mPath != null) {
-            mBgPath = new Path(mPath);
-            mBgPath.lineTo(mDrawAreaWidth, mDrawAreaHeight);
-            mBgPath.lineTo(0, mDrawAreaHeight);
-            mBgPath.close();
-        }
-
-        List<Integer> labelWidths = new ArrayList<>();
-        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
-            String label = String.valueOf(mDataProvider.mDatas.get(i));
-            //+6是为了让label两边稍微空出一点距离
-            labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
-        }
-
-        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, labelWidths);
-
-        invalidate();
     }
 
     public void startAnim() {
@@ -154,7 +106,7 @@ public class CurveChart extends View {
 
         mGradientBgPaint.setShader(
                 new LinearGradient(
-                        0, 0, 0, mDrawAreaHeight,
+                        0, 0, 0, mHeight,
                         ContextCompat.getColor(mContext, R.color.stp_bg_month_best),
                         ContextCompat.getColor(mContext, R.color.transparent), Shader.TileMode.CLAMP));
         initPath();
@@ -168,7 +120,7 @@ public class CurveChart extends View {
             mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 int count = 1;
                 float lastX = 0;
-                float xAxisInterval = mDrawAreaWidth / (float) (mDataProvider.mDatas.size() - 1);
+                float xAxisInterval = mWidth / (float) (mDataProvider.mDatas.size() - 1);
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -209,6 +161,42 @@ public class CurveChart extends View {
         mAnimator.start();
     }
 
+    public void provideData(@NonNull DataProvider dataProvider) {
+        mDataProvider = dataProvider;
+        invalidate();
+    }
+
+    private void initPath() {
+        float xAxisInterval = mWidth / (float) (mDataProvider.mDatas.size() - 1);
+
+        mDataProvider.mPoints = new ArrayList<>();
+
+        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
+            float data = mDataProvider.mDatas.get(i);
+            mDataProvider.mPoints.add(new PointF(xAxisInterval * i,
+                    mHeight - data / mDataProvider.mMaxValue * mHeight));
+        }
+
+        mPath = PathProvider.provideBezierPath(mDataProvider.mPoints, 0.25f, 0.25f);
+        if (mPath != null) {
+            mBgPath = new Path(mPath);
+            mBgPath.lineTo(mWidth, mHeight);
+            mBgPath.lineTo(0, mHeight);
+            mBgPath.close();
+        }
+
+        List<Integer> labelWidths = new ArrayList<>();
+        for (int i = 0; i < mDataProvider.mDatas.size(); i++) {
+            String label = String.valueOf(mDataProvider.mDatas.get(i));
+            //+6是为了让label两边稍微空出一点距离
+            labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
+        }
+
+        mLabelPaths = PathProvider.provideLabelPath(mDataProvider.mPoints, labelWidths);
+
+        invalidate();
+    }
+
     public void cancelAnim() {
         if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.cancel();
@@ -217,16 +205,25 @@ public class CurveChart extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
+    protected void drawOuter(Canvas canvas) {
         if (mPath == null) {
             return;
         }
+        //draw x-axis text
+        for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
+            String label = mDataProvider.mTexts.get(i);
+            canvas.drawText(label,
+                    mDataProvider.mPoints.get(i).x + mBuilder.mLeftBlack,
+                    (mRealHeight * 2 - mBuilder.mBottomBlack - mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top) / 2,
+                    mTextPaint);
+        }
+    }
 
-        canvas.save();
-        canvas.translate(mBlankX, mBlankY);
-
+    @Override
+    public void drawInner(Canvas canvas) {
+        if (mPath == null) {
+            return;
+        }
         canvas.drawPath(mPath, mPaint);
 
         for (PointF point : mDataProvider.mPoints) {
@@ -247,29 +244,9 @@ public class CurveChart extends View {
             canvas.drawText(label, mDataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
         }
 
-        canvas.restore();
-
         //x-axis
-        canvas.drawLine(mBlankX, mHeight - mBlankY, mWidth - mBlankX, mHeight - mBlankY, mAxisPaint);
+        canvas.drawLine(0, mHeight, mWidth, mHeight, mAxisPaint);
         //y-axis
-        //y轴不画到0是为了让线的终点展示为圆形
-        canvas.drawLine(mBlankX, mHeight - mBlankY, mBlankX, 2, mAxisPaint);
-
-        //draw x-axis text
-        for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
-            String label = mDataProvider.mTexts.get(i);
-            canvas.drawText(label,
-                    mDataProvider.mPoints.get(i).x + mBlankX,
-                    (mHeight * 2 - mBlankY - mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top) / 2,
-                    mTextPaint);
-        }
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mWidth = w;
-        mHeight = h;
-        mDrawAreaHeight = h - (mBlankY = (int) Utils.dp2px(mContext, 20)) - mTopBlankY;
-        mDrawAreaWidth = w - (mBlankX = (int) Utils.dp2px(mContext, 20)) - mRightBlankX;
+        canvas.drawLine(0, mHeight, 0, 0, mAxisPaint);
     }
 }

@@ -14,7 +14,7 @@ import android.view.View;
 public abstract class BaseRectChart extends View {
     protected Context mContext;
 
-    private Builder mBuilder;
+    protected Builder mBuilder;
 
     /**
      * 图表真实宽度
@@ -93,30 +93,25 @@ public abstract class BaseRectChart extends View {
         /**
          * 上方留白
          */
-        private int mTopBlack = 0;
+        public int mTopBlack = 0;
         /**
          * 下方留白
          */
-        private int mBottomBlack = 0;
+        public int mBottomBlack = 0;
         /**
          * 左边留白
          */
-        private int mLeftBlack = 0;
+        public int mLeftBlack = 0;
         /**
          * 右边留白
          */
-        private int mRightBlack = 0;
-        /**
-         * 图表标题
-         */
-        private String mChartTitle;
+        public int mRightBlack = 0;
 
-        public Builder(int leftBlack, int topBlack, int rightBlack, int bottomBlack, String chartTitle) {
+        public Builder(int leftBlack, int topBlack, int rightBlack, int bottomBlack) {
             mLeftBlack = leftBlack;
             mTopBlack = topBlack;
             mRightBlack = rightBlack;
             mBottomBlack = bottomBlack;
-            mChartTitle = chartTitle;
         }
     }
 }
