@@ -12,7 +12,6 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.graphics.Shader;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -36,18 +35,13 @@ public class CurveChart extends BaseRectChart {
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
 
-    private DataProvider mDataProvider;
-
-    private Context mContext;
-
     private Path mPath;
     private Path mBgPath;
 
-    private Paint mPaint;
+    private Paint mCurvePaint;
     private Paint mPointPaint;
     private Paint mGradientBgPaint;
     private Paint mAxisPaint;
-    private Paint mTextPaint;
     private Paint mLabelTextPaint;
 
     private List<Path> mLabelPaths;
@@ -64,15 +58,14 @@ public class CurveChart extends BaseRectChart {
 
     public CurveChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
         init();
     }
 
     private void init() {
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(ContextCompat.getColor(mContext, R.color.sunflower));
-        mPaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
+        mCurvePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCurvePaint.setStyle(Paint.Style.STROKE);
+        mCurvePaint.setColor(ContextCompat.getColor(mContext, R.color.sunflower));
+        mCurvePaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
 
         mPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPointPaint.setStyle(Paint.Style.STROKE);
@@ -87,11 +80,6 @@ public class CurveChart extends BaseRectChart {
         mAxisPaint.setStrokeWidth(4);
         mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(ContextCompat.getColor(mContext, R.color.black60));
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-        mTextPaint.setTextSize(Utils.sp2px(mContext, 14));
-
         mLabelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.white));
         mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
@@ -99,6 +87,15 @@ public class CurveChart extends BaseRectChart {
     }
 
     public void startAnim() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                startAnimInner();
+            }
+        });
+    }
+
+    private void startAnimInner() {
         if (mDataProvider.mDatas.size() <= 1) {
             Log.w(TAG, "data source size should be more than one.");
             return;
@@ -135,7 +132,7 @@ public class CurveChart extends BaseRectChart {
                         System.out.println("JayLog, x changed." + count++);
                     }
 
-                    mPaint.setPathEffect(effect);
+                    mCurvePaint.setPathEffect(effect);
                     postInvalidateOnAnimation();
                 }
             });
@@ -159,11 +156,6 @@ public class CurveChart extends BaseRectChart {
             mAnimator.setRepeatCount(0);
         }
         mAnimator.start();
-    }
-
-    public void provideData(@NonNull DataProvider dataProvider) {
-        mDataProvider = dataProvider;
-        invalidate();
     }
 
     private void initPath() {
@@ -209,14 +201,8 @@ public class CurveChart extends BaseRectChart {
         if (mPath == null) {
             return;
         }
-        //draw x-axis text
-        for (int i = 0; i < mDataProvider.mPoints.size(); i++) {
-            String label = mDataProvider.mTexts.get(i);
-            canvas.drawText(label,
-                    mDataProvider.mPoints.get(i).x + mBuilder.mLeftBlack,
-                    (mRealHeight * 2 - mBuilder.mBottomBlack - mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top) / 2,
-                    mTextPaint);
-        }
+
+        super.drawOuter(canvas);
     }
 
     @Override
@@ -224,7 +210,7 @@ public class CurveChart extends BaseRectChart {
         if (mPath == null) {
             return;
         }
-        canvas.drawPath(mPath, mPaint);
+        canvas.drawPath(mPath, mCurvePaint);
 
         for (PointF point : mDataProvider.mPoints) {
             canvas.drawPoint(point.x, point.y, mPointPaint);

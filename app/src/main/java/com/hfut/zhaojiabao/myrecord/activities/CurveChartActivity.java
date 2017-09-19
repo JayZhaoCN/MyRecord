@@ -54,13 +54,8 @@ public class CurveChartActivity extends AppCompatActivity {
         mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
         int blank = (int) Utils.dp2px(this, 20);
         mCurveChart.setBuilder(new BaseRectChart.Builder(blank, blank, blank, blank));
-        mCurveChart.post(new Runnable() {
-            @Override
-            public void run() {
-                mCurveChart.provideData(new DataProvider(datas, texts));
-                mCurveChart.startAnim();
-            }
-        });
+        mCurveChart.provideData(new DataProvider(datas, texts));
+        mCurveChart.startAnim();
     }
 
     @Override
