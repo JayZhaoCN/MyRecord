@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.hfut.zhaojiabao.myrecord.activities.CurveChartActivity">
 
-    <com.hfut.zhaojiabao.myrecord.chart.CurveChart
+    <!--<com.hfut.zhaojiabao.myrecord.chart.CurveChart
         android:id="@+id/curve_chart"
         android:layout_width="330dp"
         android:layout_height="260dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp"/>-->
 
-</LinearLayout>
+    <View
+        android:background="@color/red"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
+    <com.hfut.zhaojiabao.myrecord.chart.TestChart
+        android:id="@+id/test_chart"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
+</RelativeLayout>
