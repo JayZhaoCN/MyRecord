@@ -12,7 +12,8 @@ import java.util.List;
 
 public class PathProvider {
 
-    //TODO 有待优化
+    @SuppressWarnings("unused")
+    @Deprecated
     public static Path provideBezierPath(List<PointF> points, float a, float b) {
         if (points.size() <= 1) {
             return null;
@@ -51,6 +52,73 @@ public class PathProvider {
         return path;
     }
 
+    /**
+     * 该方法提供的Path是有极值点的
+     */
+    public static Path provideBezierPathNew(List<PointF> points, float s) {
+        if (points.size() <= 1) {
+            return null;
+        }
+
+        Path path = new Path();
+
+        List<PointF> controls = new ArrayList<>();
+
+        for (int i = 0; i < points.size(); i++) {
+            if (i == 0) {
+                //第一个点
+                //后一个控制点
+                PointF point2 = new PointF();
+                point2.x = points.get(0).x + (points.get(1).x - points.get(0).x) * s;
+                point2.y = points.get(0).y;
+                controls.add(point2);
+            } else if (i == points.size() - 1) {
+                //最后一个点
+                //前一个控制点
+                PointF point1 = new PointF();
+                point1.x = points.get(i).x - (points.get(i).x - points.get(i - 1).x) * s;
+                point1.y = points.get(i).y;
+                controls.add(point1);
+            } else if ((points.get(i - 1).y < points.get(i).y && points.get(i + 1).y < points.get(i).y) ||
+                    (points.get(i - 1).y > points.get(i).y && points.get(i + 1).y > points.get(i).y)) {
+
+                System.out.println("JayLog, 第" + (i + 1) + "个点是极值点");
+
+                //极值点
+                //前一个控制点
+                PointF point1 = new PointF();
+                point1.x = points.get(i).x - (points.get(i).x - points.get(i - 1).x) * s;
+                point1.y = points.get(i).y;
+                controls.add(point1);
+                //后一个控制点
+                PointF point2 = new PointF();
+                point2.x = points.get(i).x + (points.get(i + 1).x - points.get(i).x) * s;
+                point2.y = points.get(i).y;
+                controls.add(point2);
+            } else {
+                System.out.println("JayLog, 第" + (i + 1) + "个点是非极值点");
+                //非极值点
+                float k = (points.get(i + 1).y - points.get(i - 1).y) / (points.get(i + 1).x - points.get(i - 1).x);
+                float b = points.get(i).y - k * points.get(i).x;
+                PointF point1 = new PointF();
+                point1.x = points.get(i).x - (points.get(i).x - (points.get(i - 1).y - b) / k) * s;
+                point1.y = point1.x * k + b;
+                controls.add(point1);
+                PointF point2 = new PointF();
+                point2.x = points.get(i).x + (points.get(i + 1).x - points.get(i).x) * s;
+                point2.y = point1.x * k + b;
+                controls.add(point2);
+            }
+        }
+
+        path.moveTo(points.get(0).x, points.get(0).y);
+        for (int i = 0; i < points.size() - 1; i++) {
+            path.cubicTo(controls.get(i * 2).x, controls.get(i * 2).y, controls.get(i * 2 + 1).x, controls.get(i * 2 + 1).y, points.get(i + 1).x, points.get(i + 1).y);
+        }
+
+        return path;
+    }
+
     //TODO 所有写死的数字需要用常量表示，并且注明含义
     public static List<Path> provideLabelPath(List<PointF> points, List<Integer> labelWidths) {
         if (points.size() <= 1) {
@@ -76,6 +144,4 @@ public class PathProvider {
         }
         return paths;
     }
-
-
 }

@@ -34,6 +34,7 @@ public class CurveChart extends BaseRectChart {
     private static final String TAG = "CurveChart";
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
+    private static final float DEFAULT_SMOOTHNESS = 0.5f;
 
     private Path mPath;
     private Path mBgPath;
@@ -166,7 +167,7 @@ public class CurveChart extends BaseRectChart {
     private void initPath() {
         DataProvider dataProvider = mBuilder.dataProvider;
 
-        mPath = PathProvider.provideBezierPath(dataProvider.mPoints, 0.25f, 0.25f);
+        mPath = PathProvider.provideBezierPathNew(dataProvider.mPoints, DEFAULT_SMOOTHNESS);
         if (mPath != null) {
             mBgPath = new Path(mPath);
             mBgPath.lineTo(mWidth, mHeight);

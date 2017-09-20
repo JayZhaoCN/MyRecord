@@ -80,6 +80,8 @@ public class CurveChartActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCurveChart.cancelAnim();
+        if (mCurveChart != null) {
+            mCurveChart.cancelAnim();
+        }
     }
 }
