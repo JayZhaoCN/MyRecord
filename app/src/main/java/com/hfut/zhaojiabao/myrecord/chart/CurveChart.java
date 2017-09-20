@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class CurveChart extends BaseRectChart {
     private static final String TAG = "CurveChart";
     private static final int DEFAULT_ANIM_DURATION = 3000;
     private static final int DEFAULT_LINE_WIDTH = 5;
-    private static final float DEFAULT_SMOOTHNESS = 0.5f;
+    private static final float DEFAULT_SMOOTHNESS = 0.25f;
 
     private Path mPath;
     private Path mBgPath;
@@ -77,14 +78,12 @@ public class CurveChart extends BaseRectChart {
         mGradientBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mLabelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
+        mLabelTextPaint.setColor(ContextCompat.getColor(mContext, R.color.white));
         mLabelTextPaint.setTextAlign(Paint.Align.CENTER);
         mLabelTextPaint.setTextSize(Utils.sp2px(mContext, 10));
 
         mLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLabelPaint.setColor(ContextCompat.getColor(mContext, R.color.stp_bg_month));
-        mLabelPaint.setStyle(Paint.Style.STROKE);
-        mLabelPaint.setStrokeWidth(4);
     }
 
     public void initAnim() {
@@ -177,7 +176,7 @@ public class CurveChart extends BaseRectChart {
 
         List<Integer> labelWidths = new ArrayList<>();
         for (int i = 0; i < dataProvider.mDatas.size(); i++) {
-            String label = String.valueOf(dataProvider.mDatas.get(i));
+            String label = NumberUtils.getFormattedNumber(dataProvider.mDatas.get(i));
             //+6是为了让label两边稍微空出一点距离
             labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
         }
@@ -214,7 +213,7 @@ public class CurveChart extends BaseRectChart {
             float baseline = (dataProvider.mPoints.get(i).y * 2
                     - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom
                     - mLabelTextPaint.getFontMetrics().top) / 2;
-            String label = String.valueOf(dataProvider.mDatas.get(i));
+            String label = NumberUtils.getFormattedNumber(dataProvider.mDatas.get(i));
             canvas.drawText(label, dataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
         }
 
