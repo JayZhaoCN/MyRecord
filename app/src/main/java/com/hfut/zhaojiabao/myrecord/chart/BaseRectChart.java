@@ -81,7 +81,7 @@ public abstract class BaseRectChart extends View {
             return;
         }
         canvas.save();
-        canvas.translate(mBuilder.mLeftBlack, mBuilder.mTopBlack);
+        canvas.translate(mBuilder.mLeftBlank, mBuilder.mTopBlank);
         drawInner(canvas);
         canvas.restore();
 
@@ -120,8 +120,8 @@ public abstract class BaseRectChart extends View {
         //draw x-axis scale
         for (int i = 0; i < dataProvider.mPoints.size(); i++) {
             canvas.drawText(dataProvider.mTexts.get(i),
-                    dataProvider.mPoints.get(i).x + mBuilder.mLeftBlack,
-                    (mRealHeight * 2 - mBuilder.mBottomBlack
+                    dataProvider.mPoints.get(i).x + mBuilder.mLeftBlank,
+                    (mRealHeight * 2 - mBuilder.mBottomBlank
                             - mScalePaint.getFontMetrics().bottom - mScalePaint.getFontMetrics().top) / 2, mScalePaint);
         }
     }
@@ -131,8 +131,8 @@ public abstract class BaseRectChart extends View {
             @Override
             public void run() {
                 mBuilder = builder;
-                mWidth = mRealWidth - mBuilder.mLeftBlack - mBuilder.mRightBlack;
-                mHeight = mRealHeight - mBuilder.mTopBlack - mBuilder.mBottomBlack;
+                mWidth = mRealWidth - mBuilder.mLeftBlank - mBuilder.mRightBlank;
+                mHeight = mRealHeight - mBuilder.mTopBlank - mBuilder.mBottomBlank;
 
                 if (mBuilder.axisStyle != null) {
                     mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -161,22 +161,22 @@ public abstract class BaseRectChart extends View {
         /**
          * 上方留白
          */
-        public int mTopBlack = 0;
+        public int mTopBlank = 0;
 
         /**
          * 下方留白
          */
-        public int mBottomBlack = 0;
+        public int mBottomBlank = 0;
 
         /**
          * 左边留白
          */
-        public int mLeftBlack = 0;
+        public int mLeftBlank = 0;
 
         /**
          * 右边留白
          */
-        public int mRightBlack = 0;
+        public int mRightBlank = 0;
 
         /**
          * 轴线样式
@@ -188,11 +188,11 @@ public abstract class BaseRectChart extends View {
          */
         public DataProvider dataProvider;
 
-        public Builder(int leftBlack, int topBlack, int rightBlack, int bottomBlack) {
-            mLeftBlack = leftBlack;
-            mTopBlack = topBlack;
-            mRightBlack = rightBlack;
-            mBottomBlack = bottomBlack;
+        public Builder(int leftBlank, int topBlank, int rightBlank, int bottomBlank) {
+            mLeftBlank = leftBlank;
+            mTopBlank = topBlank;
+            mRightBlank = rightBlank;
+            mBottomBlank = bottomBlank;
         }
 
         public Builder setAxisStyle(AxisStyle style) {
