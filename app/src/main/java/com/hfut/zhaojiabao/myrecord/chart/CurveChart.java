@@ -66,7 +66,7 @@ public class CurveChart extends BaseRectChart {
     private void init() {
         mCurvePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCurvePaint.setStyle(Paint.Style.STROKE);
-        mCurvePaint.setColor(ContextCompat.getColor(mContext, R.color.sunflower));
+        mCurvePaint.setColor(ContextCompat.getColor(mContext, R.color.bittersweet));
         mCurvePaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
 
         mPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -102,7 +102,7 @@ public class CurveChart extends BaseRectChart {
     private void initAnimInner() {
         final DataProvider dataProvider = mBuilder.dataProvider;
 
-        if (dataProvider.mDatas.size() <= 1) {
+        if (dataProvider.data.size() <= 1) {
             Log.w(TAG, "data source size should be more than one.");
             return;
         }
@@ -120,7 +120,7 @@ public class CurveChart extends BaseRectChart {
             mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 int count = 1;
                 float lastX = 0;
-                float xAxisInterval = mWidth / (float) (dataProvider.mDatas.size() - 1);
+                float xAxisInterval = mWidth / (float) (dataProvider.data.size() - 1);
                 PathMeasure measure = new PathMeasure(mPath, false);
                 float length = measure.getLength();
 
@@ -175,8 +175,8 @@ public class CurveChart extends BaseRectChart {
         }
 
         List<Integer> labelWidths = new ArrayList<>();
-        for (int i = 0; i < dataProvider.mDatas.size(); i++) {
-            String label = NumberUtils.getFormattedNumber(dataProvider.mDatas.get(i));
+        for (int i = 0; i < dataProvider.data.size(); i++) {
+            String label = NumberUtils.getFormattedNumber(dataProvider.rawData.get(i));
             //+6是为了让label两边稍微空出一点距离
             labelWidths.add((int) mLabelTextPaint.measureText(label, 0, label.length()) + 6);
         }
@@ -195,6 +195,8 @@ public class CurveChart extends BaseRectChart {
 
     @Override
     public void drawInner(Canvas canvas) {
+        super.drawInner(canvas);
+
         canvas.drawPath(mPath, mCurvePaint);
 
         DataProvider dataProvider = mBuilder.dataProvider;
@@ -213,10 +215,10 @@ public class CurveChart extends BaseRectChart {
             float baseline = (dataProvider.mPoints.get(i).y * 2
                     - 20 - 35 - 20 - mLabelTextPaint.getFontMetrics().bottom
                     - mLabelTextPaint.getFontMetrics().top) / 2;
-            String label = NumberUtils.getFormattedNumber(dataProvider.mDatas.get(i));
+            String label = NumberUtils.getFormattedNumber(dataProvider.rawData.get(i));
             canvas.drawText(label, dataProvider.mPoints.get(i).x, baseline, mLabelTextPaint);
         }
 
-        super.drawInner(canvas);
+
     }
 }

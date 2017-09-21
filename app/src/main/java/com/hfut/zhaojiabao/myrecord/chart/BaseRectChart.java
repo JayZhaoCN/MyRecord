@@ -103,9 +103,13 @@ public abstract class BaseRectChart extends View {
         //draw y-axis
         canvas.drawLine(0, mHeight, 0, 0, mAxisPaint);
         //draw axis scale
-        if (mBuilder.axisStyle.scaleHeight > 0) {
+        if (mBuilder.axisStyle.scaleLength > 0) {
             for (PointF point : mBuilder.dataProvider.mPoints) {
-                canvas.drawLine(point.x, mHeight, point.x, mHeight - mBuilder.axisStyle.scaleHeight, mAxisPaint);
+                canvas.drawLine(point.x, mHeight, point.x, mHeight - mBuilder.axisStyle.scaleLength, mAxisPaint);
+            }
+
+            for (int i = 0; i < mBuilder.dataProvider.yScaleNum; i++) {
+                canvas.drawLine(0, mBuilder.dataProvider.yScaleHeights.get(i), mBuilder.axisStyle.scaleLength, mBuilder.dataProvider.yScaleHeights.get(i), mAxisPaint);
             }
         }
     }
@@ -119,10 +123,16 @@ public abstract class BaseRectChart extends View {
         DataProvider dataProvider = mBuilder.dataProvider;
         //draw x-axis scale
         for (int i = 0; i < dataProvider.mPoints.size(); i++) {
-            canvas.drawText(dataProvider.mTexts.get(i),
+            canvas.drawText(dataProvider.xScaleTexts.get(i),
                     dataProvider.mPoints.get(i).x + mBuilder.mLeftBlank,
                     (mRealHeight * 2 - mBuilder.mBottomBlank
                             - mScalePaint.getFontMetrics().bottom - mScalePaint.getFontMetrics().top) / 2, mScalePaint);
+        }
+
+        //draw y-axis scale
+        for (int i = 0; i < dataProvider.yScaleNum; i++) {
+            float baseline = (2 * dataProvider.yScaleHeights.get(i) + 2 * mBuilder.mBottomBlank - mScalePaint.getFontMetrics().bottom - mScalePaint.getFontMetrics().top) / 2;
+            canvas.drawText(dataProvider.yScaleTexts.get(i), mBuilder.mLeftBlank / 2, baseline, mScalePaint);
         }
     }
 
@@ -143,13 +153,32 @@ public abstract class BaseRectChart extends View {
 
                 DataProvider dataProvider = mBuilder.dataProvider;
 
-                float xAxisInterval = mWidth / (float) (dataProvider.mDatas.size() - 1);
+                float xAxisInterval;
+                if (mBuilder.mChartType == Builder.CURVE_CHART) {
+                    xAxisInterval = mWidth / (float) (dataProvider.data.size() - 1);
 
-                dataProvider.mPoints = new ArrayList<>();
-                for (int i = 0; i < dataProvider.mDatas.size(); i++) {
-                    float data = dataProvider.mDatas.get(i);
-                    dataProvider.mPoints.add(new PointF(xAxisInterval * i,
-                            mHeight - data / dataProvider.mMaxValue * mHeight));
+                    dataProvider.mPoints = new ArrayList<>();
+                    for (int i = 0; i < dataProvider.data.size(); i++) {
+                        float data = dataProvider.data.get(i);
+                        dataProvider.mPoints.add(new PointF(xAxisInterval * i,
+                                mHeight - data / dataProvider.mMaxValue * mHeight));
+                    }
+                } else {
+                    xAxisInterval = mWidth / (float) dataProvider.data.size();
+
+                    dataProvider.mPoints = new ArrayList<>();
+                    for (int i = 0; i < dataProvider.data.size(); i++) {
+                        float data = dataProvider.data.get(i);
+                        dataProvider.mPoints.add(new PointF(xAxisInterval * i + xAxisInterval / 2,
+                                mHeight - data / dataProvider.mMaxValue * mHeight));
+                    }
+                }
+
+                if (dataProvider.yScaleNum > 0) {
+                    dataProvider.yScaleHeights = new ArrayList<>();
+                    for (int i = 0; i < dataProvider.yScaleNum; i++) {
+                        dataProvider.yScaleHeights.add(mHeight - mHeight / (float) (dataProvider.yScaleNum + 1) * (i + 1));
+                    }
                 }
 
                 invalidate();
@@ -158,6 +187,14 @@ public abstract class BaseRectChart extends View {
     }
 
     public static class Builder {
+        /**
+         * 不同的图表类型决定不同的x轴取点方式
+         */
+        public static final int BAR_CHART = 0;
+        public static final int CURVE_CHART = 1;
+
+        private int mChartType = CURVE_CHART;
+
         /**
          * 上方留白
          */
@@ -188,7 +225,8 @@ public abstract class BaseRectChart extends View {
          */
         public DataProvider dataProvider;
 
-        public Builder(int leftBlank, int topBlank, int rightBlank, int bottomBlank) {
+        public Builder(int chartType, int leftBlank, int topBlank, int rightBlank, int bottomBlank) {
+            mChartType = chartType;
             mLeftBlank = leftBlank;
             mTopBlank = topBlank;
             mRightBlank = rightBlank;

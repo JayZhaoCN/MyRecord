@@ -22,11 +22,11 @@ public class AxisStyle {
     /**
      * 刻度线高度(in px)
      */
-    public int scaleHeight;
+    public int scaleLength;
 
-    public AxisStyle(@ColorInt int color, int width, int scaleHeight) {
+    public AxisStyle(@ColorInt int color, int width, int scaleLength) {
         this.color = color;
         this.width = width;
-        this.scaleHeight = scaleHeight;
+        this.scaleLength = scaleLength;
     }
 }

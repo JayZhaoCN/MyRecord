@@ -29,6 +29,7 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
+import com.hfut.zhaojiabao.myrecord.chart.BarChartActivity;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
@@ -182,6 +183,8 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
         verifyStoragePermissions(this);
 
         EventBus.getDefault().registerSticky(this);
+
+        startActivity(new Intent(this, CurveChartActivity.class));
     }
 
     public void onEventMainThread(RecordRecoveryEvent event) {
@@ -481,7 +484,6 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

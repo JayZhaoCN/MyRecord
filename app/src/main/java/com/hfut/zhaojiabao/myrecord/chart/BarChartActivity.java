@@ -1,31 +1,26 @@
-package com.hfut.zhaojiabao.myrecord.activities;
+package com.hfut.zhaojiabao.myrecord.chart;
 
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
 import com.hfut.zhaojiabao.myrecord.DayRecord;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.chart.AxisStyle;
-import com.hfut.zhaojiabao.myrecord.chart.BaseRectChart;
-import com.hfut.zhaojiabao.myrecord.chart.CurveChart;
-import com.hfut.zhaojiabao.myrecord.chart.DataProvider;
-import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
-public class CurveChartActivity extends AppCompatActivity {
-    private CurveChart mCurveChart;
+public class BarChartActivity extends AppCompatActivity {
 
-    @OnClick(R.id.btn)
-    void load() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bar_chart);
+
         ValueTransfer
                 .getDayRecords()
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -35,13 +30,6 @@ public class CurveChartActivity extends AppCompatActivity {
                         provideData(dayRecords);
                     }
                 });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_curve);
-        ButterKnife.bind(this);
     }
 
     private void provideData(List<DayRecord> dayRecords) {
@@ -56,10 +44,10 @@ public class CurveChartActivity extends AppCompatActivity {
             }
         }
 
-        mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
+        BarChart mBarChart = (BarChart) findViewById(R.id.bar_chart);
 
         BaseRectChart.Builder builder = new BaseRectChart.Builder(
-                BaseRectChart.Builder.CURVE_CHART,
+                BaseRectChart.Builder.BAR_CHART,
                 (int) Utils.dp2px(this, 50),
                 (int) Utils.dp2px(this, 20),
                 (int) Utils.dp2px(this, 15),
@@ -67,19 +55,9 @@ public class CurveChartActivity extends AppCompatActivity {
 
         builder.setAxisStyle(new AxisStyle(
                 ContextCompat.getColor(this, R.color.origin100),
-                (int) Utils.dp2px(this, 1),
-                (int) Utils.dp2px(this, 2)))
-                .setDataProvider(new DataProvider(datas, texts, true, 5));
+                (int) Utils.dp2px(this, 1), 0))
+                .setDataProvider(new DataProvider(datas, texts, true, 3));
 
-        mCurveChart.setBuilder(builder);
-        mCurveChart.initAnim();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mCurveChart != null) {
-            mCurveChart.cancelAnim();
-        }
+        mBarChart.setBuilder(builder);
     }
 }
