@@ -98,11 +98,11 @@ public abstract class BaseRectChart extends View {
             return;
         }
 
-        //draw x-axis
+        //画x轴
         canvas.drawLine(0, mHeight, mWidth, mHeight, mAxisPaint);
-        //draw y-axis
+        //画y轴
         canvas.drawLine(0, mHeight, 0, 0, mAxisPaint);
-        //draw axis scale
+        //画刻度线
         if (mBuilder.axisStyle.scaleLength > 0) {
             for (PointF point : mBuilder.dataProvider.mPoints) {
                 canvas.drawLine(point.x, mHeight, point.x, mHeight - mBuilder.axisStyle.scaleLength, mAxisPaint);
@@ -121,7 +121,7 @@ public abstract class BaseRectChart extends View {
     @CallSuper
     protected void drawOuter(Canvas canvas) {
         DataProvider dataProvider = mBuilder.dataProvider;
-        //draw x-axis scale
+        //画x轴刻度值
         for (int i = 0; i < dataProvider.mPoints.size(); i++) {
             canvas.drawText(dataProvider.xScaleTexts.get(i),
                     dataProvider.mPoints.get(i).x + mBuilder.mLeftBlank,
@@ -129,7 +129,7 @@ public abstract class BaseRectChart extends View {
                             - mScalePaint.getFontMetrics().bottom - mScalePaint.getFontMetrics().top) / 2, mScalePaint);
         }
 
-        //draw y-axis scale
+        //画y轴刻度值
         for (int i = 0; i < dataProvider.yScaleNum; i++) {
             float baseline = (2 * dataProvider.yScaleHeights.get(i) + 2 * mBuilder.mBottomBlank - mScalePaint.getFontMetrics().bottom - mScalePaint.getFontMetrics().top) / 2;
             canvas.drawText(dataProvider.yScaleTexts.get(i), mBuilder.mLeftBlank / 2, baseline, mScalePaint);
@@ -141,9 +141,32 @@ public abstract class BaseRectChart extends View {
             @Override
             public void run() {
                 mBuilder = builder;
-                mWidth = mRealWidth - mBuilder.mLeftBlank - mBuilder.mRightBlank;
                 mHeight = mRealHeight - mBuilder.mTopBlank - mBuilder.mBottomBlank;
 
+                DataProvider dataProvider = mBuilder.dataProvider;
+
+                //初始化y轴刻度点
+                if (dataProvider.yScaleNum > 0) {
+                    dataProvider.yScaleHeights = new ArrayList<>();
+                    for (int i = 0; i < dataProvider.yScaleNum; i++) {
+                        dataProvider.yScaleHeights.add(mHeight - mHeight / (float) (dataProvider.yScaleNum + 1) * (i + 1));
+                    }
+
+                    float max = Float.MIN_VALUE;
+                    for (String yText : dataProvider.yScaleTexts) {
+                        float width = mScalePaint.measureText(yText, 0, yText.length());
+                        if (width > max) {
+                            max = width;
+                        }
+                    }
+
+                    //加10是为了两边空出一点距离
+                    mBuilder.mLeftBlank = (int) max + 10;
+                }
+
+                mWidth = mRealWidth - mBuilder.mLeftBlank - mBuilder.mRightBlank;
+
+                //初始化轴线样式
                 if (mBuilder.axisStyle != null) {
                     mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                     mAxisPaint.setColor(mBuilder.axisStyle.color);
@@ -151,8 +174,7 @@ public abstract class BaseRectChart extends View {
                     mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
                 }
 
-                DataProvider dataProvider = mBuilder.dataProvider;
-
+                //初始化数据点
                 float xAxisInterval;
                 if (mBuilder.mChartType == Builder.CURVE_CHART) {
                     xAxisInterval = mWidth / (float) (dataProvider.data.size() - 1);
@@ -174,73 +196,8 @@ public abstract class BaseRectChart extends View {
                     }
                 }
 
-                if (dataProvider.yScaleNum > 0) {
-                    dataProvider.yScaleHeights = new ArrayList<>();
-                    for (int i = 0; i < dataProvider.yScaleNum; i++) {
-                        dataProvider.yScaleHeights.add(mHeight - mHeight / (float) (dataProvider.yScaleNum + 1) * (i + 1));
-                    }
-                }
-
                 invalidate();
             }
         });
-    }
-
-    public static class Builder {
-        /**
-         * 不同的图表类型决定不同的x轴取点方式
-         */
-        public static final int BAR_CHART = 0;
-        public static final int CURVE_CHART = 1;
-
-        private int mChartType = CURVE_CHART;
-
-        /**
-         * 上方留白
-         */
-        public int mTopBlank = 0;
-
-        /**
-         * 下方留白
-         */
-        public int mBottomBlank = 0;
-
-        /**
-         * 左边留白
-         */
-        public int mLeftBlank = 0;
-
-        /**
-         * 右边留白
-         */
-        public int mRightBlank = 0;
-
-        /**
-         * 轴线样式
-         */
-        public AxisStyle axisStyle;
-
-        /**
-         * 图表数据
-         */
-        public DataProvider dataProvider;
-
-        public Builder(int chartType, int leftBlank, int topBlank, int rightBlank, int bottomBlank) {
-            mChartType = chartType;
-            mLeftBlank = leftBlank;
-            mTopBlank = topBlank;
-            mRightBlank = rightBlank;
-            mBottomBlank = bottomBlank;
-        }
-
-        public Builder setAxisStyle(AxisStyle style) {
-            this.axisStyle = style;
-            return this;
-        }
-
-        public Builder setDataProvider(DataProvider dataProvider) {
-            this.dataProvider = dataProvider;
-            return this;
-        }
     }
 }

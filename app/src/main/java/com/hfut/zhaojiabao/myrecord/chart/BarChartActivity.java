@@ -46,8 +46,8 @@ public class BarChartActivity extends AppCompatActivity {
 
         BarChart mBarChart = (BarChart) findViewById(R.id.bar_chart);
 
-        BaseRectChart.Builder builder = new BaseRectChart.Builder(
-                BaseRectChart.Builder.BAR_CHART,
+        Builder builder = new Builder(
+                Builder.BAR_CHART,
                 (int) Utils.dp2px(this, 50),
                 (int) Utils.dp2px(this, 20),
                 (int) Utils.dp2px(this, 15),

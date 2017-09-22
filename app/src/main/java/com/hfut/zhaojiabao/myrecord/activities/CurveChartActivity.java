@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.hfut.zhaojiabao.myrecord.DayRecord;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.AxisStyle;
-import com.hfut.zhaojiabao.myrecord.chart.BaseRectChart;
+import com.hfut.zhaojiabao.myrecord.chart.Builder;
 import com.hfut.zhaojiabao.myrecord.chart.CurveChart;
 import com.hfut.zhaojiabao.myrecord.chart.DataProvider;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
@@ -58,9 +58,9 @@ public class CurveChartActivity extends AppCompatActivity {
 
         mCurveChart = (CurveChart) findViewById(R.id.curve_chart);
 
-        BaseRectChart.Builder builder = new BaseRectChart.Builder(
-                BaseRectChart.Builder.CURVE_CHART,
-                (int) Utils.dp2px(this, 50),
+        Builder builder = new Builder(
+                Builder.CURVE_CHART,
+                (int) Utils.dp2px(this, 15),
                 (int) Utils.dp2px(this, 20),
                 (int) Utils.dp2px(this, 15),
                 (int) Utils.dp2px(this, 20));
@@ -69,7 +69,7 @@ public class CurveChartActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, R.color.origin100),
                 (int) Utils.dp2px(this, 1),
                 (int) Utils.dp2px(this, 2)))
-                .setDataProvider(new DataProvider(datas, texts, true, 5));
+                .setDataProvider(new DataProvider(datas, texts, false, 5));
 
         mCurveChart.setBuilder(builder);
         mCurveChart.initAnim();
