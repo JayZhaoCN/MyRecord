@@ -1,5 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +29,6 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
-import com.hfut.zhaojiabao.myrecord.chart.BarChartActivity;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
@@ -61,9 +60,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
-import static com.hfut.zhaojiabao.myrecord.file_operation.IOManager.verifyStoragePermissions;
-
-public class JayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class JayActivity extends PermissionBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "JayActivity";
 
     private static final int REQUEST_CODE_COMPUTE = 0;
@@ -180,11 +177,37 @@ public class JayActivity extends AppCompatActivity implements NavigationView.OnN
         initUI();
         initTime();
         //请求读取存储权限
-        verifyStoragePermissions(this);
+        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, new IRationale() {
+            @Override
+            public void showRationale(final String permission) {
+                final CommonDialog dialog = new CommonDialog();
+                CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(JayActivity.this);
+                builder.setTitleText("请允许账本使用存储权限")
+                        .setLeftTextVisible(true)
+                        .setLeftText(R.string.cancel)
+                        .setLeftListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setRightTextVisible(true)
+                        .setRightText(R.string.confirm)
+                        .setRightListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestPermission(permission);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setContentText("数据备份和恢复功能需要使用存储权限.");
+
+                dialog.setBuilder(builder);
+                dialog.show(getSupportFragmentManager(), "PermissionDialog");
+            }
+        });
 
         EventBus.getDefault().registerSticky(this);
-
-        startActivity(new Intent(this, CurveChartActivity.class));
     }
 
     public void onEventMainThread(RecordRecoveryEvent event) {
