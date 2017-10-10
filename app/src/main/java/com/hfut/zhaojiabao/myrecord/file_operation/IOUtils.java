@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 
@@ -28,14 +29,10 @@ public class IOUtils {
     public static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
 
     public static String getBackupFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory())
-                .append(File.separator)
-                .append(BACKUP_FOLDER_NAME)
-                .append(File.separator)
-                .append(TimeFormatter.formatHHmm(System.currentTimeMillis()))
-                .append(RECORD_FILE_SUFFIX_NAME);
-        return sb.toString();
+        return getAppExternalDir(JayApp.getInstance(), BACKUP_FOLDER_NAME)
+                + File.separator
+                + TimeFormatter.formatHHmm(System.currentTimeMillis())
+                + RECORD_FILE_SUFFIX_NAME;
     }
 
     public static File getCropImgFile(String imgFolder) {
@@ -75,8 +72,9 @@ public class IOUtils {
                     .append(File.separator)
                     .append(AVATAR_IMG_FOLDER_NAME)
                     .append(File.separator)
-                    .append("jay_avatar")
+                    .append(AVATAR_IMG_FOLDER_NAME)
                     .append(CROP_IMG_SUFFIX_NAME);
+
             File file = new File(sb.toString());
             if (!file.getParentFile().exists()) {
                 Log.i(TAG, "parents not exist, so create: " + file.getParentFile().getParentFile().mkdir());
@@ -158,5 +156,54 @@ public class IOUtils {
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
+    }
+
+
+    /**
+     * 获取应用私有目录
+     * /data/user/0/包名/files
+     */
+    public static File getInternalDir(Context context) {
+        return context.getFilesDir();
+    }
+
+    /**
+     * 获取应用在外部存储中的私有目录
+     * /storage/emulated/0/Android/data/包名/files/目录名
+     */
+    public static File getAppExternalDir(Context context, String dir) {
+        return context.getExternalFilesDir(dir);
+    }
+
+    /**
+     * 获取内部存储根目录
+     * /data
+     */
+    public static File getInternalRootDir() {
+        return Environment.getDataDirectory();
+    }
+
+    /**
+     * 获取内部存储下载目录
+     * /data/cache
+     */
+    public static File getInternalDownloadDir() {
+        return Environment.getDownloadCacheDirectory();
+    }
+
+    /**
+     * 获取外部存储根目录
+     * /storage/emulated/0
+     */
+    public static File getExternalRootDir() {
+        return Environment.getExternalStorageDirectory();
+    }
+
+    /**
+     * 获取外部存储指定目录
+     * /storage/emulated/0/目录名
+     */
+    public static File getExternalDir(String dir) {
+        return Environment.getExternalStoragePublicDirectory(dir);
     }
 }
