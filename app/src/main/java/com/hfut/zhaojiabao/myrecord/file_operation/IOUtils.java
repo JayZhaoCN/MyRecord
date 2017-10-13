@@ -28,6 +28,8 @@ public class IOUtils {
     private static final String CROP_IMG_SUFFIX_NAME = ".png";
     public static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
 
+    //备份路径为外部存储应用私有目录下
+    //
     public static String getBackupFilePath() {
         return getAppExternalDir(JayApp.getInstance(), BACKUP_FOLDER_NAME)
                 + File.separator

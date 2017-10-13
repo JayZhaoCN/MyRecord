@@ -86,13 +86,6 @@ public class RecoveryActivity extends AppCompatActivity {
                             IOManager.recoveryData(RecoveryActivity.this, file.getPath())
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .doOnSubscribe(new Consumer<Disposable>() {
-                                        @Override
-                                        public void accept(Disposable disposable) throws Exception {
-                                            //每次恢复数据之前需要请求读写存储权限
-                                            IOManager.verifyStoragePermissions(RecoveryActivity.this);
-                                        }
-                                    })
                                     .subscribeWith(new DisposableObserver<Void>() {
                                         @Override
                                         public void onNext(Void value) {}

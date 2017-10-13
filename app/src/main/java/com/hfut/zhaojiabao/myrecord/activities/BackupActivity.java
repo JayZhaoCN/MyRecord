@@ -49,8 +49,6 @@ public class BackupActivity extends AppCompatActivity {
                                 .doOnSubscribe(new Consumer<Disposable>() {
                                     @Override
                                     public void accept(Disposable disposable) throws Exception {
-                                        IOManager.verifyStoragePermissions(BackupActivity.this);
-
                                         mDialog.setCancelable(false);
                                         mDialog.showLoading(getString(R.string.back_uping));
                                         mDialog.show(getSupportFragmentManager(), "backup");

@@ -3,6 +3,7 @@ package com.hfut.zhaojiabao.myrecord.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -177,37 +178,18 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         initUI();
         initTime();
         //请求读取存储权限
-        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, new IRationale() {
-            @Override
-            public void showRationale(final String permission) {
-                final CommonDialog dialog = new CommonDialog();
-                CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(JayActivity.this);
-                builder.setTitleText("请允许账本使用存储权限")
-                        .setLeftTextVisible(true)
-                        .setLeftText(R.string.cancel)
-                        .setLeftListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setRightTextVisible(true)
-                        .setRightText(R.string.confirm)
-                        .setRightListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                requestPermission(permission);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setContentText("数据备份和恢复功能需要使用存储权限.");
 
-                dialog.setBuilder(builder);
-                dialog.show(getSupportFragmentManager(), "PermissionDialog");
-            }
-        });
-
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
         EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    protected void permissionGrantedResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (permissions.length > 0 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                showRationale("请允许账本使用存储权限", "数据备份和恢复功能需要使用存储权限");
+            }
+        }
     }
 
     public void onEventMainThread(RecordRecoveryEvent event) {
