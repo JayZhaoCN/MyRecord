@@ -1,7 +1,7 @@
 ext {
     android = [
             compileSdkVersion: 25,
-            buildToolsVersion: "25.0.2",
+            buildToolsVersion: "26.0.2",
             applicationId    : "com.hfut.zhaojiabao.myrecord",
             minSdkVersion    : 18,
             targetSdkVersion : 25,

@@ -96,25 +96,17 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
     @OnClick(R.id.type_container)
     void type() {
-        mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
-            @Override
-            public void onSelect(String category) {
-                mCategoryTv.setText(category);
-            }
-        });
+        mRecordManager.showManageCategoryDialog(category -> mCategoryTv.setText(category));
     }
 
     @OnClick(R.id.date_container)
     void date() {
         PickDateDialog pickDateDialog = new PickDateDialog();
-        pickDateDialog.setOnDatePickListener(new PickDateDialog.OnDatePickListener() {
-            @Override
-            public void onDatePick(int year, int month, int day) {
-                mCalendar.set(Calendar.YEAR, year);
-                mCalendar.set(Calendar.MONTH, month);
-                mCalendar.set(Calendar.DAY_OF_MONTH, day);
-                mDateTv.setText(getDateDescription());
-            }
+        pickDateDialog.setOnDatePickListener((year, month, day) -> {
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, month);
+            mCalendar.set(Calendar.DAY_OF_MONTH, day);
+            mDateTv.setText(getDateDescription());
         });
         pickDateDialog.show(getSupportFragmentManager(), "pickDateDialog");
     }
@@ -122,13 +114,10 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     @OnClick(R.id.time_container)
     void time() {
         PickTimeDialog pickTimeDialog = new PickTimeDialog();
-        pickTimeDialog.setOnTimePickListener(new PickTimeDialog.OnTimePickListener() {
-            @Override
-            public void onTimePick(int hour, int minute) {
-                mCalendar.set(Calendar.HOUR_OF_DAY, hour);
-                mCalendar.set(Calendar.MINUTE, minute);
-                mTimeTv.setText(getTimeDescription());
-            }
+        pickTimeDialog.setOnTimePickListener((hour, minute) -> {
+            mCalendar.set(Calendar.HOUR_OF_DAY, hour);
+            mCalendar.set(Calendar.MINUTE, minute);
+            mTimeTv.setText(getTimeDescription());
         });
         pickTimeDialog.show(getSupportFragmentManager(), "pickTimeDialog");
     }
@@ -308,20 +297,14 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     private void showPickImgDialog() {
         final CommonDialog dialog = new CommonDialog();
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
-        content.findViewById(R.id.pick_img_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Crop.pickImage(JayActivity.this);
-                dialog.dismiss();
-            }
+        content.findViewById(R.id.pick_img_tv).setOnClickListener(v -> {
+            Crop.pickImage(JayActivity.this);
+            dialog.dismiss();
         });
-        content.findViewById(R.id.capture_img_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickCapture(JayActivity.this, Uri.fromFile
-                        (mCaptureFile = IOUtils.getCropImgFile(IOUtils.CAPTURE_IMG_FOLDER_NAME)), REQUEST_CODE_CAPTURE);
-                dialog.dismiss();
-            }
+        content.findViewById(R.id.capture_img_tv).setOnClickListener(v -> {
+            pickCapture(JayActivity.this, Uri.fromFile
+                    (mCaptureFile = IOUtils.getCropImgFile(IOUtils.CAPTURE_IMG_FOLDER_NAME)), REQUEST_CODE_CAPTURE);
+            dialog.dismiss();
         });
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         builder.setTitleText(getString(R.string.select_img))
@@ -341,26 +324,18 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                 .setTitleText(getString(R.string.modify_name_title))
                 .setLeftText(getString(R.string.cancel))
                 .setRightText(getString(R.string.confirm))
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+                .setLeftListener(v -> dialog.dismiss())
+                .setRightListener(v -> {
+                    String userName = nameEdit.getText().toString();
+                    if (!userName.equals("")) {
+                        mUserNameTv.setText(userName);
+                        UserDao userDao = JayDaoManager.getInstance().getDaoSession().getUserDao();
+                        User user = userDao.loadAll().get(0);
+                        user.setUserName(userName);
+                        userDao.insertOrReplace(user);
+                        closeKeyboard(nameEdit);
                     }
-                })
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String userName = nameEdit.getText().toString();
-                        if (!userName.equals("")) {
-                            mUserNameTv.setText(userName);
-                            UserDao userDao = JayDaoManager.getInstance().getDaoSession().getUserDao();
-                            User user = userDao.loadAll().get(0);
-                            user.setUserName(userName);
-                            userDao.insertOrReplace(user);
-                            closeKeyboard(nameEdit);
-                        }
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 });
         dialog.setBuilder(builder);
         dialog.show(getSupportFragmentManager(), "modifyNameDialog");
@@ -529,12 +504,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                 .setTitleText(getString(R.string.about))
                 .setLeftTextVisible(false)
                 .setRightText(getString(R.string.confirm))
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        aboutDialog.dismiss();
-                    }
-                });
+                .setRightListener(v -> aboutDialog.dismiss());
         aboutDialog.setBuilder(builder);
         aboutDialog.show(getSupportFragmentManager(), "aboutDialog");
 
@@ -555,12 +525,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
-        mUserNameTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showModifyNameDialog();
-            }
-        });
+        mUserNameTv.setOnClickListener(v -> showModifyNameDialog());
     }
 
     private void closeKeyboard(EditText editText) {
