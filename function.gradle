@@ -1,0 +1,9 @@
+ext {
+    dft = [
+            ["String", "HOST_NAME", "\"www.baidu.com\""],
+    ]
+
+    internal = [
+            ["String", "HOST_NAME", "\"www.google.com\""],
+    ]
+}

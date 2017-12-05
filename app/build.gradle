@@ -18,6 +18,16 @@ android {
         }
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        internal {
+            dimension "default"
+        }
+        normal {
+            dimension "default"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -39,6 +49,16 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        rootProject.ext.dft.each {
+            variant.buildConfigField(it[0], it[1], it[2])
+        }
+        if (variant.flavorName.equals("internal")) {
+            rootProject.ext.internal.each {
+                variant.buildConfigField(it[0], it[1], it[2])
+            }
+        }
+    }
 }
 
 //重命名Apk文件
