@@ -22,6 +22,32 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    /** Rename output file names */
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            // 修改输出的apk文件名
+            outputFileName = generateOutputApkFileName(variant.buildType.name, variant.flavorName, defaultConfig.versionName)
+
+            /*移动文件
+            output.assemble.doLast {
+                copy {
+                    from output.outputFile
+                    into "${project.buildDir}/outputs/apks"
+                }
+            }*/
+        }
+    }
+
+}
+
+//重命名Apk文件
+static def generateOutputApkFileName(String buildType, String flavorName, String version) {
+    String path = "MyRecord-"
+    if (!buildType.empty) path += buildType + "-"
+    if (!flavorName.empty) path += flavorName + "-"
+    if (!version.empty) path += version
+    return path + ".apk"
 }
 
 dependencies {
