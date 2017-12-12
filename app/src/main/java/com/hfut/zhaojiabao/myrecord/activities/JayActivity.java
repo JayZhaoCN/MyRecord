@@ -38,6 +38,8 @@ import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.events.RxBus;
+import com.hfut.zhaojiabao.myrecord.events.TestEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
@@ -59,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class JayActivity extends PermissionBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "JayActivity";
@@ -180,6 +183,8 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
         EventBus.getDefault().registerSticky(this);
+
+        registerRxBus();
     }
 
     @Override
@@ -189,6 +194,16 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                 showRationale("请允许账本使用存储权限", "数据备份和恢复功能需要使用存储权限");
             }
         }
+    }
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private void registerRxBus() {
+        mCompositeDisposable.add(RxBus.getDefault()
+                .toObserver(TestEvent.class)
+                .subscribe(testEvent -> System.out.println("JayLog, " + testEvent.str)));
+
+        RxBus.getDefault().post(new TestEvent("zhaojiabao"));
     }
 
     @SuppressWarnings("unused")
@@ -227,6 +242,9 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+            mCompositeDisposable.clear();
+        }
     }
 
     private void initTime() {
