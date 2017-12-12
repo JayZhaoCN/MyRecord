@@ -1,12 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.file_operation;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.hfut.zhaojiabao.JayDaoManager;
@@ -16,6 +10,7 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,12 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * all operations about file.
@@ -55,21 +47,11 @@ public class IOManager {
     //分隔符,表示另一种记录的开始
     private static final String FILE_DIVIDER = "---------";
 
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
     public static Observable<Void> backupFile() {
         return Observable
-                .create(new ObservableOnSubscribe<Void>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<Void> e) throws Exception {
-                        backupFile(IOUtils.getBackupFilePath());
-                        e.onComplete();
-                    }
+                .create(e -> {
+                    backupFile(IOUtils.getBackupFilePath());
+                    e.onComplete();
                 });
     }
 
@@ -118,14 +100,11 @@ public class IOManager {
         fileWriter.close();
     }
 
-    public static Observable<Void> recoveryData(final AppCompatActivity context, final String filePath) {
+    public static Observable<Void> recoveryData(final String filePath) {
         return Observable
-                .create(new ObservableOnSubscribe<Void>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<Void> e) throws Exception {
-                        recoveryFile(filePath);
-                        e.onComplete();
-                    }
+                .create(e -> {
+                    recoveryFile(filePath);
+                    e.onComplete();
                 });
     }
 
@@ -175,22 +154,19 @@ public class IOManager {
             users.add(user);
         }
 
-        JayDaoManager.getInstance().getDaoSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                recordDao.deleteAll();
-                categoryDao.deleteAll();
-                userDao.deleteAll();
+        JayDaoManager.getInstance().getDaoSession().runInTx(() -> {
+            recordDao.deleteAll();
+            categoryDao.deleteAll();
+            userDao.deleteAll();
 
-                if (records.size() > 0) {
-                    recordDao.insertOrReplaceInTx(records);
-                }
-                if (categories.size() > 0) {
-                    categoryDao.insertOrReplaceInTx(categories);
-                }
-                if (users.size() > 0) {
-                    userDao.insertOrReplaceInTx(users);
-                }
+            if (records.size() > 0) {
+                recordDao.insertOrReplaceInTx(records);
+            }
+            if (categories.size() > 0) {
+                categoryDao.insertOrReplaceInTx(categories);
+            }
+            if (users.size() > 0) {
+                userDao.insertOrReplaceInTx(users);
             }
         });
 
@@ -200,15 +176,11 @@ public class IOManager {
 
     public static Disposable traverseFile(Consumer<List<File>> consumer) {
         return Observable
-                .create(new ObservableOnSubscribe<List<File>>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<List<File>> e) throws Exception {
-                        List<File> files = traverseFileInternal();
-                        e.onNext(files);
-                    }
+                .create((ObservableOnSubscribe<List<File>>) e -> {
+                    List<File> files = traverseFileInternal();
+                    e.onNext(files);
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxUtils.ioToMain())
                 .subscribe(consumer);
     }
 
@@ -237,22 +209,5 @@ public class IOManager {
         }
 
         return files;
-    }
-
-    /**
-     * 请求读写权限
-     */
-    public static void verifyStoragePermissions(Context context) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    (Activity) context,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 }

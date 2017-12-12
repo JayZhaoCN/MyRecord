@@ -30,29 +30,28 @@ import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
-import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
-import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
-import com.hfut.zhaojiabao.myrecord.views.PopLayout;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
+import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
-import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
+import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
+import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
+import com.hfut.zhaojiabao.myrecord.views.PopLayout;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,17 +66,28 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     private static final int REQUEST_CODE_COMPUTE = 0;
     private static final int REQUEST_CODE_CAPTURE = 1;
 
-    @BindView(R.id.income_btn) CheckBox mIncomeBtn;
-    @BindView(R.id.expend_btn) CheckBox mExpendBtn;
-    @BindView(R.id.category_tv) TextView mCategoryTv;
-    @BindView(R.id.date_tv) TextView mDateTv;
-    @BindView(R.id.time_tv) TextView mTimeTv;
-    @BindView(R.id.sum_edit) EditText mSumEdit;
-    @BindView(R.id.remark_edit) EditText mRemarkEdit;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.income_sum_tv) TextView mIncomeSumTv;
-    @BindView(R.id.expend_sum_tv) TextView mExpendSumTv;
-    @BindView(R.id.balance_warning_tv) TextView mBalanceWarningTv;
+    @BindView(R.id.income_btn)
+    CheckBox mIncomeBtn;
+    @BindView(R.id.expend_btn)
+    CheckBox mExpendBtn;
+    @BindView(R.id.category_tv)
+    TextView mCategoryTv;
+    @BindView(R.id.date_tv)
+    TextView mDateTv;
+    @BindView(R.id.time_tv)
+    TextView mTimeTv;
+    @BindView(R.id.sum_edit)
+    EditText mSumEdit;
+    @BindView(R.id.remark_edit)
+    EditText mRemarkEdit;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.income_sum_tv)
+    TextView mIncomeSumTv;
+    @BindView(R.id.expend_sum_tv)
+    TextView mExpendSumTv;
+    @BindView(R.id.balance_warning_tv)
+    TextView mBalanceWarningTv;
 
     @OnClick(R.id.income_btn)
     void income() {
@@ -181,18 +191,21 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(RecordRecoveryEvent event) {
         Log.i(TAG, "recovery success: " + event.success);
         loadRecords();
         updateTodaySummary();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(CategoryUpdateEvent event) {
         if (mAdapter != null) {
             mAdapter.invalidateCategoryList();
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(RecordUpdateEvent event) {
         Log.i(TAG, "RecordUpdateEvent");
         long[] todayBounds = TimeFormatter.getTodayBounds();
@@ -205,6 +218,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         updateTodaySummary();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(BudgetChangedEvent event) {
         updateTodaySummary();
     }
@@ -279,12 +293,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         if (mAdapter != null) {
             mAdapter.setData(mList);
         }
-        Collections.sort(mList, new Comparator<Record>() {
-            @Override
-            public int compare(Record o1, Record o2) {
-                return o2.getRecordTime().compareTo(o1.getRecordTime());
-            }
-        });
+        Collections.sort(mList, (o1, o2) -> o2.getRecordTime().compareTo(o1.getRecordTime()));
     }
 
     //调用相机，准备拍照
@@ -294,6 +303,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         activity.startActivityForResult(intent, requestCode);
     }
 
+    @SuppressWarnings("unused")
     private void showPickImgDialog() {
         final CommonDialog dialog = new CommonDialog();
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
@@ -529,7 +539,9 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     }
 
     private void closeKeyboard(EditText editText) {
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow
-                (editText.getWindowToken(), 0);
+        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (manager != null) {
+            manager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        }
     }
 }

@@ -6,7 +6,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.File;
@@ -24,12 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class RecoveryActivity extends AppCompatActivity {
@@ -58,12 +54,9 @@ public class RecoveryActivity extends AppCompatActivity {
         recoveryList.setAdapter(mAdapter);
 
         mCompositeDisposable
-                .add(IOManager.traverseFile(new Consumer<List<File>>() {
-                    @Override
-                    public void accept(List<File> files) throws Exception {
-                        mRecoveryItem = files;
-                        mAdapter.notifyDataSetChanged();
-                    }
+                .add(IOManager.traverseFile(files -> {
+                    mRecoveryItem = files;
+                    mAdapter.notifyDataSetChanged();
                 }));
     }
 
@@ -79,16 +72,14 @@ public class RecoveryActivity extends AppCompatActivity {
         public void onBindViewHolder(final RecoveryItemHolder holder, int position) {
             final File file = mRecoveryItem.get(position);
             holder.titleTv.setText(mRecoveryItem.get(position).getName());
-            holder.recoveryTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            holder.recoveryTv.setOnClickListener(v ->
                     mCompositeDisposable.add(
-                            IOManager.recoveryData(RecoveryActivity.this, file.getPath())
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
+                            IOManager.recoveryData(file.getPath())
+                                    .compose(RxUtils.ioToMain())
                                     .subscribeWith(new DisposableObserver<Void>() {
                                         @Override
-                                        public void onNext(Void value) {}
+                                        public void onNext(Void value) {
+                                        }
 
                                         @Override
                                         public void onError(Throwable e) {
@@ -101,15 +92,8 @@ public class RecoveryActivity extends AppCompatActivity {
                                             ToastUtil.showToast(getString(R.string.recovery_done), Toast.LENGTH_SHORT);
                                             EventBus.getDefault().postSticky(new RecordRecoveryEvent(true));
                                         }
-                                    }));
-                }
-            });
-            holder.deleteImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDeleteConfirmDialog(holder.getAdapterPosition());
-                }
-            });
+                                    })));
+            holder.deleteImg.setOnClickListener(v -> showDeleteConfirmDialog(holder.getAdapterPosition()));
         }
 
         private void showDeleteConfirmDialog(final int position) {
@@ -117,23 +101,15 @@ public class RecoveryActivity extends AppCompatActivity {
             CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
             builder.setTitleText("确认删除该备份文件吗？")
                     .setLeftText(getString(R.string.cancel))
-                    .setLeftListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .setLeftListener(v -> dialog.dismiss())
                     .setRightText(getString(R.string.confirm))
-                    .setRightListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mRecoveryItem.get(position).delete()) {
-                                mRecoveryItem.remove(position);
-                                ToastUtil.showToast(getString(R.string.file_delete_success), Toast.LENGTH_SHORT);
-                                notifyDataSetChanged();
-                            }
-                            dialog.dismiss();
+                    .setRightListener(v -> {
+                        if (mRecoveryItem.get(position).delete()) {
+                            mRecoveryItem.remove(position);
+                            ToastUtil.showToast(getString(R.string.file_delete_success), Toast.LENGTH_SHORT);
+                            notifyDataSetChanged();
                         }
+                        dialog.dismiss();
                     });
             dialog.setBuilder(builder);
             dialog.show(getSupportFragmentManager(), "deleteConfirmDialog");

@@ -137,11 +137,6 @@ public class JayLoadingDialog extends DialogFragment {
     }
 
     public void delayClose(long delayMillis) {
-        mLoadingImg.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dismiss();
-            }
-        }, delayMillis);
+        mLoadingImg.postDelayed(() -> dismiss(), delayMillis);
     }
 }
