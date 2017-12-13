@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/income_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/income"
         android:textSize="16sp"/>
 
+    <View
+        android:layout_width="200dp"
+        android:layout_height="0.33dp"
+        android:background="@color/divider_line_color"/>
+
     <TextView
         android:id="@+id/expend_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

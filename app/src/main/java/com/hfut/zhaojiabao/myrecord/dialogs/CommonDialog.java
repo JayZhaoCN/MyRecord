@@ -60,19 +60,23 @@ public class CommonDialog extends DialogFragment {
             rightTv.setText(mBuilder.rightText);
             rightTv.setOnClickListener(mBuilder.rightListener);
         }
+        if (!mBuilder.leftTextVisible && !mBuilder.rightTextVisible) {
+            content.findViewById(R.id.option_container).setVisibility(View.GONE);
+        }
         //这里contentText的优先级是高于contentView的，也就是说，
         //如果同时设置了contentText和contentView，会展示contentText而不展示contentView.
         if (!TextUtils.isEmpty(mBuilder.contentText)) {
+            contentContainer.setVisibility(View.GONE);
             contentTv.setVisibility(View.VISIBLE);
             contentTv.setText(mBuilder.contentText);
-        } else {
+        } else if (mBuilder.content != null) {
             contentTv.setVisibility(View.GONE);
-            if (mBuilder.content != null) {
-                if (mBuilder.content.getParent() != null) {
-                    ((ViewGroup) mBuilder.content.getParent()).removeView(content);
-                }
-                contentContainer.addView(mBuilder.content);
+            if (mBuilder.content.getParent() != null) {
+                ((ViewGroup) mBuilder.content.getParent()).removeView(content);
             }
+            contentContainer.addView(mBuilder.content);
+        } else {
+            content.findViewById(R.id.root_container).setVisibility(View.GONE);
         }
     }
 

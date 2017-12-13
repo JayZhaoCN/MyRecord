@@ -54,26 +54,18 @@ public class JayDialogManager {
                 .setLeftTextVisible(true)
                 .setLeftText(mContext.getString(R.string.cancel))
                 .setRightText(mContext.getString(R.string.confirm))
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        commonDialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> commonDialog.dismiss())
                 .setRightTextVisible(true)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        closeKeyboard(editRemark, mContext);
-                        String remark = editRemark.getText().toString();
-                        mList.remove(position);
-                        record.setRemark(remark);
-                        JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                        mList.add(position, record);
-                        mAdapter.notifyDataSetChanged();
-                        Log.i(TAG, "edit remark: " + remark);
-                        commonDialog.dismiss();
-                    }
+                .setRightListener(v -> {
+                    closeKeyboard(editRemark, mContext);
+                    String remark = editRemark.getText().toString();
+                    mList.remove(position);
+                    record.setRemark(remark);
+                    JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                    mList.add(position, record);
+                    mAdapter.notifyDataSetChanged();
+                    Log.i(TAG, "edit remark: " + remark);
+                    commonDialog.dismiss();
                 });
         builder.setContent(content);
         commonDialog.setBuilder(builder);
