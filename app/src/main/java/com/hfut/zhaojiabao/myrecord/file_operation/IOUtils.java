@@ -3,7 +3,6 @@ package com.hfut.zhaojiabao.myrecord.file_operation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -113,23 +112,18 @@ public class IOUtils {
 
     //将裁剪后的图片保存起来
     public static void saveAvatar(final Bitmap bm) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File avatarFile = getAvatarImgFile();
-                try {
-                    FileOutputStream fos;
-                    if (avatarFile != null) {
-                        fos = new FileOutputStream(avatarFile);
-                        bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
-                        fos.flush();
-                        fos.close();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        File avatarFile = getAvatarImgFile();
+        try {
+            FileOutputStream fos;
+            if (avatarFile != null) {
+                fos = new FileOutputStream(avatarFile);
+                bm.compress(Bitmap.CompressFormat.PNG, 10, fos);
+                fos.flush();
+                fos.close();
             }
-        }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Bitmap getSmallBitmap(String filePath) {

@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TimePicker;
 
 import com.hfut.zhaojiabao.myrecord.R;
@@ -29,7 +30,10 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
         v.findViewById(R.id.confirm_tv).setOnClickListener(this);
 
         initTimePicker(v);
-
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
         return v;
     }
 
@@ -39,12 +43,9 @@ public class PickTimeDialog extends DialogFragment implements View.OnClickListen
         mHour = timePicker.getCurrentHour();
         mMinute = timePicker.getCurrentMinute();
 
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                mHour = hourOfDay;
-                mMinute = minute;
-            }
+        timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            mHour = hourOfDay;
+            mMinute = minute;
         });
 
     }

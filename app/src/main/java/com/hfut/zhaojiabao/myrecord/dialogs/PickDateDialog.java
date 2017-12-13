@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.DatePicker;
 
 import com.hfut.zhaojiabao.myrecord.R;
@@ -30,6 +31,10 @@ public class PickDateDialog extends DialogFragment implements View.OnClickListen
         v.findViewById(R.id.confirm_tv).setOnClickListener(this);
 
         initDatePicker(v);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
         return v;
     }
 
@@ -41,13 +46,10 @@ public class PickDateDialog extends DialogFragment implements View.OnClickListen
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         final DatePicker datePicker = (DatePicker) v.findViewById(R.id.date_picker);
-        datePicker.init(mYear, mMonth, mDay, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mYear = year;
-                mMonth = monthOfYear;
-                mDay = dayOfMonth;
-            }
+        datePicker.init(mYear, mMonth, mDay, (view, year, monthOfYear, dayOfMonth) -> {
+            mYear = year;
+            mMonth = monthOfYear;
+            mDay = dayOfMonth;
         });
     }
 

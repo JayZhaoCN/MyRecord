@@ -110,7 +110,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/calculator"/>
+                android:src="@drawable/calculator"
+                android:tint="@color/colorAccent"/>
 
         </LinearLayout>
 
@@ -152,7 +153,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_account"/>
+                    android:src="@drawable/ic_account"
+                    android:tint="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/account_tv"
@@ -187,7 +189,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_subject"/>
+                    android:src="@drawable/ic_subject"
+                    android:tint="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/category_tv"
@@ -230,7 +233,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_date_range"/>
+                    android:src="@drawable/ic_date_range"
+                    android:tint="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/date_tv"
@@ -259,7 +263,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_av_timer"/>
+                    android:src="@drawable/ic_av_timer"
+                    android:tint="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/time_tv"
@@ -318,12 +323,12 @@
                     android:textSize="12sp"/>
 
                 <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
-                    android:fontFamily="pt_din"
                     android:id="@+id/income_sum_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="2dp"
+                    android:fontFamily="pt_din"
                     android:textColor="@color/blue_jeans"
                     android:textSize="16sp"
                     tools:text="100"/>
@@ -339,24 +344,24 @@
                     android:textSize="12sp"/>
 
                 <com.hfut.zhaojiabao.myrecord.typeface.TypefaceTextView
-                    android:fontFamily="pt_din"
                     android:id="@+id/expend_sum_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="2dp"
+                    android:fontFamily="pt_din"
                     android:textColor="@color/origin100"
                     android:textSize="16sp"
                     tools:text="100"/>
 
                 <TextView
-                    android:textSize="12sp"
                     android:id="@+id/balance_warning_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:textColor="@color/red"
+                    android:textSize="12sp"
                     tools:text="balance"/>
 
             </LinearLayout>

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -20,14 +21,6 @@ import com.hfut.zhaojiabao.myrecord.R;
  */
 
 public class CommonDialog extends DialogFragment {
-    private static final String TAG = "CommonFragment";
-
-    private FrameLayout mContentContainer;
-    private TextView mTitleTv;
-    private TextView mLeftTv;
-    private TextView mRightTv;
-    private TextView mContentTv;
-
     private CommonBuilder mBuilder;
 
     @Nullable
@@ -35,46 +28,50 @@ public class CommonDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View content = inflater.inflate(R.layout.dialog_common_dialog, container, false);
         init(content);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
         return content;
     }
 
     private void init(View content) {
-        mContentContainer = (FrameLayout) content.findViewById(R.id.content_container);
-        mTitleTv = (TextView) content.findViewById(R.id.dialog_title_tv);
-        mLeftTv = (TextView) content.findViewById(R.id.left_tv);
-        mRightTv = (TextView) content.findViewById(R.id.right_tv);
-        mContentTv = (TextView) content.findViewById(R.id.content_tv);
+        FrameLayout contentContainer = (FrameLayout) content.findViewById(R.id.content_container);
+        TextView titleTv = (TextView) content.findViewById(R.id.dialog_title_tv);
+        TextView leftTv = (TextView) content.findViewById(R.id.left_tv);
+        TextView rightTv = (TextView) content.findViewById(R.id.right_tv);
+        TextView contentTv = (TextView) content.findViewById(R.id.content_tv);
 
         setCancelable(mBuilder.cancelable);
         if (!mBuilder.titleVisible) {
-            mTitleTv.setVisibility(View.GONE);
+            titleTv.setVisibility(View.GONE);
         } else {
-            mTitleTv.setText(mBuilder.titleText);
+            titleTv.setText(mBuilder.titleText);
         }
         if (!mBuilder.leftTextVisible) {
-            mLeftTv.setVisibility(View.GONE);
+            leftTv.setVisibility(View.GONE);
         } else {
-            mLeftTv.setText(mBuilder.leftText);
-            mLeftTv.setOnClickListener(mBuilder.leftListener);
+            leftTv.setText(mBuilder.leftText);
+            leftTv.setOnClickListener(mBuilder.leftListener);
         }
         if (!mBuilder.rightTextVisible) {
-            mRightTv.setVisibility(View.GONE);
+            rightTv.setVisibility(View.GONE);
         } else {
-            mRightTv.setText(mBuilder.rightText);
-            mRightTv.setOnClickListener(mBuilder.rightListener);
+            rightTv.setText(mBuilder.rightText);
+            rightTv.setOnClickListener(mBuilder.rightListener);
         }
         //这里contentText的优先级是高于contentView的，也就是说，
         //如果同时设置了contentText和contentView，会展示contentText而不展示contentView.
         if (!TextUtils.isEmpty(mBuilder.contentText)) {
-            mContentTv.setVisibility(View.VISIBLE);
-            mContentTv.setText(mBuilder.contentText);
+            contentTv.setVisibility(View.VISIBLE);
+            contentTv.setText(mBuilder.contentText);
         } else {
-            mContentTv.setVisibility(View.GONE);
+            contentTv.setVisibility(View.GONE);
             if (mBuilder.content != null) {
                 if (mBuilder.content.getParent() != null) {
                     ((ViewGroup) mBuilder.content.getParent()).removeView(content);
                 }
-                mContentContainer.addView(mBuilder.content);
+                contentContainer.addView(mBuilder.content);
             }
         }
     }
@@ -104,6 +101,7 @@ public class CommonDialog extends DialogFragment {
             mContext = context;
         }
 
+        @SuppressWarnings("unused")
         public CommonBuilder setTitleVisible(boolean visible) {
             titleVisible = visible;
             return this;
@@ -154,6 +152,7 @@ public class CommonDialog extends DialogFragment {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public CommonBuilder setContentText(@StringRes int contentTextRes) {
             setContentText(mContext.getString(contentTextRes));
             return this;

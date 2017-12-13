@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,6 +33,7 @@ import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
@@ -61,7 +63,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class JayActivity extends PermissionBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "JayActivity";
@@ -321,7 +327,6 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         activity.startActivityForResult(intent, requestCode);
     }
 
-    @SuppressWarnings("unused")
     private void showPickImgDialog() {
         final CommonDialog dialog = new CommonDialog();
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
@@ -375,18 +380,29 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         if (resultCode != RESULT_OK) {
             return;
         }
-        onSelectImg(requestCode, data);
-        onCropImg(requestCode);
-        onComputeDone(requestCode, data);
-        onCaptureImg(requestCode);
+
+        switch (requestCode) {
+            case Crop.REQUEST_PICK:
+                onSelectImg(data);
+                break;
+            case Crop.REQUEST_CROP:
+                onCropImg();
+                break;
+            case REQUEST_CODE_COMPUTE:
+                onComputeDone(data);
+                break;
+            case REQUEST_CODE_CAPTURE:
+                onCaptureImg();
+                break;
+            default:
+                break;
+        }
     }
 
-    //拍照完成，准备裁剪图片
-    private void onCaptureImg(int requestCode) {
-        if (requestCode != REQUEST_CODE_CAPTURE) {
-            return;
-        }
-
+    /**
+     * 拍照完成，准备裁剪图片
+     */
+    private void onCaptureImg() {
         Uri source = Uri.fromFile(mCaptureFile);
         mDestinationUri = Uri.fromFile(IOUtils.getCropImgFile(IOUtils.CROP_IMG_FOLDER_NAME));
         Log.i(TAG, "source uri: " + source);
@@ -394,44 +410,52 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         Crop.of(source, mDestinationUri).asSquare().start(this);
     }
 
-    private void onComputeDone(int requestCode, Intent intent) {
+    private void onComputeDone(Intent intent) {
         if (intent == null) {
             Log.i(TAG, "data is null, so return.");
-            return;
-        }
-        if (requestCode != REQUEST_CODE_COMPUTE) {
             return;
         }
         mSumEdit.setText(NumberUtils.getFormattedNumber(intent.getDoubleExtra("result", 0)));
         mSumEdit.setSelection(mSumEdit.getText().toString().length());
     }
 
-    //获取裁剪完的图片，更新到UI
-    //这里裁剪的图片可能来自图库选择，也可能来自拍照
-    private void onCropImg(int requestCode) {
-        if (requestCode != Crop.REQUEST_CROP) {
-            return;
-        }
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestinationUri);
-            mUserIcon.setImageBitmap(bitmap);
-            //这个等下新开线程去做
-            IOUtils.saveAvatar(bitmap);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    /**
+     * 获取裁剪完的图片, 更新到UI.
+     * 这里裁剪的图片可能来自图库选择, 也可能来自拍照.
+     */
+    private void onCropImg() {
+        JayLoadingDialog loadingDialog = new JayLoadingDialog();
+        Observable
+                .create((ObservableOnSubscribe<Bitmap>) e -> {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestinationUri);
+                    IOUtils.saveAvatar(bitmap);
+                    e.onNext(bitmap);
+                    e.onComplete();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> {
+                    loadingDialog.setCancelable(false);
+                    loadingDialog.showLoading("保存中...");
+                    loadingDialog.show(getSupportFragmentManager(), "backup");
+                })
+                .subscribe(bitmap -> {
+                    mUserIcon.setImageBitmap(bitmap);
+                    loadingDialog.showSuccess("保存成功");
+                    loadingDialog.delayClose(1000);
+                }, Throwable::printStackTrace);
     }
 
-    //从图库选择完图片，调用该方法开始图片裁剪
-    private void onSelectImg(int requestCode, Intent intent) {
+    /**
+     * 从图库选择完图片，调用该方法开始图片裁剪
+     */
+    private void onSelectImg(Intent intent) {
         if (intent == null) {
             Log.i(TAG, "data is null, so return.");
             return;
         }
         try {
-            if (requestCode != Crop.REQUEST_PICK) {
-                return;
-            }
             //被选中的图片的Uri
             Uri pickedUri = intent.getData();
             //裁剪完的图片放在该目录下
@@ -551,6 +575,14 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
+        mUserIcon.setOnClickListener(v -> showPickImgDialog());
+
+        File file = IOUtils.getAvatarImgFile();
+        if (file != null && file.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            mUserIcon.setImageBitmap(bitmap);
+        }
+
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
         mUserNameTv.setOnClickListener(v -> showModifyNameDialog());

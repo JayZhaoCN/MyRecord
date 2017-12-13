@@ -213,12 +213,9 @@ public class JayDialogManager {
                 .setLeftTextVisible(false)
                 .setRightTextVisible(true)
                 .setRightText(R.string.manage_category)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, ManageCategoryActivity.class));
-                        commonDialog.dismiss();
-                    }
+                .setRightListener(v -> {
+                    mContext.startActivity(new Intent(mContext, ManageCategoryActivity.class));
+                    commonDialog.dismiss();
                 })
                 .setContent(contentView);
         commonDialog.setBuilder(builder);
@@ -248,14 +245,11 @@ public class JayDialogManager {
         @Override
         public void onBindViewHolder(final CategoryAdapter.CategoryViewHolder holder, int position) {
             holder.categoryTv.setText(categories.get(position).getCategory());
-            holder.categoryTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onSelect(categories.get(holder.getAdapterPosition()).getCategory());
-                    }
-                    dialog.dismiss();
+            holder.categoryTv.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onSelect(categories.get(holder.getAdapterPosition()).getCategory());
                 }
+                dialog.dismiss();
             });
         }
 
