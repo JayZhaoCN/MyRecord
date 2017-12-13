@@ -31,7 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class DetailActivity extends AppCompatActivity {
@@ -58,7 +57,7 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.detail);
         setSupportActionBar(toolbar);
-        initDatas();
+        initData();
 
         EventBus.getDefault().registerSticky(this);
     }
@@ -77,7 +76,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public void onEventMainThread(RecordUpdateEvent event) {
         //当记录发生变化，重新加载一遍
-        initDatas();
+        initData();
         if (mDayRecords == null) {
             //所有记录都删完了，直接返回
             return;
@@ -110,31 +109,25 @@ public class DetailActivity extends AppCompatActivity {
         return null;
     }
 
-    private void initDatas() {
+    private void initData() {
         ValueTransfer.getDayRecords()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<DayRecord>>() {
-                    @Override
-                    public void accept(List<DayRecord> dayRecords) throws Exception {
-                        //剔除掉没有任何记录的日期
-                        mDayRecords = new ArrayList<>();
-                        if (dayRecords == null) {
-                            //当下还没有数据, 则展示无数据提示UI
-                            findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
-                            findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
-                            findViewById(R.id.divider).setVisibility(View.GONE);
-                            findViewById(R.id.detail_recyler).setVisibility(View.GONE);
-                            return;
+                .subscribe(dayRecords -> {
+                    //剔除掉没有任何记录的日期
+                    mDayRecords = new ArrayList<>();
+                    for (DayRecord record : dayRecords) {
+                        if (record.incomeSum > 0 || record.expendSum > 0) {
+                            mDayRecords.add(record);
                         }
-                        for (DayRecord record : dayRecords) {
-                            if (record.incomeSum > 0 || record.expendSum > 0) {
-                                mDayRecords.add(record);
-                            }
-                        }
-
-                        initUI();
                     }
+                    initUI();
+                }, throwable -> {
+                    //当下还没有数据, 则展示无数据提示UI
+                    findViewById(R.id.empty_tv).setVisibility(View.VISIBLE);
+                    findViewById(R.id.indicator_recycler).setVisibility(View.GONE);
+                    findViewById(R.id.divider).setVisibility(View.GONE);
+                    findViewById(R.id.detail_recyler).setVisibility(View.GONE);
                 });
 
         //取所有记录数据

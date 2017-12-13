@@ -63,10 +63,12 @@ public class ValueTransfer {
     }
 
     public static Observable<List<DayRecord>> getDayRecords() {
-        return Observable.create(new ObservableOnSubscribe<List<DayRecord>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<DayRecord>> e) throws Exception {
+        return Observable.create(e -> {
+            List<DayRecord> dayRecords = getDayRecordsInternal();
+            if (dayRecords != null) {
                 e.onNext(getDayRecordsInternal());
+            } else {
+                e.onError(null);
             }
         });
     }
