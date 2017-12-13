@@ -33,7 +33,6 @@ import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
-import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
@@ -170,7 +169,6 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     private Calendar mCalendar;
     private JayRecordAdapter mAdapter;
 
-    private File mCaptureFile;
     //存放裁剪后临时图片的Uri
     private Uri mDestinationUri;
 
@@ -327,7 +325,10 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         activity.startActivityForResult(intent, requestCode);
     }
 
-    private void showPickImgDialog() {
+    /**
+     * 展示修改头像对话框
+     */
+    private void showModifyAvatarDialog() {
         final CommonDialog dialog = new CommonDialog();
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
         content.findViewById(R.id.pick_img_tv).setOnClickListener(v -> {
@@ -336,7 +337,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         });
         content.findViewById(R.id.capture_img_tv).setOnClickListener(v -> {
             pickCapture(JayActivity.this, Uri.fromFile
-                    (mCaptureFile = IOUtils.getCropImgFile(IOUtils.CAPTURE_IMG_FOLDER_NAME)), REQUEST_CODE_CAPTURE);
+                    (IOUtils.getCaptureImgFile()), REQUEST_CODE_CAPTURE);
             dialog.dismiss();
         });
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
@@ -348,7 +349,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         dialog.show(getSupportFragmentManager(), "pickImgDialog");
     }
 
-    private void showModifyNameDialog() {
+    private void showModifyNicknameDialog() {
         final CommonDialog dialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         View content = View.inflate(this, R.layout.dialog_modify_name, null);
@@ -403,8 +404,8 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
      * 拍照完成，准备裁剪图片
      */
     private void onCaptureImg() {
-        Uri source = Uri.fromFile(mCaptureFile);
-        mDestinationUri = Uri.fromFile(IOUtils.getCropImgFile(IOUtils.CROP_IMG_FOLDER_NAME));
+        Uri source = Uri.fromFile(IOUtils.getCaptureImgFile());
+        mDestinationUri = Uri.fromFile(IOUtils.getAvatarImgFile());
         Log.i(TAG, "source uri: " + source);
         Log.i(TAG, "destination uri: " + mDestinationUri);
         Crop.of(source, mDestinationUri).asSquare().start(this);
@@ -425,26 +426,15 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
      * 这里裁剪的图片可能来自图库选择, 也可能来自拍照.
      */
     private void onCropImg() {
-        JayLoadingDialog loadingDialog = new JayLoadingDialog();
         Observable
                 .create((ObservableOnSubscribe<Bitmap>) e -> {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mDestinationUri);
-                    IOUtils.saveAvatar(bitmap);
                     e.onNext(bitmap);
                     e.onComplete();
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> {
-                    loadingDialog.setCancelable(false);
-                    loadingDialog.showLoading("保存中...");
-                    loadingDialog.show(getSupportFragmentManager(), "backup");
-                })
-                .subscribe(bitmap -> {
-                    mUserIcon.setImageBitmap(bitmap);
-                    loadingDialog.showSuccess("保存成功");
-                    loadingDialog.delayClose(1000);
-                }, Throwable::printStackTrace);
+                .subscribe(bitmap -> mUserIcon.setImageBitmap(bitmap), Throwable::printStackTrace);
     }
 
     /**
@@ -459,7 +449,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
             //被选中的图片的Uri
             Uri pickedUri = intent.getData();
             //裁剪完的图片放在该目录下
-            mDestinationUri = Uri.fromFile(IOUtils.getCropImgFile(IOUtils.CROP_IMG_FOLDER_NAME));
+            mDestinationUri = Uri.fromFile(IOUtils.getAvatarImgFile());
             Log.i(TAG, "picked img uri: " + pickedUri);
             Log.i(TAG, "mDestination img uri: " + mDestinationUri);
             //开始裁剪
@@ -575,7 +565,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mUserIcon = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
-        mUserIcon.setOnClickListener(v -> showPickImgDialog());
+        mUserIcon.setOnClickListener(v -> showModifyAvatarDialog());
 
         File file = IOUtils.getAvatarImgFile();
         if (file != null && file.exists()) {
@@ -585,7 +575,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());
-        mUserNameTv.setOnClickListener(v -> showModifyNameDialog());
+        mUserNameTv.setOnClickListener(v -> showModifyNicknameDialog());
     }
 
     private void closeKeyboard(EditText editText) {

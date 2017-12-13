@@ -20,12 +20,11 @@ import java.io.FileOutputStream;
 public class IOUtils {
     private static final String TAG = "IOUtils";
 
-    public static final String BACKUP_FOLDER_NAME = "jay_backups";
+    static final String BACKUP_FOLDER_NAME = "jay_backups";
     private static final String RECORD_FILE_SUFFIX_NAME = ".jay";
-    public static final String CROP_IMG_FOLDER_NAME = "jay_crops";
     public static final String CAPTURE_IMG_FOLDER_NAME = "jay_capture";
     private static final String CROP_IMG_SUFFIX_NAME = ".png";
-    public static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
+    private static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
 
     //备份路径为外部存储应用私有目录下
     //
@@ -36,16 +35,19 @@ public class IOUtils {
                 + RECORD_FILE_SUFFIX_NAME;
     }
 
-    public static File getCropImgFile(String imgFolder) {
+    /**
+     * 获取拍照图片的保存路径
+     */
+    public static File getCaptureImgFile() {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append(Environment.getExternalStorageDirectory())
                     .append(File.separator)
                     .append(BACKUP_FOLDER_NAME)
                     .append(File.separator)
-                    .append(imgFolder)
+                    .append(CAPTURE_IMG_FOLDER_NAME)
                     .append(File.separator)
-                    .append(System.currentTimeMillis())
+                    .append(CAPTURE_IMG_FOLDER_NAME)
                     .append(CROP_IMG_SUFFIX_NAME);
             File file = new File(sb.toString());
             if (!file.getParentFile().exists()) {
@@ -64,6 +66,9 @@ public class IOUtils {
         return null;
     }
 
+    /**
+     * 获取保存头像的文件路径
+     */
     public static File getAvatarImgFile() {
         try {
             StringBuilder sb = new StringBuilder();
@@ -141,13 +146,13 @@ public class IOUtils {
         return BitmapFactory.decodeFile(filePath, options);
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }

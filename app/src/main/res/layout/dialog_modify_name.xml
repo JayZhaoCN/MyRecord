@@ -7,7 +7,7 @@
 
     <EditText
         android:id="@+id/edit_name"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:hint="@string/modify_name_tips"
         android:inputType="text"/>
