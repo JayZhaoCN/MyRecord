@@ -7,16 +7,18 @@
 
     <TextView
         android:id="@+id/income_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/income"
         android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/expend_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/expend"
         android:textSize="16sp"/>

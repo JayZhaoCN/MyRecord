@@ -145,29 +145,23 @@ public class JayDialogManager {
                 .setRightTextVisible(false);
 
         View content = View.inflate(mContext, R.layout.layout_select_income, null);
-        content.findViewById(R.id.income_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                record.setIncome(true);
-                JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                mList.remove(position);
-                mList.add(position, record);
-                mAdapter.notifyDataSetChanged();
-                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
-                commonDialog.dismiss();
-            }
+        content.findViewById(R.id.income_tv).setOnClickListener(v -> {
+            record.setIncome(true);
+            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+            mList.remove(position);
+            mList.add(position, record);
+            mAdapter.notifyDataSetChanged();
+            EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
+            commonDialog.dismiss();
         });
-        content.findViewById(R.id.expend_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                record.setIncome(false);
-                JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                mList.remove(position);
-                mList.add(position, record);
-                mAdapter.notifyDataSetChanged();
-                EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
-                commonDialog.dismiss();
-            }
+        content.findViewById(R.id.expend_tv).setOnClickListener(v -> {
+            record.setIncome(false);
+            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+            mList.remove(position);
+            mList.add(position, record);
+            mAdapter.notifyDataSetChanged();
+            EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
+            commonDialog.dismiss();
         });
         builder.setContent(content);
         commonDialog.setBuilder(builder);
