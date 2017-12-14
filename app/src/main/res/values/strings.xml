@@ -132,4 +132,5 @@
     <string name="remain_sum">账户余额</string>
     <string name="setting">设置</string>
     <string name="remain_summary">今日还可以花%1$s元</string>
+    <string name="sector_type">%s  %s %%</string>
 </resources>

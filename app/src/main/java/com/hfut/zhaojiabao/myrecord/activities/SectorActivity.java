@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SectorActivity extends AppCompatActivity {
+    private static final int UPDATE_DELAY = 300;
 
     private List<SectorChart.SectorChartItem> mData;
     private List<TypeItem> mTypeData;
@@ -36,7 +37,12 @@ public class SectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sector);
         ButterKnife.bind(this);
-        updateUI(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mChart.postDelayed(() -> updateUI(false), UPDATE_DELAY);
     }
 
     private void updateUI(boolean income) {
@@ -116,7 +122,8 @@ public class SectorActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(IndicatorViewHolder holder, int position) {
             holder.indicatorView.setBackgroundColor(mTypeData.get(position).color);
-            holder.typeTv.setText(mTypeData.get(position).text + "  " + mTypeData.get(position).percent + "%");
+            holder.typeTv.setText
+                    (getString(R.string.sector_type, mTypeData.get(position).text, String.valueOf(mTypeData.get(position).percent)));
         }
 
         @Override
