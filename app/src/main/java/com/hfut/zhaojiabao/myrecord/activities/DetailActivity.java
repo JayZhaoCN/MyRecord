@@ -34,8 +34,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class DetailActivity extends AppCompatActivity {
-    private static final String TAG = "DetailActivity";
-
     private List<DayRecord> mDayRecords;
     private List<Record> mRecordList;
     private List<Record> mCertainDayRecords = new ArrayList<>();
@@ -68,12 +66,14 @@ public class DetailActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(CategoryUpdateEvent event) {
         if (mRecordAdapter != null) {
             mRecordAdapter.invalidateCategoryList();
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(RecordUpdateEvent event) {
         //当记录发生变化，重新加载一遍
         initData();
@@ -141,13 +141,10 @@ public class DetailActivity extends AppCompatActivity {
         mIndicatorList.setAdapter(mIndicatorAdapter = new IndicatorAdapter());
 
         //这里需要在post里才能拿到RecyclerView.childView
-        mIndicatorList.post(new Runnable() {
-            @Override
-            public void run() {
-                mSelectedView = mIndicatorList.getChildAt(0);
-                if (mSelectedView != null) {
-                    mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
-                }
+        mIndicatorList.post(() -> {
+            mSelectedView = mIndicatorList.getChildAt(0);
+            if (mSelectedView != null) {
+                mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
             }
         });
 
@@ -189,18 +186,15 @@ public class DetailActivity extends AppCompatActivity {
             holder.indicatorTv.setText(TimeFormatter.formatDate(mDayRecords.get(position).timeMillis));
             System.out.println("JayLog, " + TimeFormatter.formatDate(mDayRecords.get(position).timeMillis));
 
-            holder.indicatorTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSelectedView.setBackgroundColor(Color.WHITE);
-                    mSelectedView = v;
-                    mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
-                    DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
-                    setDetailSummary(dayRecord);
-                    mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
-                    getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
-                    mRecordAdapter.setData(mCertainDayRecords);
-                }
+            holder.indicatorTv.setOnClickListener(v -> {
+                mSelectedView.setBackgroundColor(Color.WHITE);
+                mSelectedView = v;
+                mSelectedView.setBackgroundColor(ContextCompat.getColor(DetailActivity.this, R.color.aqua));
+                DayRecord dayRecord = mDayRecords.get(holder.getAdapterPosition());
+                setDetailSummary(dayRecord);
+                mSelectDate.set(dayRecord.year, dayRecord.month, dayRecord.day);
+                getDataFromCertainDay(mSelectDate.year, mSelectDate.month, mSelectDate.day);
+                mRecordAdapter.setData(mCertainDayRecords);
             });
         }
 

@@ -37,12 +37,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.manage_catrgory);
         setSupportActionBar(toolbar);
 
-        findViewById(R.id.edit_img).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddCategoryDialog();
-            }
-        });
+        findViewById(R.id.edit_img).setOnClickListener(v -> showAddCategoryDialog());
 
         initCategories();
     }
@@ -73,38 +68,27 @@ public class ManageCategoryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ManageViewHolder holder, int position) {
             holder.titleTv.setText(mCategories.get(position).getCategory());
-            holder.deleteImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final CommonDialog dialog = new CommonDialog();
-                    CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManageCategoryActivity.this);
-                    builder.setTitleText(getString(R.string.confirm_delete))
-                            .setRightText(getString(R.string.confirm))
-                            .setLeftText(getString(R.string.cancel))
-                            .setContentText(getString(R.string.delete_category_tips))
-                            .setRightListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (!checkCanDelete()) {
-                                        ToastUtil.showToast(getString(R.string.at_least_one), Toast.LENGTH_SHORT);
-                                        return;
-                                    }
-                                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
-                                    updateCategories();
-                                    notifyDataSetChanged();
-                                    EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setLeftListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    dialog.setBuilder(builder);
-                    dialog.show(getSupportFragmentManager(), "confirmDeleteCategoryDialog");
-                }
+            holder.deleteImg.setOnClickListener(v -> {
+                final CommonDialog dialog = new CommonDialog();
+                CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManageCategoryActivity.this);
+                builder.setTitleText(getString(R.string.confirm_delete))
+                        .setRightText(getString(R.string.confirm))
+                        .setLeftText(getString(R.string.cancel))
+                        .setContentText(getString(R.string.delete_category_tips))
+                        .setRightListener(v1 -> {
+                            if (!checkCanDelete()) {
+                                ToastUtil.showToast(getString(R.string.at_least_one), Toast.LENGTH_SHORT);
+                                return;
+                            }
+                            JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
+                            updateCategories();
+                            notifyDataSetChanged();
+                            EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
+                            dialog.dismiss();
+                        })
+                        .setLeftListener(v12 -> dialog.dismiss());
+                dialog.setBuilder(builder);
+                dialog.show(getSupportFragmentManager(), "confirmDeleteCategoryDialog");
             });
         }
 
@@ -135,25 +119,17 @@ public class ManageCategoryActivity extends AppCompatActivity {
         builder.setTitleText(R.string.add_category)
                 .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> dialog.dismiss())
                 .setRightTextVisible(true)
                 .setRightText(R.string.confirm)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Category category = new Category();
-                        category.setCategory(addEdit.getText().toString());
-                        JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
-                        updateCategories();
-                        EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
-                        mAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
+                .setRightListener(v -> {
+                    Category category = new Category();
+                    category.setCategory(addEdit.getText().toString());
+                    JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
+                    updateCategories();
+                    EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
+                    mAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
                 })
                 .setContent(content);
         dialog.setBuilder(builder);

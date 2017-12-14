@@ -51,24 +51,16 @@ public class RecordChartActivity extends AppCompatActivity {
         ValueTransfer.getDayRecords()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<DayRecord>>() {
-                    @Override
-                    public void accept(List<DayRecord> dayRecords) throws Exception {
-                        mDatas = dayRecords;
-                        List<RecordChart.ChartItem> chartItems = new ArrayList<>();
-                        if (mDatas != null) {
-                            for (DayRecord record : mDatas) {
-                                chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
-                            }
+                .subscribe(dayRecords -> {
+                    mDatas = dayRecords;
+                    List<RecordChart.ChartItem> chartItems = new ArrayList<>();
+                    if (mDatas != null) {
+                        for (DayRecord record : mDatas) {
+                            chartItems.add(new RecordChart.ChartItem(record.expendSum, record.date));
                         }
-                        chart.provideData(chartItems);
-                        chart.setOnColumnSelectedListener(new RecordChart.OnColumnSelectedListener() {
-                            @Override
-                            public void onColumnSelected(int position) {
-                                updateValues(position);
-                            }
-                        });
                     }
+                    chart.provideData(chartItems);
+                    chart.setOnColumnSelectedListener(this::updateValues);
                 });
     }
 

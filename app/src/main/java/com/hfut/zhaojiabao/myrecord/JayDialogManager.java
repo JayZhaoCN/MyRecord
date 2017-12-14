@@ -81,41 +81,33 @@ public class JayDialogManager {
                 .setLeftTextVisible(true)
                 .setLeftText(mContext.getString(R.string.cancel))
                 .setRightText(mContext.getString(R.string.confirm))
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        commonDialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> commonDialog.dismiss())
                 .setRightTextVisible(true)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        closeKeyboard(editSum, mContext);
-                        float sum;
-                        try {
-                            sum = Float.valueOf(editSum.getText().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_not_match));
-                            Log.e(TAG, "please input correct number!");
-                            commonDialog.dismiss();
-                            return;
-                        }
-                        if (sum == 0) {
-                            showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_zero));
-                            Log.e(TAG, "sum cannot be zero!");
-                            commonDialog.dismiss();
-                            return;
-                        }
-                        record.setSum(sum);
-                        JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                        mList.remove(position);
-                        mList.add(position, record);
-                        mAdapter.setData(mList);
-                        EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
+                .setRightListener(v -> {
+                    closeKeyboard(editSum, mContext);
+                    float sum;
+                    try {
+                        sum = Float.valueOf(editSum.getText().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_not_match));
+                        Log.e(TAG, "please input correct number!");
                         commonDialog.dismiss();
+                        return;
                     }
+                    if (sum == 0) {
+                        showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_zero));
+                        Log.e(TAG, "sum cannot be zero!");
+                        commonDialog.dismiss();
+                        return;
+                    }
+                    record.setSum(sum);
+                    JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+                    mList.remove(position);
+                    mList.add(position, record);
+                    mAdapter.setData(mList);
+                    EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
+                    commonDialog.dismiss();
                 });
         builder.setContent(content);
         commonDialog.setBuilder(builder);
@@ -172,12 +164,7 @@ public class JayDialogManager {
         builder.setLeftTextVisible(false)
                 .setRightText(mContext.getString(R.string.confirm))
                 .setRightTextVisible(true)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        commonDialog.dismiss();
-                    }
-                })
+                .setRightListener(v -> commonDialog.dismiss())
                 .setContentText(content);
         commonDialog.setBuilder(builder);
         commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
@@ -264,6 +251,8 @@ public class JayDialogManager {
      */
     public static void closeKeyboard(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        }
     }
 }

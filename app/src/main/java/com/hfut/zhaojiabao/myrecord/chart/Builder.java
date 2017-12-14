@@ -8,40 +8,40 @@ public class Builder {
     /**
      * 不同的图表类型决定不同的x轴取点方式
      */
-    public static final int BAR_CHART = 0;
+    static final int BAR_CHART = 0;
     public static final int CURVE_CHART = 1;
 
-    public int mChartType = CURVE_CHART;
+    int mChartType = CURVE_CHART;
 
     /**
      * 上方留白
      */
-    public int mTopBlank = 0;
+    int mTopBlank = 0;
 
     /**
      * 下方留白
      */
-    public int mBottomBlank = 0;
+    int mBottomBlank = 0;
 
     /**
      * 左边留白
      */
-    public int mLeftBlank = 0;
+    int mLeftBlank = 0;
 
     /**
      * 右边留白
      */
-    public int mRightBlank = 0;
+    int mRightBlank = 0;
 
     /**
      * 轴线样式
      */
-    public AxisStyle axisStyle;
+    AxisStyle axisStyle;
 
     /**
      * 图表数据
      */
-    public DataProvider dataProvider;
+    DataProvider dataProvider;
 
     public Builder(int chartType, int leftBlank, int topBlank, int rightBlank, int bottomBlank) {
         mChartType = chartType;

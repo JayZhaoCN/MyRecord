@@ -87,15 +87,12 @@ public class CurveChart extends BaseRectChart {
     }
 
     public void initAnim() {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if (mBuilder == null) {
-                    throw new IllegalArgumentException("you should init builder first.");
-                }
-
-                initAnimInner();
+        post(() -> {
+            if (mBuilder == null) {
+                throw new IllegalArgumentException("you should init builder first.");
             }
+
+            initAnimInner();
         });
     }
 

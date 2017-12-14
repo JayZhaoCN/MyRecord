@@ -125,24 +125,24 @@ public class ArithmeticHelper {
         //'-'在一定情况下可以看做负号，而不是运算符
         boolean canBeNumber = true;
 
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < infix.length(); i++) {
             char a = infix.charAt(i);
             if (!isOperator(a) || (a == '-' && canBeNumber)) {
-                str += a;
+                str.append(a);
                 canBeNumber = false;
                 continue;
             }
             canBeNumber = true;
-            if (!str.equals("")) {
-                elements.add(new Element(true, Double.parseDouble(str), '?'));
-                str = "";
+            if (!str.toString().equals("")) {
+                elements.add(new Element(true, Double.parseDouble(str.toString()), '?'));
+                str = new StringBuilder();
             }
             elements.add(new Element(false, -1, a));
 
         }
-        if (!str.equals("")) {
-            elements.add(new Element(true, Double.parseDouble(str), '?'));
+        if (!str.toString().equals("")) {
+            elements.add(new Element(true, Double.parseDouble(str.toString()), '?'));
         }
 
         return elements;

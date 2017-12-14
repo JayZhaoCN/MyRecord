@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 /**
  * 数值转换工具
@@ -200,16 +198,13 @@ public class ValueTransfer {
             middleDate = calendarJ.getTime();
         }
         result.addAll(tmpRecord);
-        Collections.sort(result, new Comparator<DayRecord>() {
-            @Override
-            public int compare(DayRecord o1, DayRecord o2) {
-                if (o1.timeMillis > o2.timeMillis) {
-                    return 1;
-                } else if (o1.timeMillis < o2.timeMillis) {
-                    return -1;
-                }
-                return 0;
+        Collections.sort(result, (o1, o2) -> {
+            if (o1.timeMillis > o2.timeMillis) {
+                return 1;
+            } else if (o1.timeMillis < o2.timeMillis) {
+                return -1;
             }
+            return 0;
         });
 
         for (DayRecord record : result) {

@@ -29,7 +29,7 @@ public class CurveChartActivity extends AppCompatActivity {
         ValueTransfer
                 .getDayRecords()
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(dayRecords -> provideData(dayRecords));
+                .subscribe(this::provideData);
     }
 
     @Override

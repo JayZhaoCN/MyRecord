@@ -12,9 +12,8 @@ import java.util.List;
  */
 
 public class DataProvider {
-    public List<PointF> mPoints;
-    public float mMaxValue = Float.MIN_VALUE;
-    public float mMinValue = Float.MAX_VALUE;
+    List<PointF> mPoints;
+    float mMaxValue = Float.MIN_VALUE;
 
     /**
      * 取以10为底的对数后的数据
@@ -24,31 +23,32 @@ public class DataProvider {
     /**
      * 原始数据
      */
-    public List<Float> rawData;
+    List<Float> rawData;
 
     /**
      * x轴label
      */
-    public List<String> xScaleTexts;
+    List<String> xScaleTexts;
 
     /**
      * y轴label数
      */
-    public int yScaleNum;
+    int yScaleNum;
 
     /**
      * y轴label
      */
-    public List<String> yScaleTexts;
+    List<String> yScaleTexts;
 
     /**
      * y轴label高度
      */
-    public List<Float> yScaleHeights;
+    List<Float> yScaleHeights;
     /**
      * 是否取对数
      */
-    public boolean logarithm;
+    @SuppressWarnings("unused")
+    private boolean logarithm;
 
 
     /**
@@ -78,10 +78,6 @@ public class DataProvider {
         for (Float aFloat : this.data) {
             if (aFloat > mMaxValue) {
                 mMaxValue = aFloat;
-            }
-
-            if (aFloat < mMinValue) {
-                mMinValue = aFloat;
             }
         }
 

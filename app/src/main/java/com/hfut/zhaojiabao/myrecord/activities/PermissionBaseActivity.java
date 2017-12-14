@@ -1,5 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,7 +9,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
@@ -28,6 +28,7 @@ import java.util.List;
  * ## 请求多个权限
  * 调用`requestPermissions()`,传入需要请求的多个权限.之后的步骤和请求单个权限类似.
  */
+@SuppressLint("Registered")
 public class PermissionBaseActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1024;
 
@@ -65,20 +66,12 @@ public class PermissionBaseActivity extends AppCompatActivity {
                 .setContentText(content)
                 .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> dialog.dismiss())
                 .setRightTextVisible(true)
                 .setRightText(R.string.confirm)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startAppSettings();
-                        dialog.dismiss();
-                    }
+                .setRightListener(v -> {
+                    startAppSettings();
+                    dialog.dismiss();
                 });
         dialog.setBuilder(builder);
         dialog.show(getSupportFragmentManager(), "RationaleDialog");
@@ -118,6 +111,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
      *
      * @return 权限已获取
      */
+    @SuppressWarnings("unused")
     public boolean checkPermissionAndRequestIfNotHaved(String permission) {
         boolean isHaved = Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                 || getNeedGrantPermissions(new String[]{permission}).isEmpty();

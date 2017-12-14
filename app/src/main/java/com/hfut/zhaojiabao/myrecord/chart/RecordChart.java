@@ -3,6 +3,7 @@ package com.hfut.zhaojiabao.myrecord.chart;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -251,12 +252,9 @@ public class RecordChart extends View implements BaseChart {
         mEnterAnimator = ValueAnimator.ofFloat(0, 1);
         mEnterAnimator.setRepeatCount(0);
         mEnterAnimator.setDuration(START_ANIM_DURATION);
-        mEnterAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mHeightPercent = (float) animation.getAnimatedValue();
-                postInvalidateOnAnimation();
-            }
+        mEnterAnimator.addUpdateListener(animation -> {
+            mHeightPercent = (float) animation.getAnimatedValue();
+            postInvalidateOnAnimation();
         });
         mEnterAnimator.start();
     }
@@ -296,6 +294,7 @@ public class RecordChart extends View implements BaseChart {
         return true;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -319,13 +318,10 @@ public class RecordChart extends View implements BaseChart {
         mAnimator = ValueAnimator.ofFloat(mExcursion, mExcursion - centerX + mWidth / 2);
         mAnimator.setDuration(300);
         mAnimator.setRepeatCount(0);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mExcursion = (float) animation.getAnimatedValue();
+        mAnimator.addUpdateListener(animation -> {
+            mExcursion = (float) animation.getAnimatedValue();
 
-                postInvalidateOnAnimation();
-            }
+            postInvalidateOnAnimation();
         });
         mShouldEnd = true;
         mAnimator.start();

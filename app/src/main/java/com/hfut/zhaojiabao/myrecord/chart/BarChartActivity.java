@@ -24,7 +24,7 @@ public class BarChartActivity extends AppCompatActivity {
         ValueTransfer
                 .getDayRecords()
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(dayRecords -> provideData(dayRecords));
+                .subscribe(this::provideData);
     }
 
     private void provideData(List<DayRecord> dayRecords) {

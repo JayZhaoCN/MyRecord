@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.User;
-import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
@@ -84,36 +83,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .setCancelable(false)
                 .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> dialog.dismiss())
                 .setRightTextVisible(true)
                 .setRightText(R.string.confirm)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        float budget = 0;
-                        try {
-                            budget = Float.valueOf(editText.getText().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        //输入有误(0或非数字)
-                        if (budget == 0) {
-                            ToastUtil.showToast(getString(R.string.budget_cannot_be_zero), Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            return;
-                        }
-                        User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
-                        user.setBudget(budget);
-                        JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
-                        EventBus.getDefault().post(new BudgetChangedEvent());
-                        dialog.dismiss();
-                        updateItemSummary();
+                .setRightListener(v -> {
+                    float budget = 0;
+                    try {
+                        budget = Float.valueOf(editText.getText().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                    //输入有误(0或非数字)
+                    if (budget == 0) {
+                        ToastUtil.showToast(getString(R.string.budget_cannot_be_zero), Toast.LENGTH_SHORT);
+                        dialog.dismiss();
+                        return;
+                    }
+                    User user = JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0);
+                    user.setBudget(budget);
+                    JayDaoManager.getInstance().getDaoSession().getUserDao().insertOrReplace(user);
+                    EventBus.getDefault().post(new BudgetChangedEvent());
+                    dialog.dismiss();
+                    updateItemSummary();
                 })
                 .setContent(editText);
         dialog.setBuilder(builder);

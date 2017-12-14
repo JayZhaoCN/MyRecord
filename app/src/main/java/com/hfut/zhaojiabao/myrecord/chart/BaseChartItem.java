@@ -8,7 +8,7 @@ public abstract class BaseChartItem {
     public String text;
     public float value;
 
-    public BaseChartItem(String text, float value) {
+    BaseChartItem(String text, float value) {
         this.text = text;
         this.value = value;
     }

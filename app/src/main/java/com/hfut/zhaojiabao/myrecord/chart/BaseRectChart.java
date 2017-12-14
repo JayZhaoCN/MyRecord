@@ -137,67 +137,64 @@ public abstract class BaseRectChart extends View {
     }
 
     public void setBuilder(final Builder builder) {
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                mBuilder = builder;
-                mHeight = mRealHeight - mBuilder.mTopBlank - mBuilder.mBottomBlank;
+        this.post(() -> {
+            mBuilder = builder;
+            mHeight = mRealHeight - mBuilder.mTopBlank - mBuilder.mBottomBlank;
 
-                DataProvider dataProvider = mBuilder.dataProvider;
+            DataProvider dataProvider = mBuilder.dataProvider;
 
-                //初始化y轴刻度点
-                if (dataProvider.yScaleNum > 0) {
-                    dataProvider.yScaleHeights = new ArrayList<>();
-                    for (int i = 0; i < dataProvider.yScaleNum; i++) {
-                        dataProvider.yScaleHeights.add(mHeight - mHeight / (float) (dataProvider.yScaleNum + 1) * (i + 1));
-                    }
-
-                    float max = Float.MIN_VALUE;
-                    for (String yText : dataProvider.yScaleTexts) {
-                        float width = mScalePaint.measureText(yText, 0, yText.length());
-                        if (width > max) {
-                            max = width;
-                        }
-                    }
-
-                    //加10是为了两边空出一点距离
-                    mBuilder.mLeftBlank = (int) max + 10;
+            //初始化y轴刻度点
+            if (dataProvider.yScaleNum > 0) {
+                dataProvider.yScaleHeights = new ArrayList<>();
+                for (int i = 0; i < dataProvider.yScaleNum; i++) {
+                    dataProvider.yScaleHeights.add(mHeight - mHeight / (float) (dataProvider.yScaleNum + 1) * (i + 1));
                 }
 
-                mWidth = mRealWidth - mBuilder.mLeftBlank - mBuilder.mRightBlank;
-
-                //初始化轴线样式
-                if (mBuilder.axisStyle != null) {
-                    mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    mAxisPaint.setColor(mBuilder.axisStyle.color);
-                    mAxisPaint.setStrokeWidth(mBuilder.axisStyle.width);
-                    mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
-                }
-
-                //初始化数据点
-                float xAxisInterval;
-                if (mBuilder.mChartType == Builder.CURVE_CHART) {
-                    xAxisInterval = mWidth / (float) (dataProvider.data.size() - 1);
-
-                    dataProvider.mPoints = new ArrayList<>();
-                    for (int i = 0; i < dataProvider.data.size(); i++) {
-                        float data = dataProvider.data.get(i);
-                        dataProvider.mPoints.add(new PointF(xAxisInterval * i,
-                                mHeight - data / dataProvider.mMaxValue * mHeight));
-                    }
-                } else {
-                    xAxisInterval = mWidth / (float) dataProvider.data.size();
-
-                    dataProvider.mPoints = new ArrayList<>();
-                    for (int i = 0; i < dataProvider.data.size(); i++) {
-                        float data = dataProvider.data.get(i);
-                        dataProvider.mPoints.add(new PointF(xAxisInterval * i + xAxisInterval / 2,
-                                mHeight - data / dataProvider.mMaxValue * mHeight));
+                float max = Float.MIN_VALUE;
+                for (String yText : dataProvider.yScaleTexts) {
+                    float width = mScalePaint.measureText(yText, 0, yText.length());
+                    if (width > max) {
+                        max = width;
                     }
                 }
 
-                invalidate();
+                //加10是为了两边空出一点距离
+                mBuilder.mLeftBlank = (int) max + 10;
             }
+
+            mWidth = mRealWidth - mBuilder.mLeftBlank - mBuilder.mRightBlank;
+
+            //初始化轴线样式
+            if (mBuilder.axisStyle != null) {
+                mAxisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mAxisPaint.setColor(mBuilder.axisStyle.color);
+                mAxisPaint.setStrokeWidth(mBuilder.axisStyle.width);
+                mAxisPaint.setStrokeCap(Paint.Cap.ROUND);
+            }
+
+            //初始化数据点
+            float xAxisInterval;
+            if (mBuilder.mChartType == Builder.CURVE_CHART) {
+                xAxisInterval = mWidth / (float) (dataProvider.data.size() - 1);
+
+                dataProvider.mPoints = new ArrayList<>();
+                for (int i = 0; i < dataProvider.data.size(); i++) {
+                    float data = dataProvider.data.get(i);
+                    dataProvider.mPoints.add(new PointF(xAxisInterval * i,
+                            mHeight - data / dataProvider.mMaxValue * mHeight));
+                }
+            } else {
+                xAxisInterval = mWidth / (float) dataProvider.data.size();
+
+                dataProvider.mPoints = new ArrayList<>();
+                for (int i = 0; i < dataProvider.data.size(); i++) {
+                    float data = dataProvider.data.get(i);
+                    dataProvider.mPoints.add(new PointF(xAxisInterval * i + xAxisInterval / 2,
+                            mHeight - data / dataProvider.mMaxValue * mHeight));
+                }
+            }
+
+            invalidate();
         });
     }
 }

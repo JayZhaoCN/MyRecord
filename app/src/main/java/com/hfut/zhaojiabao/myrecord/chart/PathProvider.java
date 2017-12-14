@@ -55,7 +55,7 @@ public class PathProvider {
     /**
      * 该方法提供的Path是有极值点的
      */
-    public static Path provideBezierPathNew(List<PointF> points, float s) {
+    static Path provideBezierPathNew(List<PointF> points, float s) {
         if (points.size() <= 1) {
             return null;
         }

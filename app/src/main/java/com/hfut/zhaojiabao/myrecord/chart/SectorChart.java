@@ -103,12 +103,9 @@ public class SectorChart extends View implements BaseChart {
     private void initAnim() {
         clearAnim();
         mAnimator = ValueAnimator.ofFloat(0, 1);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mAnimPercent = (float) animation.getAnimatedValue();
-                postInvalidateOnAnimation();
-            }
+        mAnimator.addUpdateListener(animation -> {
+            mAnimPercent = (float) animation.getAnimatedValue();
+            postInvalidateOnAnimation();
         });
         mAnimator.setRepeatCount(0);
         mAnimator.setDuration(START_ANIM_DURATION);
@@ -143,12 +140,13 @@ public class SectorChart extends View implements BaseChart {
         float angle = 0;
         public float percent = 0;
 
+        @SuppressWarnings("unused")
         public SectorChartItem(String text, float value, float angle) {
             super(text, value);
             this.angle = angle;
         }
 
-        public SectorChartItem(String text, float percent) {
+        SectorChartItem(String text, float percent) {
             super(text, percent);
         }
     }

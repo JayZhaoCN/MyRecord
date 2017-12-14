@@ -11,6 +11,7 @@ import android.util.AttributeSet;
  * @author zhaojiabao 2017/9/19
  */
 
+@SuppressWarnings("unused")
 public class TestChart extends BaseRectChart {
 
     Paint mPaint;
@@ -32,11 +33,12 @@ public class TestChart extends BaseRectChart {
 
     @Override
     public void drawInner(Canvas canvas) {
+        super.drawInner(canvas);
         canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
     }
 
     @Override
     public void drawOuter(Canvas canvas) {
-
+        super.drawOuter(canvas);
     }
 }
