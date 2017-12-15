@@ -68,6 +68,8 @@
         </activity>
         <activity android:name=".chart.BarChartActivity">
         </activity>
+
+        <service android:name=".services.JayService"/>
     </application>
 
 </manifest>

@@ -14,6 +14,4 @@ public class RxUtils {
                 upstream.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
     }
-
-
 }

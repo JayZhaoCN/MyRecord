@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -9,6 +10,7 @@ import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
+import com.hfut.zhaojiabao.myrecord.services.JayService;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
@@ -37,6 +39,15 @@ public class JayApp extends Application {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+
+        initService();
+    }
+
+    /**
+     * 启动服务
+     */
+    public static void initService() {
+        sInstance.startService(new Intent(sInstance, JayService.class));
     }
 
     /**
