@@ -10,6 +10,8 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "$rootProject.ext.weatherKey.name", "\"$rootProject.ext.weatherKey.value\""
     }
     buildTypes {
         release {

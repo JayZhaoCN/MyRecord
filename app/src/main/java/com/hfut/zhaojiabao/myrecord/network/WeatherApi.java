@@ -3,6 +3,9 @@ package com.hfut.zhaojiabao.myrecord.network;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.hfut.zhaojiabao.myrecord.BuildConfig;
+import com.hfut.zhaojiabao.myrecord.network.weather_entities.ForecastWeatherEntity;
+import com.hfut.zhaojiabao.myrecord.network.weather_entities.RealTimeWeatherEntity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,13 +26,13 @@ public class WeatherApi {
      * 预报天气URL
      */
     private static final String FORECAST_WEATHER_URL
-            = "https://free-api.heweather.com/s6/weather/forecast?parameters&location={cityName}&key=b683fba23dac44b9881a1eada1d2c064";
+            = "https://free-api.heweather.com/s6/weather/forecast?parameters&location={cityName}&";
 
     /**
      * 实况天气URL
      */
     private static final String REAL_TIME_WEATHER_URL
-            = "https://free-api.heweather.com/s6/weather/now?parameters&location={cityName}&key=b683fba23dac44b9881a1eada1d2c064";
+            = "https://free-api.heweather.com/s6/weather/now?parameters&location={cityName}&";
 
     private static OkHttpClient sClient;
 
@@ -45,14 +48,23 @@ public class WeatherApi {
         return Holder.sInstance;
     }
 
+    private static String realTimeWeatherUrl(String cityName) {
+        return REAL_TIME_WEATHER_URL.replace("{cityName}", cityName) + BuildConfig.weatherKey;
+    }
+
+    private static String forecastWeatherUrl(String cityName) {
+        return FORECAST_WEATHER_URL.replace("{cityName}", cityName) + BuildConfig.weatherKey;
+    }
+
     /**
      * get forecast weather.
      */
+    @SuppressWarnings("unused")
     public Observable<ForecastWeatherEntity> getForecastWeather(String cityName) {
         return Observable
                 .create(e -> {
                     Request request = new Request.Builder()
-                            .url(FORECAST_WEATHER_URL.replace("{cityName}", cityName))
+                            .url(forecastWeatherUrl(cityName))
                             .build();
 
                     Response response = sClient.newCall(request).execute();
@@ -71,7 +83,6 @@ public class WeatherApi {
                         e.onComplete();
                     } else {
                         e.onError(null);
-
                     }
                 });
     }
@@ -83,7 +94,7 @@ public class WeatherApi {
         return Observable
                 .create(e -> {
                     Request request = new Request.Builder()
-                            .url(REAL_TIME_WEATHER_URL.replace("{cityName}", cityName))
+                            .url(realTimeWeatherUrl(cityName))
                             .build();
 
                     Response response = sClient.newCall(request).execute();
@@ -106,6 +117,4 @@ public class WeatherApi {
                     }
                 });
     }
-
-
 }
