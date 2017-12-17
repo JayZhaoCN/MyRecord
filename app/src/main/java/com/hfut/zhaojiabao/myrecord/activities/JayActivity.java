@@ -44,7 +44,9 @@ import com.hfut.zhaojiabao.myrecord.events.TestEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
+import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
@@ -191,6 +193,25 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         registerRxBus();
 
         testFromCallable();
+        testWeather();
+
+    }
+
+    private void testWeather() {
+        WeatherApi
+                .getInstance()
+                .getRealTimeWeather("唐山")
+                .compose(RxUtils.ioToMain())
+                .subscribe(weatherEntity -> {
+                            Log.i(TAG, "responseBody: " + weatherEntity.now.cloud);
+                        },
+                        throwable -> {
+                            Log.e(TAG, "some error happened.");
+                            if (throwable != null) {
+                                throwable.printStackTrace();
+                            }
+                        });
+
     }
 
     private void testFromCallable() {
