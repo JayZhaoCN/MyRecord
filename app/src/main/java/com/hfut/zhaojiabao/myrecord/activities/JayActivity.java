@@ -189,6 +189,20 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         EventBus.getDefault().registerSticky(this);
 
         registerRxBus();
+
+        testFromCallable();
+    }
+
+    private void testFromCallable() {
+        Observable
+                .fromCallable(() -> {
+                    //TODO 很明显, 这段代码在主线程中执行, 而不是子线程
+                    System.out.println("JayLog, fromCallable thread: " + Thread.currentThread());
+                    return "fromCallable";
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     @Override
