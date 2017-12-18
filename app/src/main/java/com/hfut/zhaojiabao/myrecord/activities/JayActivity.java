@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
@@ -45,12 +47,15 @@ import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
+import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
+import com.hfut.zhaojiabao.myrecord.weather_db.City;
+import com.hfut.zhaojiabao.myrecord.weather_db.Province;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -195,6 +200,23 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         testFromCallable();
         testWeather();
 
+        /*List<Province> provinces = CityDBManager.getInstance().getProvinces();
+        if (provinces != null) {
+            for (Province province : provinces) {
+                System.out.println("JayLog, province: " + province);
+            }
+        } else {
+            System.out.println("JayLog, province is null.");
+        }*/
+
+        List<City> cities = CityDBManager.getInstance().getCities(12);
+        if (cities != null) {
+            for (City city : cities) {
+                System.out.println("JayLog, city: " + city);
+            }
+        } else {
+            System.out.println("JayLog, city is null.");
+        }
     }
 
     private void testWeather() {
@@ -284,6 +306,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
             mCompositeDisposable.clear();
         }
+        CityDBManager.getInstance().closeDatabase();
     }
 
     private void initTime() {

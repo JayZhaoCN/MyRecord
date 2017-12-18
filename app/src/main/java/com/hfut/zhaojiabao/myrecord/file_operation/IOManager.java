@@ -7,6 +7,7 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
@@ -191,7 +192,7 @@ public class IOManager {
     private static List<File> traverseFileInternal() {
         List<File> files = new ArrayList<>();
 
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + IOUtils.BACKUP_FOLDER_NAME);
+        File file = IOUtils.getAppExternalDir(JayApp.getInstance(), IOUtils.BACKUP_FOLDER_NAME);
         if (!file.exists()) {
             Log.i(TAG, "file not exist, return.");
             return files;

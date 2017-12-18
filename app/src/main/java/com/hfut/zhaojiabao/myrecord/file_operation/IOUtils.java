@@ -20,11 +20,12 @@ import java.io.FileOutputStream;
 public class IOUtils {
     private static final String TAG = "IOUtils";
 
-    static final String BACKUP_FOLDER_NAME = "jay_backups";
+    public static final String BACKUP_FOLDER_NAME = "jay_backups";
     private static final String RECORD_FILE_SUFFIX_NAME = ".jay";
     public static final String CAPTURE_IMG_FOLDER_NAME = "jay_capture";
     private static final String CROP_IMG_SUFFIX_NAME = ".png";
     private static final String AVATAR_IMG_FOLDER_NAME = "jay_avatar";
+    public static final String DATABASE_FOLDER_NAME = "jay_database";
 
     //备份路径为外部存储应用私有目录下
     //
