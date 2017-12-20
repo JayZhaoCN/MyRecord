@@ -26,13 +26,13 @@ public class WeatherApi {
      * 预报天气URL
      */
     private static final String FORECAST_WEATHER_URL
-            = "https://free-api.heweather.com/s6/weather/forecast?parameters&location={cityName}&";
+            = "https://free-api.heweather.com/s6/weather/forecast?parameters&location={cityName}&key=";
 
     /**
      * 实况天气URL
      */
     private static final String REAL_TIME_WEATHER_URL
-            = "https://free-api.heweather.com/s6/weather/now?parameters&location={cityName}&";
+            = "https://free-api.heweather.com/s6/weather/now?parameters&location={cityName}&key=";
 
     private static OkHttpClient sClient;
 

@@ -222,7 +222,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     private void testWeather() {
         WeatherApi
                 .getInstance()
-                .getRealTimeWeather("唐山")
+                .getRealTimeWeather("合肥")
                 .compose(RxUtils.ioToMain())
                 .subscribe(weatherEntity -> {
                             Log.i(TAG, "responseBody: " + weatherEntity.now.cloud);
