@@ -10,7 +10,7 @@ import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.JayLoadingDialog;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
-import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
@@ -38,7 +38,7 @@ public class BackupActivity extends AppCompatActivity {
         startBackupBtn.setOnClickListener(v ->
                 mDisposable = IOManager
                         .backupFile()
-                        .compose(RxUtils.ioToMain())
+                        .compose(RxUtil.ioToMain())
                         .doOnSubscribe(disposable -> {
                             mDialog.setCancelable(false);
                             mDialog.showLoading(getString(R.string.back_uping));

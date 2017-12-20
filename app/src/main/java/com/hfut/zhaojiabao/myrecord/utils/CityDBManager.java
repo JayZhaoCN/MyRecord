@@ -87,6 +87,9 @@ public class CityDBManager {
             Log.i(TAG, "database null");
             return null;
         }
+        if (!mDatabase.isOpen()) {
+            mDatabase = initDatabase();
+        }
         Cursor cursor = mDatabase.query(TABLE_PROVINCE, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             List<Province> provinces = new ArrayList<>();
@@ -107,6 +110,9 @@ public class CityDBManager {
         if (mDatabase == null) {
             Log.i(TAG, "database null.");
             return null;
+        }
+        if (!mDatabase.isOpen()) {
+            mDatabase = initDatabase();
         }
         Cursor cursor = mDatabase.query(TABLE_CITY, null, COLUMN_PRO_ID + " = ?", new String[]{String.valueOf(proId)}, null, null, null);
         if (cursor.moveToFirst()) {

@@ -8,7 +8,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author zhaojiabao (zhaojiabao@huami.com)
  */
 
-public class RxUtils {
+public class RxUtil {
     public static <T> ObservableTransformer<T, T> ioToMain() {
         return upstream ->
                 upstream.subscribeOn(Schedulers.io())

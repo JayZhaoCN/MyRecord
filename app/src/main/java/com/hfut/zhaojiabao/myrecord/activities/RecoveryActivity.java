@@ -16,7 +16,7 @@ import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
-import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 
 import java.io.File;
@@ -75,7 +75,7 @@ public class RecoveryActivity extends AppCompatActivity {
             holder.recoveryTv.setOnClickListener(v ->
                     mCompositeDisposable.add(
                             IOManager.recoveryData(file.getPath())
-                                    .compose(RxUtils.ioToMain())
+                                    .compose(RxUtil.ioToMain())
                                     .subscribeWith(new DisposableObserver<Void>() {
                                         @Override
                                         public void onNext(Void value) {

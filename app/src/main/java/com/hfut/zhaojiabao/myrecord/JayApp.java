@@ -11,6 +11,7 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.services.JayService;
+import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class JayApp extends Application {
         }
 
         initService();
+        JayKeeper.init(this);
     }
 
     /**

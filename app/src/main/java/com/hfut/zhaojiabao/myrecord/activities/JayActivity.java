@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
-import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
@@ -39,6 +37,7 @@ import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.events.CityChangedEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RxBus;
@@ -48,14 +47,14 @@ import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
 import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
+import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
-import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
 import com.hfut.zhaojiabao.myrecord.weather_db.City;
-import com.hfut.zhaojiabao.myrecord.weather_db.Province;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -169,6 +168,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
     private CircleImageView mUserIcon;
     private TextView mUserNameTv;
+    private TextView mWeatherTv;
 
     private List<Record> mList;
     private String mDefaultCategory;
@@ -197,8 +197,8 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
         registerRxBus();
 
-        testFromCallable();
-        testWeather();
+        /*testFromCallable();
+        testWeather();*/
 
         /*List<Province> provinces = CityDBManager.getInstance().getProvinces();
         if (provinces != null) {
@@ -223,7 +223,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         WeatherApi
                 .getInstance()
                 .getRealTimeWeather("合肥")
-                .compose(RxUtils.ioToMain())
+                .compose(RxUtil.ioToMain())
                 .subscribe(weatherEntity -> {
                             Log.i(TAG, "responseBody: " + weatherEntity.now.cloud);
                         },
@@ -263,6 +263,21 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(TestEvent.class)
                 .subscribe(testEvent -> System.out.println("JayLog, " + testEvent.str)));
+
+        mCompositeDisposable.add(RxBus.getDefault()
+                .toObserver(CityChangedEvent.class)
+                .subscribe(cityChangedEvent -> WeatherApi.getInstance().getRealTimeWeather(cityChangedEvent.cityName)
+                        .compose(RxUtil.ioToMain())
+                        .subscribe(weatherEntity -> mWeatherTv.setText(
+                                String.format("%s, %s, %s℃",
+                                        weatherEntity.basic.location,
+                                        weatherEntity.now.condTxt,
+                                        weatherEntity.now.tmp)),
+                                throwable -> {
+                                    if (throwable != null) {
+                                        throwable.printStackTrace();
+                                    }
+                                })));
 
         RxBus.getDefault().post(new TestEvent("zhaojiabao"));
     }
@@ -630,6 +645,18 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
             mUserIcon.setImageBitmap(bitmap);
         }
+
+        mWeatherTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.weather_tv);
+        WeatherApi.getInstance().getRealTimeWeather(JayKeeper.getCity())
+                .compose(RxUtil.ioToMain())
+                .subscribe(weatherEntity -> mWeatherTv.setText(
+                        String.format("%s, %s, %s℃", weatherEntity.basic.location, weatherEntity.now.condTxt, weatherEntity.now.tmp)),
+                        throwable -> {
+                            if (throwable != null) {
+                                throwable.printStackTrace();
+                            }
+                        });
+        mWeatherTv.setOnClickListener(v -> startActivity(new Intent(JayActivity.this, SelectCityActivity.class)));
 
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);
         mUserNameTv.setText(JayDaoManager.getInstance().getDaoSession().getUserDao().loadAll().get(0).getUserName());

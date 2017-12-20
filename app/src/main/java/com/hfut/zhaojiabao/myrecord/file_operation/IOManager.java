@@ -1,6 +1,5 @@
 package com.hfut.zhaojiabao.myrecord.file_operation;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.hfut.zhaojiabao.JayDaoManager;
@@ -11,7 +10,7 @@ import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
-import com.hfut.zhaojiabao.myrecord.utils.RxUtils;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -181,7 +180,7 @@ public class IOManager {
                     List<File> files = traverseFileInternal();
                     e.onNext(files);
                 })
-                .compose(RxUtils.ioToMain())
+                .compose(RxUtil.ioToMain())
                 .subscribe(consumer);
     }
 
