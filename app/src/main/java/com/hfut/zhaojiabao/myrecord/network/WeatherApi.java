@@ -93,6 +93,7 @@ public class WeatherApi {
     public Observable<RealTimeWeatherEntity> getRealTimeWeather(String cityName) {
         return Observable
                 .create(e -> {
+                    Log.i("JayLog", "thread 1: " + Thread.currentThread());
                     Request request = new Request.Builder()
                             .url(realTimeWeatherUrl(cityName))
                             .build();

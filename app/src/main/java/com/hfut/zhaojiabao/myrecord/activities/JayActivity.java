@@ -41,11 +41,11 @@ import com.hfut.zhaojiabao.myrecord.events.CityChangedEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.events.RxBus;
-import com.hfut.zhaojiabao.myrecord.events.TestEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOUtils;
 import com.hfut.zhaojiabao.myrecord.greendao.RecordDao;
 import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
+import com.hfut.zhaojiabao.myrecord.network.weather_entities.RealTimeWeatherEntity;
 import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
 import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
@@ -54,7 +54,6 @@ import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
-import com.hfut.zhaojiabao.myrecord.weather_db.City;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -181,6 +180,8 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
 
     private JayDialogManager mRecordManager;
 
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,62 +191,16 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         loadRecords();
         initUI();
         initTime();
-        //请求读取存储权限
 
+        //请求读取存储权限
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
         EventBus.getDefault().registerSticky(this);
 
         registerRxBus();
 
-        /*testFromCallable();
-        testWeather();*/
-
-        /*List<Province> provinces = CityDBManager.getInstance().getProvinces();
-        if (provinces != null) {
-            for (Province province : provinces) {
-                System.out.println("JayLog, province: " + province);
-            }
-        } else {
-            System.out.println("JayLog, province is null.");
-        }*/
-
-        List<City> cities = CityDBManager.getInstance().getCities(12);
-        if (cities != null) {
-            for (City city : cities) {
-                System.out.println("JayLog, city: " + city);
-            }
-        } else {
-            System.out.println("JayLog, city is null.");
-        }
-    }
-
-    private void testWeather() {
-        WeatherApi
-                .getInstance()
-                .getRealTimeWeather("合肥")
-                .compose(RxUtil.ioToMain())
-                .subscribe(weatherEntity -> {
-                            Log.i(TAG, "responseBody: " + weatherEntity.now.cloud);
-                        },
-                        throwable -> {
-                            Log.e(TAG, "some error happened.");
-                            if (throwable != null) {
-                                throwable.printStackTrace();
-                            }
-                        });
-
-    }
-
-    private void testFromCallable() {
-        Observable
-                .fromCallable(() -> {
-                    //TODO 很明显, 这段代码在主线程中执行, 而不是子线程
-                    System.out.println("JayLog, fromCallable thread: " + Thread.currentThread());
-                    return "fromCallable";
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+        RxUtil.runOnMainThread(() -> {
+            Log.i("JayLog", "thread: " + Thread.currentThread());
+        });
     }
 
     @Override
@@ -257,13 +212,11 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         }
     }
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
+    /**
+     * 注册RxBus
+     */
     private void registerRxBus() {
-        mCompositeDisposable.add(RxBus.getDefault()
-                .toObserver(TestEvent.class)
-                .subscribe(testEvent -> System.out.println("JayLog, " + testEvent.str)));
-
+        //city change event
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(CityChangedEvent.class)
                 .subscribe(cityChangedEvent -> WeatherApi.getInstance().getRealTimeWeather(cityChangedEvent.cityName)
@@ -278,8 +231,16 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                                         throwable.printStackTrace();
                                     }
                                 })));
-
-        RxBus.getDefault().post(new TestEvent("zhaojiabao"));
+        //weather update event
+        mCompositeDisposable.add(RxBus.getDefault()
+                .toObserver(RealTimeWeatherEntity.class)
+                .subscribe(realTimeWeatherEntity -> {
+                    String weatherDescription = String.format("%s, %s, %s℃",
+                            realTimeWeatherEntity.basic.location,
+                            realTimeWeatherEntity.now.condTxt,
+                            realTimeWeatherEntity.now.tmp);
+                    mWeatherTv.setText(weatherDescription);
+                }));
     }
 
     @SuppressWarnings("unused")

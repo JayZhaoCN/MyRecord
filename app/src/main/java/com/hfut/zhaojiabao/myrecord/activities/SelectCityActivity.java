@@ -1,7 +1,6 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -50,7 +49,7 @@ public class SelectCityActivity extends AppCompatActivity {
     private void initList() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CityAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
         queryProvinces();
     }
 
@@ -82,13 +81,19 @@ public class SelectCityActivity extends AppCompatActivity {
     private static class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
         private List<CityItem> data;
         private Activity activity;
+        private RecyclerView recyclerView;
 
         enum LEVEL {PROVINCE, CITY}
 
         private LEVEL level = LEVEL.PROVINCE;
 
-        public CityAdapter(Activity activity) {
+        CityAdapter(Activity activity) {
             this.activity = activity;
+        }
+
+        void bindToRecyclerView(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+            this.recyclerView.setAdapter(this);
         }
 
         LEVEL getLevel() {
@@ -114,7 +119,7 @@ public class SelectCityActivity extends AppCompatActivity {
             holder.cityCard.setOnClickListener(v -> {
                 if (level == LEVEL.PROVINCE) {
                     queryCities(data.get(position).cityId);
-                } else {
+                } else if (level == LEVEL.CITY) {
                     JayKeeper.setCity(data.get(position).cityName);
                     RxBus.getDefault().post(new CityChangedEvent(data.get(position).cityName));
                     activity.finish();
@@ -164,6 +169,7 @@ public class SelectCityActivity extends AppCompatActivity {
                         setData(cityItems);
                         setLevel(LEVEL.CITY);
                         notifyDataSetChanged();
+                        recyclerView.smoothScrollToPosition(0);
                     }, throwable -> {
                     });
         }

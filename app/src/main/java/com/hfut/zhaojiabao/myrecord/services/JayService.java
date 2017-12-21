@@ -6,6 +6,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.hfut.zhaojiabao.myrecord.events.RxBus;
+import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
+import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
+import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -17,8 +22,10 @@ import io.reactivex.disposables.Disposable;
 
 public class JayService extends Service {
     private static final String TAG = "JayService";
-    /** unit: second*/
-    private static final int HEARTBEAT_INTERVAL = 10;
+    /**
+     * unit: second
+     */
+    private static final int WEATHER_UPDATE_INTERVAL = 60 * 60;
 
     private JayBinder mBinder = new JayBinder();
 
@@ -40,17 +47,21 @@ public class JayService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //TODO onStartCommand()难道不是运行在主线程的?
         Log.i(TAG, "onStartCommand, Thread: " + Thread.currentThread());
-        startCount();
+        initWeatherUpdate();
         return START_REDELIVER_INTENT;
     }
 
-    private void startCount() {
+    private void initWeatherUpdate() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
         }
         //interval()默认使用Schedulers.computation().
-        mDisposable = Observable.interval(HEARTBEAT_INTERVAL, TimeUnit.SECONDS)
-                .subscribe(aLong -> Log.i(TAG, "I'm still alive: " + aLong));
+        mDisposable = Observable.interval(WEATHER_UPDATE_INTERVAL, TimeUnit.SECONDS)
+                .subscribe(aLong -> WeatherApi.getInstance()
+                        .getRealTimeWeather(JayKeeper.getCity())
+                        .compose(RxUtil.ioToMain())
+                        .subscribe(realTimeWeatherEntity -> RxBus.getDefault().post(realTimeWeatherEntity), throwable -> {
+                        }));
     }
 
     @Override
