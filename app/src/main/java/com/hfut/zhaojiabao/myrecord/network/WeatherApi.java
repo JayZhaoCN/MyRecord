@@ -61,61 +61,46 @@ public class WeatherApi {
      */
     @SuppressWarnings("unused")
     public Observable<ForecastWeatherEntity> getForecastWeather(String cityName) {
-        return Observable
-                .create(e -> {
-                    Request request = new Request.Builder()
-                            .url(forecastWeatherUrl(cityName))
-                            .build();
+        return Observable.fromCallable(() -> {
+            Request request = new Request.Builder()
+                    .url(forecastWeatherUrl(cityName))
+                    .build();
 
-                    Response response = sClient.newCall(request).execute();
-                    ResponseBody responseBody = response.body();
-                    if (!response.isSuccessful()) {
-                        e.onError(null);
-                        return;
-                    }
-                    if (responseBody != null) {
-                        String item = responseBody.string();
-                        Log.i(TAG, "forecast weather: " + item);
-                        Gson gson = new Gson();
-                        JSONArray jsonArray = new JSONObject(item).getJSONArray("HeWeather6");
-                        ForecastWeatherEntity forecastWeatherEntity = gson.fromJson(jsonArray.getJSONObject(0).toString(), ForecastWeatherEntity.class);
-                        e.onNext(forecastWeatherEntity);
-                        e.onComplete();
-                    } else {
-                        e.onError(null);
-                    }
-                });
+            Response response = sClient.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                return null;
+            }
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                return null;
+            }
+            String item = responseBody.string();
+            Log.i(TAG, "forecast weather: " + item);
+            Gson gson = new Gson();
+            JSONArray jsonArray = new JSONObject(item).getJSONArray("HeWeather6");
+            return gson.fromJson(jsonArray.getJSONObject(0).toString(), ForecastWeatherEntity.class);
+        });
     }
 
-    /**
-     * get realTime weather.
-     */
-    public Observable<RealTimeWeatherEntity> getRealTimeWeather(String cityName) {
-        return Observable
-                .create(e -> {
-                    Log.i("JayLog", "thread 1: " + Thread.currentThread());
-                    Request request = new Request.Builder()
-                            .url(realTimeWeatherUrl(cityName))
-                            .build();
+    public Observable<RealTimeWeatherEntity> getRealTimeWeatherNew(String cityName) {
+        return Observable.fromCallable(() -> {
+            Request request = new Request.Builder()
+                    .url(realTimeWeatherUrl(cityName))
+                    .build();
 
-                    Response response = sClient.newCall(request).execute();
-                    ResponseBody responseBody = response.body();
-                    if (!response.isSuccessful()) {
-                        e.onError(null);
-                        return;
-                    }
-                    if (responseBody != null) {
-                        String item = responseBody.string();
-                        Log.i(TAG, "realTime weather: " + item);
-                        Gson gson = new Gson();
-                        JSONArray jsonArray = new JSONObject(item).getJSONArray("HeWeather6");
-                        RealTimeWeatherEntity forecastWeatherEntity
-                                = gson.fromJson(jsonArray.getJSONObject(0).toString(), RealTimeWeatherEntity.class);
-                        e.onNext(forecastWeatherEntity);
-                        e.onComplete();
-                    } else {
-                        e.onError(null);
-                    }
-                });
+            Response response = sClient.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                return null;
+            }
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                return null;
+            }
+            String item = responseBody.string();
+            Log.i(TAG, "realTime weather: " + item);
+            Gson gson = new Gson();
+            JSONArray jsonArray = new JSONObject(item).getJSONArray("HeWeather6");
+            return gson.fromJson(jsonArray.getJSONObject(0).toString(), RealTimeWeatherEntity.class);
+        });
     }
 }

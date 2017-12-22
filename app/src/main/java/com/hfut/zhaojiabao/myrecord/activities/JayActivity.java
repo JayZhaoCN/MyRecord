@@ -219,18 +219,13 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         //city change event
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(CityChangedEvent.class)
-                .subscribe(cityChangedEvent -> WeatherApi.getInstance().getRealTimeWeather(cityChangedEvent.cityName)
+                .subscribe(cityChangedEvent -> WeatherApi.getInstance().getRealTimeWeatherNew(cityChangedEvent.cityName)
                         .compose(RxUtil.ioToMain())
-                        .subscribe(weatherEntity -> mWeatherTv.setText(
-                                String.format("%s, %s, %s℃",
-                                        weatherEntity.basic.location,
-                                        weatherEntity.now.condTxt,
-                                        weatherEntity.now.tmp)),
-                                throwable -> {
-                                    if (throwable != null) {
-                                        throwable.printStackTrace();
-                                    }
-                                })));
+                        .subscribe(weatherEntity -> mWeatherTv.setText(String.format("%s, %s, %s℃",
+                                weatherEntity.basic.location,
+                                weatherEntity.now.condTxt,
+                                weatherEntity.now.tmp)),
+                                Throwable::printStackTrace)));
         //weather update event
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(RealTimeWeatherEntity.class)
@@ -608,15 +603,13 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         }
 
         mWeatherTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.weather_tv);
-        WeatherApi.getInstance().getRealTimeWeather(JayKeeper.getCity())
+        WeatherApi.getInstance()
+                .getRealTimeWeatherNew(JayKeeper.getCity())
                 .compose(RxUtil.ioToMain())
                 .subscribe(weatherEntity -> mWeatherTv.setText(
                         String.format("%s, %s, %s℃", weatherEntity.basic.location, weatherEntity.now.condTxt, weatherEntity.now.tmp)),
-                        throwable -> {
-                            if (throwable != null) {
-                                throwable.printStackTrace();
-                            }
-                        });
+                        Throwable::printStackTrace);
+
         mWeatherTv.setOnClickListener(v -> startActivity(new Intent(JayActivity.this, SelectCityActivity.class)));
 
         mUserNameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name_tv);

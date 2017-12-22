@@ -58,10 +58,10 @@ public class JayService extends Service {
         //interval()默认使用Schedulers.computation().
         mDisposable = Observable.interval(WEATHER_UPDATE_INTERVAL, TimeUnit.SECONDS)
                 .subscribe(aLong -> WeatherApi.getInstance()
-                        .getRealTimeWeather(JayKeeper.getCity())
+                        .getRealTimeWeatherNew(JayKeeper.getCity())
                         .compose(RxUtil.ioToMain())
-                        .subscribe(realTimeWeatherEntity -> RxBus.getDefault().post(realTimeWeatherEntity), throwable -> {
-                        }));
+                        .subscribe(realTimeWeatherEntity -> RxBus.getDefault().post(realTimeWeatherEntity),
+                                Throwable::printStackTrace));
     }
 
     @Override
