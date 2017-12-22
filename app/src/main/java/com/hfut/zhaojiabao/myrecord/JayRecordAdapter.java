@@ -72,51 +72,23 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
 
         holder.typeDot.setColor(getCategoryColor(mContext, record.getCategory()));
 
-        holder.titleTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecordManager.editSum(holder.getAdapterPosition(), record);
-            }
-        });
+        holder.titleTV.setOnClickListener(v -> mRecordManager.editSum(holder.getAdapterPosition(), record));
 
-        holder.remarkTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecordManager.editRemark(holder.getAdapterPosition(), record);
-            }
-        });
+        holder.remarkTv.setOnClickListener(v -> mRecordManager.editRemark(holder.getAdapterPosition(), record));
 
         holder.incomeDot.setColor(ContextCompat.getColor(mContext, record.getIncome() ? R.color.colorAccent : R.color.mint));
 
-        holder.deleteImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeleteConfirmDialog(record);
-            }
-        });
+        holder.deleteImg.setOnClickListener(v -> showDeleteConfirmDialog(record));
 
-        holder.incomeContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecordManager.editType(record, holder.getAdapterPosition());
-            }
-        });
+        holder.incomeContainer.setOnClickListener(v -> mRecordManager.editType(record, holder.getAdapterPosition()));
 
-        holder.typeContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecordManager.showManageCategoryDialog(new JayDialogManager.OnCategorySelectedListener() {
-                    @Override
-                    public void onSelect(String category) {
-                        record.setCategory(category);
-                        JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
-                        mList.remove(holder.getAdapterPosition());
-                        mList.add(holder.getAdapterPosition(), record);
-                        notifyDataSetChanged();
-                    }
-                });
-            }
-        });
+        holder.typeContainer.setOnClickListener(v -> mRecordManager.showManageCategoryDialog(category -> {
+            record.setCategory(category);
+            JayDaoManager.getInstance().getDaoSession().getRecordDao().insertOrReplace(record);
+            mList.remove(holder.getAdapterPosition());
+            mList.add(holder.getAdapterPosition(), record);
+            notifyDataSetChanged();
+        }));
     }
 
     @Override
@@ -209,21 +181,13 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
         builder.setTitleText(R.string.delete_confirm)
                 .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                })
+                .setLeftListener(v -> dialog.dismiss())
                 .setRightTextVisible(true)
                 .setRightText(R.string.confirm)
-                .setRightListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mRecordManager.deleteRecord(record);
-                        EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
-                        dialog.dismiss();
-                    }
+                .setRightListener(v -> {
+                    mRecordManager.deleteRecord(record);
+                    EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
+                    dialog.dismiss();
                 });
         dialog.setBuilder(builder);
         dialog.show(mContext.getSupportFragmentManager(), "deleteConfirmDialog");
