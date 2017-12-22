@@ -67,6 +67,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -219,13 +220,23 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         //city change event
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(CityChangedEvent.class)
-                .subscribe(cityChangedEvent -> WeatherApi.getInstance().getRealTimeWeatherNew(cityChangedEvent.cityName)
-                        .compose(RxUtil.ioToMain())
-                        .subscribe(weatherEntity -> mWeatherTv.setText(String.format("%s, %s, %s℃",
-                                weatherEntity.basic.location,
-                                weatherEntity.now.condTxt,
-                                weatherEntity.now.tmp)),
-                                Throwable::printStackTrace)));
+                //TODO 为什么这里使用subscribeOn(Schedulers.io())切换不了线程?
+                //.subscribeOn(Schedulers.io);
+                .observeOn(Schedulers.io())
+                .flatMap(cityChangedEvent ->
+                        WeatherApi.getInstance().getRealTimeWeatherNew(cityChangedEvent.cityName)
+                                .toFlowable(BackpressureStrategy.BUFFER))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(entity -> {
+                    if (entity != null) {
+                        mWeatherTv.setText(String.format("%s, %s, %s℃",
+                                entity.basic.location,
+                                entity.now.condTxt,
+                                entity.now.tmp));
+                    }
+                }, throwable -> {
+                }));
+
         //weather update event
         mCompositeDisposable.add(RxBus.getDefault()
                 .toObserver(RealTimeWeatherEntity.class)
@@ -606,8 +617,15 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         WeatherApi.getInstance()
                 .getRealTimeWeatherNew(JayKeeper.getCity())
                 .compose(RxUtil.ioToMain())
-                .subscribe(weatherEntity -> mWeatherTv.setText(
-                        String.format("%s, %s, %s℃", weatherEntity.basic.location, weatherEntity.now.condTxt, weatherEntity.now.tmp)),
+                .subscribe(weatherEntity -> {
+                            if (weatherEntity == null) {
+                                return;
+                            }
+                            mWeatherTv.setText(String.format("%s, %s, %s℃",
+                                    weatherEntity.basic.location,
+                                    weatherEntity.now.condTxt,
+                                    weatherEntity.now.tmp));
+                        },
                         Throwable::printStackTrace);
 
         mWeatherTv.setOnClickListener(v -> startActivity(new Intent(JayActivity.this, SelectCityActivity.class)));

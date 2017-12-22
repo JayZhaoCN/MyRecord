@@ -60,7 +60,12 @@ public class JayService extends Service {
                 .subscribe(aLong -> WeatherApi.getInstance()
                         .getRealTimeWeatherNew(JayKeeper.getCity())
                         .compose(RxUtil.ioToMain())
-                        .subscribe(realTimeWeatherEntity -> RxBus.getDefault().post(realTimeWeatherEntity),
+                        .subscribe(realTimeWeatherEntity -> {
+                                    if (realTimeWeatherEntity == null) {
+                                        return;
+                                    }
+                                    RxBus.getDefault().post(realTimeWeatherEntity);
+                                },
                                 Throwable::printStackTrace));
     }
 

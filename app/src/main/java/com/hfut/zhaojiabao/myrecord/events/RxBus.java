@@ -7,7 +7,7 @@ import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 /**
- * RxBus, Thread safe and backPressure buffer.
+ * RxBus,
  * @author zhaojiabao (zhaojiabao@huami.com)
  */
 
