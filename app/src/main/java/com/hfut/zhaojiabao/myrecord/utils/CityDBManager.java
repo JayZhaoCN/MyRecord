@@ -56,7 +56,7 @@ public class CityDBManager {
 
     private static SQLiteDatabase initDatabase() {
         try {
-            String dbFilePath = IOUtils.getAppExternalDir(JayApp.getInstance(), IOUtils.DATABASE_FOLDER_NAME)
+            String dbFilePath = FileUtil.getAppExternalDir(JayApp.getInstance(), IOUtils.DATABASE_FOLDER_NAME)
                     + File.pathSeparator + DB_FILE_NAME;
             File dbFile = new File(dbFilePath);
             Log.i(TAG, "db file path: " + dbFile.getPath());

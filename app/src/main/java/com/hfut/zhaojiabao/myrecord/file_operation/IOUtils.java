@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.R;
+import com.hfut.zhaojiabao.myrecord.utils.FileUtil;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class IOUtils {
     //备份路径为外部存储应用私有目录下
     //
     public static String getBackupFilePath() {
-        return getAppExternalDir(JayApp.getInstance(), BACKUP_FOLDER_NAME)
+        return FileUtil.getAppExternalDir(JayApp.getInstance(), BACKUP_FOLDER_NAME)
                 + File.separator
                 + TimeFormatter.formatHHmm(System.currentTimeMillis())
                 + RECORD_FILE_SUFFIX_NAME;
@@ -158,54 +159,5 @@ public class IOUtils {
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
-    }
-
-
-    /**
-     * 获取应用私有目录
-     * /data/user/0/包名/files
-     */
-    public static File getInternalDir(Context context) {
-        return context.getFilesDir();
-    }
-
-    /**
-     * 获取应用在外部存储中的私有目录
-     * /storage/emulated/0/Android/data/包名/files/目录名
-     */
-    public static File getAppExternalDir(Context context, String dir) {
-        return context.getExternalFilesDir(dir);
-    }
-
-    /**
-     * 获取内部存储根目录
-     * /data
-     */
-    public static File getInternalRootDir() {
-        return Environment.getDataDirectory();
-    }
-
-    /**
-     * 获取内部存储下载目录
-     * /data/cache
-     */
-    public static File getInternalDownloadDir() {
-        return Environment.getDownloadCacheDirectory();
-    }
-
-    /**
-     * 获取外部存储根目录
-     * /storage/emulated/0
-     */
-    public static File getExternalRootDir() {
-        return Environment.getExternalStorageDirectory();
-    }
-
-    /**
-     * 获取外部存储指定目录
-     * /storage/emulated/0/目录名
-     */
-    public static File getExternalDir(String dir) {
-        return Environment.getExternalStoragePublicDirectory(dir);
     }
 }

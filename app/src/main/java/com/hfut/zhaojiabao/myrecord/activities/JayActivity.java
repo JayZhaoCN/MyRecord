@@ -47,6 +47,7 @@ import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
 import com.hfut.zhaojiabao.myrecord.network.weather_entities.RealTimeWeatherEntity;
 import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
+import com.hfut.zhaojiabao.myrecord.utils.FileUtil;
 import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
@@ -198,10 +199,6 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
         EventBus.getDefault().registerSticky(this);
 
         registerRxBus();
-
-        RxUtil.runOnMainThread(() -> {
-            Log.i("JayLog", "thread: " + Thread.currentThread());
-        });
     }
 
     @Override
