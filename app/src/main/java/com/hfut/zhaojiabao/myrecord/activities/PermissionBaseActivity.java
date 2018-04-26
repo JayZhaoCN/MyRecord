@@ -11,7 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
     }
 
     public void showRationale(String title, String content) {
-        final CommonDialog dialog = new CommonDialog();
+        CommonDialog dialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         builder.setTitleText(title)
                 .setContentText(content)

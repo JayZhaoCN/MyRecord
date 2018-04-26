@@ -19,9 +19,9 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.myrecord.activities.ManageCategoryActivity;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class JayDialogManager {
     }
 
     void editRemark(final int position, final Record record) {
-        final CommonDialog commonDialog = new CommonDialog();
+        CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_remark, null);
         final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);

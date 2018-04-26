@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
         public void onBindViewHolder(final ManageViewHolder holder, int position) {
             holder.titleTv.setText(mCategories.get(position).getCategory());
             holder.deleteImg.setOnClickListener(v -> {
-                final CommonDialog dialog = new CommonDialog();
+                CommonDialog dialog = new CommonDialog();
                 CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManageCategoryActivity.this);
                 builder.setTitleText(getString(R.string.confirm_delete))
                         .setRightText(getString(R.string.confirm))

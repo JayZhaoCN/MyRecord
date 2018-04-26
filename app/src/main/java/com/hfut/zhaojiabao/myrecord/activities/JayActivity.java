@@ -32,7 +32,6 @@ import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickDateDialog;
 import com.hfut.zhaojiabao.myrecord.dialogs.PickTimeDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
@@ -47,7 +46,6 @@ import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
 import com.hfut.zhaojiabao.myrecord.network.weather_entities.RealTimeWeatherEntity;
 import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
-import com.hfut.zhaojiabao.myrecord.utils.FileUtil;
 import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
@@ -56,6 +54,7 @@ import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.CircleImageView;
 import com.hfut.zhaojiabao.myrecord.views.PopLayout;
 import com.soundcloud.android.crop.Crop;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -366,7 +365,7 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
      * 展示修改头像对话框
      */
     private void showModifyAvatarDialog() {
-        final CommonDialog dialog = new CommonDialog();
+        CommonDialog dialog = new CommonDialog();
         View content = View.inflate(this, R.layout.dialog_pick_img, null);
         content.findViewById(R.id.pick_img_tv).setOnClickListener(v -> {
             Crop.pickImage(JayActivity.this);

@@ -12,11 +12,11 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.User;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.chart.ValueTransfer;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.BudgetChangedEvent;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.hfut.zhaojiabao.myrecord.views.JayItemView;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import de.greenrobot.event.EventBus;
 
@@ -77,7 +77,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void showEditBudgetDialog() {
         final EditText editText = new EditText(this);
         editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        final CommonDialog dialog = new CommonDialog();
+        CommonDialog dialog = new CommonDialog();
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         builder.setTitleText(R.string.edit_budget)
                 .setCancelable(false)

@@ -23,15 +23,15 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:25.4.0'
+    api 'com.android.support:appcompat-v7:25.4.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
-/** 以下开始是将Android Library上传到jCenter的相关配置**/
+/** 以下开始是将Android Library上传到JCenter的相关配置**/
 
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
@@ -47,7 +47,8 @@ group = "com.utils.zhaojiabao"
 def libName = "baseui"
 // 版本号，下次更新是只需要更改版本号即可
 version = "0.0.2"
-/**  上面配置后上传至jCenter后的编译路径是这样的： compile 'com.utils.zhaojiabao:baseui:0.0.2'  **/
+/**  上面配置后上传至JCenter后的编译路径是这样的： compile 'group:libName:version'  **/
+
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -61,7 +62,7 @@ task javadoc(type: Javadoc) {
     options.charSet 'UTF-8'
     options.author true
     options.version true
-    options.links "https://github.com/linglongxin24/FastDev/tree/master/mylibrary/docs/javadoc"
+    options.links "https://github.com/JayZhaoCN"
     failOnError false
 }
 

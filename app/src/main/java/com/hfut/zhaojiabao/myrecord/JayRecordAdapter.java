@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.database.Record;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordUpdateEvent;
 import com.hfut.zhaojiabao.myrecord.utils.TimeFormatter;
 import com.hfut.zhaojiabao.myrecord.views.DotView;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.util.List;
 
@@ -175,7 +175,7 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
     }
 
     private void showDeleteConfirmDialog(final Record record) {
-        final CommonDialog dialog = new CommonDialog();
+        CommonDialog dialog = new CommonDialog();
 
         CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
         builder.setTitleText(R.string.delete_confirm)

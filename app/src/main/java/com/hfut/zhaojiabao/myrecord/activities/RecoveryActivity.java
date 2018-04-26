@@ -13,11 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hfut.zhaojiabao.myrecord.R;
-import com.hfut.zhaojiabao.myrecord.dialogs.CommonDialog;
 import com.hfut.zhaojiabao.myrecord.events.RecordRecoveryEvent;
 import com.hfut.zhaojiabao.myrecord.file_operation.IOManager;
 import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
+import com.zhaojiabao.android.baseui.CommonDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class RecoveryActivity extends AppCompatActivity {
         }
 
         private void showDeleteConfirmDialog(final int position) {
-            final CommonDialog dialog = new CommonDialog();
+            CommonDialog dialog = new CommonDialog();
             CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
             builder.setTitleText("确认删除该备份文件吗？")
                     .setLeftText(getString(R.string.cancel))
