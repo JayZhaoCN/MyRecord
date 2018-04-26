@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -376,26 +377,24 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                     (IOUtils.getCaptureImgFile()), REQUEST_CODE_CAPTURE);
             dialog.dismiss();
         });
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setTitleText(getString(R.string.select_img))
-                .setLeftTextVisible(false)
-                .setRightTextVisible(false)
-                .setContent(content);
+        CommonDialog.Builder builder =
+                new CommonDialog.Builder(this)
+                        .setTitleText(getString(R.string.select_img))
+                        .setContent(content);
         dialog.setBuilder(builder);
         dialog.show(getSupportFragmentManager(), "pickImgDialog");
     }
 
     private void showModifyNicknameDialog() {
-        final CommonDialog dialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
         View content = View.inflate(this, R.layout.dialog_modify_name, null);
         final EditText nameEdit = (EditText) content.findViewById(R.id.edit_name);
-        builder.setContent(content)
+        new CommonDialog.Builder(this)
+                .setContent(content)
                 .setTitleText(getString(R.string.modify_name_title))
                 .setLeftText(getString(R.string.cancel))
                 .setRightText(getString(R.string.confirm))
-                .setLeftListener(v -> dialog.dismiss())
-                .setRightListener(v -> {
+                .setLeftListener(DialogFragment::dismiss)
+                .setRightListener(dialog -> {
                     String userName = nameEdit.getText().toString();
                     if (!userName.equals("")) {
                         mUserNameTv.setText(userName);
@@ -406,9 +405,8 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                         closeKeyboard(nameEdit);
                     }
                     dialog.dismiss();
-                });
-        dialog.setBuilder(builder);
-        dialog.show(getSupportFragmentManager(), "modifyNameDialog");
+                })
+                .show(getSupportFragmentManager());
     }
 
     @Override
@@ -576,15 +574,12 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
     }
 
     private void showAboutDialog() {
-        final CommonDialog aboutDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setContentText(getString(R.string.about_content))
+        new CommonDialog.Builder(this)
+                .setContentText(getString(R.string.about_content))
                 .setTitleText(getString(R.string.about))
-                .setLeftTextVisible(false)
                 .setRightText(getString(R.string.confirm))
-                .setRightListener(v -> aboutDialog.dismiss());
-        aboutDialog.setBuilder(builder);
-        aboutDialog.show(getSupportFragmentManager(), "aboutDialog");
+                .setRightListener(DialogFragment::dismiss)
+                .show(getSupportFragmentManager());
 
     }
 

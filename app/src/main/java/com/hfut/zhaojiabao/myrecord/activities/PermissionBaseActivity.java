@@ -8,6 +8,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.hfut.zhaojiabao.myrecord.R;
@@ -60,21 +61,17 @@ public class PermissionBaseActivity extends AppCompatActivity {
     }
 
     public void showRationale(String title, String content) {
-        CommonDialog dialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setTitleText(title)
+        new CommonDialog.Builder(this)
+                .setTitleText(title)
                 .setContentText(content)
-                .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(v -> dialog.dismiss())
-                .setRightTextVisible(true)
+                .setLeftListener(DialogFragment::dismiss)
                 .setRightText(R.string.confirm)
-                .setRightListener(v -> {
+                .setRightListener(dialog -> {
                     startAppSettings();
                     dialog.dismiss();
-                });
-        dialog.setBuilder(builder);
-        dialog.show(getSupportFragmentManager(), "RationaleDialog");
+                })
+                .show(getSupportFragmentManager());
     }
 
     /**

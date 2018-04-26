@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -75,18 +76,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
      * 修改预算
      */
     private void showEditBudgetDialog() {
-        final EditText editText = new EditText(this);
+        EditText editText = new EditText(this);
         editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        CommonDialog dialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setTitleText(R.string.edit_budget)
+        new CommonDialog.Builder(this)
+                .setTitleText(R.string.edit_budget)
                 .setCancelable(false)
-                .setLeftTextVisible(true)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(v -> dialog.dismiss())
-                .setRightTextVisible(true)
+                .setLeftListener(DialogFragment::dismiss)
                 .setRightText(R.string.confirm)
-                .setRightListener(v -> {
+                .setRightListener(dialog -> {
                     float budget = 0;
                     try {
                         budget = Float.valueOf(editText.getText().toString());
@@ -106,8 +104,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     dialog.dismiss();
                     updateItemSummary();
                 })
-                .setContent(editText);
-        dialog.setBuilder(builder);
-        dialog.show(getSupportFragmentManager(), "editBudgetDialog");
+                .setContent(editText)
+                .show(getSupportFragmentManager());
     }
 }

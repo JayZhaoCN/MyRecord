@@ -2,6 +2,7 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -175,21 +176,16 @@ public class JayRecordAdapter extends RecyclerView.Adapter<JayRecordAdapter.Reco
     }
 
     private void showDeleteConfirmDialog(final Record record) {
-        CommonDialog dialog = new CommonDialog();
-
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(R.string.delete_confirm)
-                .setLeftTextVisible(true)
+        new CommonDialog.Builder(mContext)
+                .setTitleText(R.string.delete_confirm)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(v -> dialog.dismiss())
-                .setRightTextVisible(true)
+                .setLeftListener(DialogFragment::dismiss)
                 .setRightText(R.string.confirm)
-                .setRightListener(v -> {
+                .setRightListener(dialog -> {
                     mRecordManager.deleteRecord(record);
                     EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_DELETE));
                     dialog.dismiss();
-                });
-        dialog.setBuilder(builder);
-        dialog.show(mContext.getSupportFragmentManager(), "deleteConfirmDialog");
+                })
+                .show(mContext.getSupportFragmentManager());
     }
 }

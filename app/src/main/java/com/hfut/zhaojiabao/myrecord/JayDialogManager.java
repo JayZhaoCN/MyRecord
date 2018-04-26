@@ -2,6 +2,7 @@ package com.hfut.zhaojiabao.myrecord;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,18 +46,15 @@ public class JayDialogManager {
         mList = list;
     }
 
-    void editRemark(final int position, final Record record) {
-        CommonDialog commonDialog = new CommonDialog();
+    void editRemark(int position, Record record) {
         View content = View.inflate(mContext, R.layout.layout_edit_remark, null);
-        final EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(mContext.getString(R.string.edit_remark))
-                .setLeftTextVisible(true)
+        EditText editRemark = (EditText) content.findViewById(R.id.remark_edit);
+        new CommonDialog.Builder(mContext)
+                .setTitleText(mContext.getString(R.string.edit_remark))
                 .setLeftText(mContext.getString(R.string.cancel))
                 .setRightText(mContext.getString(R.string.confirm))
-                .setLeftListener(v -> commonDialog.dismiss())
-                .setRightTextVisible(true)
-                .setRightListener(v -> {
+                .setLeftListener(DialogFragment::dismiss)
+                .setRightListener(dialog -> {
                     closeKeyboard(editRemark, mContext);
                     String remark = editRemark.getText().toString();
                     mList.remove(position);
@@ -65,25 +63,21 @@ public class JayDialogManager {
                     mList.add(position, record);
                     mAdapter.notifyDataSetChanged();
                     Log.i(TAG, "edit remark: " + remark);
-                    commonDialog.dismiss();
-                });
-        builder.setContent(content);
-        commonDialog.setBuilder(builder);
-        commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
+                    dialog.dismiss();
+                })
+                .setContent(content)
+                .show(mContext.getSupportFragmentManager());
     }
 
     void editSum(final int position, final Record record) {
-        final CommonDialog commonDialog = new CommonDialog();
         View content = View.inflate(mContext, R.layout.layout_edit_sum, null);
         final EditText editSum = (EditText) content.findViewById(R.id.sum_edit);
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(mContext.getString(R.string.edit_sum))
-                .setLeftTextVisible(true)
+        new CommonDialog.Builder(mContext)
+                .setTitleText(mContext.getString(R.string.edit_sum))
                 .setLeftText(mContext.getString(R.string.cancel))
                 .setRightText(mContext.getString(R.string.confirm))
-                .setLeftListener(v -> commonDialog.dismiss())
-                .setRightTextVisible(true)
-                .setRightListener(v -> {
+                .setLeftListener(DialogFragment::dismiss)
+                .setRightListener(dialog -> {
                     closeKeyboard(editSum, mContext);
                     float sum;
                     try {
@@ -92,13 +86,13 @@ public class JayDialogManager {
                         e.printStackTrace();
                         showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_not_match));
                         Log.e(TAG, "please input correct number!");
-                        commonDialog.dismiss();
+                        dialog.dismiss();
                         return;
                     }
                     if (sum == 0) {
                         showWarningDialog(mContext.getString(R.string.warning_title), mContext.getString(R.string.warning_input_zero));
                         Log.e(TAG, "sum cannot be zero!");
-                        commonDialog.dismiss();
+                        dialog.dismiss();
                         return;
                     }
                     record.setSum(sum);
@@ -107,11 +101,10 @@ public class JayDialogManager {
                     mList.add(position, record);
                     mAdapter.setData(mList);
                     EventBus.getDefault().post(new RecordUpdateEvent(record, RecordUpdateEvent.STATE_UPDATE));
-                    commonDialog.dismiss();
-                });
-        builder.setContent(content);
-        commonDialog.setBuilder(builder);
-        commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
+                    dialog.dismiss();
+                })
+                .setContent(content)
+                .show(mContext.getSupportFragmentManager());
     }
 
     void deleteRecord(Record record) {
@@ -123,10 +116,8 @@ public class JayDialogManager {
 
     void editType(final Record record, final int position) {
         final CommonDialog commonDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
-        builder.setTitleText(mContext.getString(R.string.income_or_expend))
-                .setLeftTextVisible(false)
-                .setRightTextVisible(false);
+        CommonDialog.Builder builder = new CommonDialog.Builder(mContext);
+        builder.setTitleText(mContext.getString(R.string.income_or_expend));
 
         View content = View.inflate(mContext, R.layout.layout_select_income, null);
         content.findViewById(R.id.income_tv).setOnClickListener(v -> {
@@ -156,18 +147,14 @@ public class JayDialogManager {
      * 展示警告框
      */
     private void showWarningDialog(String title, String content) {
-        final CommonDialog commonDialog = new CommonDialog();
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
+        CommonDialog.Builder builder = new CommonDialog.Builder(mContext);
         if (!TextUtils.isEmpty(title)) {
             builder.setTitleText(title);
         }
-        builder.setLeftTextVisible(false)
-                .setRightText(mContext.getString(R.string.confirm))
-                .setRightTextVisible(true)
-                .setRightListener(v -> commonDialog.dismiss())
-                .setContentText(content);
-        commonDialog.setBuilder(builder);
-        commonDialog.show(mContext.getSupportFragmentManager(), "selectIncomeDialog");
+        builder.setRightText(mContext.getString(R.string.confirm))
+                .setRightListener(DialogFragment::dismiss)
+                .setContentText(content)
+                .show(mContext.getSupportFragmentManager());
     }
 
     /**
@@ -181,14 +168,12 @@ public class JayDialogManager {
         categoryList.setLayoutManager(new LinearLayoutManager(mContext));
         categoryList.setAdapter(new CategoryAdapter(JayDaoManager.getInstance().getDaoSession().getCategoryDao().loadAll(), commonDialog, listener));
 
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(mContext);
+        CommonDialog.Builder builder = new CommonDialog.Builder(mContext);
         builder.setTitleText(R.string.select_category)
-                .setLeftTextVisible(false)
-                .setRightTextVisible(true)
                 .setRightText(R.string.manage_category)
-                .setRightListener(v -> {
+                .setRightListener(dialog -> {
                     mContext.startActivity(new Intent(mContext, ManageCategoryActivity.class));
-                    commonDialog.dismiss();
+                    dialog.dismiss();
                 })
                 .setContent(contentView);
         commonDialog.setBuilder(builder);

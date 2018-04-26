@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import android.widget.TextView;
  */
 
 public class CommonDialog extends DialogFragment {
-    private CommonBuilder mBuilder;
+    private Builder mBuilder;
 
     @Nullable
     @Override
@@ -40,27 +41,46 @@ public class CommonDialog extends DialogFragment {
         TextView rightTv = (TextView) content.findViewById(R.id.right_tv);
         TextView contentTv = (TextView) content.findViewById(R.id.content_tv);
 
+        //是否可以取消
         setCancelable(mBuilder.cancelable);
-        if (!mBuilder.titleVisible) {
+
+        //标题文字
+        if (TextUtils.isEmpty(mBuilder.titleText)) {
             titleTv.setVisibility(View.GONE);
         } else {
             titleTv.setText(mBuilder.titleText);
         }
-        if (!mBuilder.leftTextVisible) {
+
+        //左按钮
+        if (TextUtils.isEmpty(mBuilder.leftText)) {
             leftTv.setVisibility(View.GONE);
         } else {
             leftTv.setText(mBuilder.leftText);
-            leftTv.setOnClickListener(mBuilder.leftListener);
+            leftTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBuilder.leftListener.onClick(CommonDialog.this);
+                }
+            });
         }
-        if (!mBuilder.rightTextVisible) {
+
+        //右按钮
+        if (TextUtils.isEmpty(mBuilder.rightText)) {
             rightTv.setVisibility(View.GONE);
         } else {
             rightTv.setText(mBuilder.rightText);
-            rightTv.setOnClickListener(mBuilder.rightListener);
+            rightTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBuilder.rightListener.onClick(CommonDialog.this);
+                }
+            });
         }
-        if (!mBuilder.leftTextVisible && !mBuilder.rightTextVisible) {
+
+        if (TextUtils.isEmpty(mBuilder.leftText) && TextUtils.isEmpty(mBuilder.rightText)) {
             content.findViewById(R.id.option_container).setVisibility(View.GONE);
         }
+
         //这里contentText的优先级是高于contentView的，也就是说，
         //如果同时设置了contentText和contentView，会展示contentText而不展示contentView.
         if (!TextUtils.isEmpty(mBuilder.contentText)) {
@@ -78,110 +98,111 @@ public class CommonDialog extends DialogFragment {
         }
     }
 
-    public void setBuilder(CommonBuilder builder) {
+    public void setBuilder(Builder builder) {
         mBuilder = builder;
     }
 
-    public static class CommonBuilder {
+    public static class Builder {
         String titleText;
         String leftText;
         String rightText;
         String contentText;
         public View content;
         boolean titleVisible = true;
-        boolean leftTextVisible = true;
-        boolean rightTextVisible = true;
         //Dialog默认是可以取消的
         boolean cancelable = true;
 
-        private View.OnClickListener leftListener;
-        private View.OnClickListener rightListener;
+        private OnClickListener leftListener;
+        private OnClickListener rightListener;
 
         private Context mContext;
 
-        public static void foo() {
-
-        }
-
-        public CommonBuilder(Context context) {
+        public Builder(Context context) {
             mContext = context;
         }
 
         @SuppressWarnings("unused")
-        public CommonBuilder setTitleVisible(boolean visible) {
+        public Builder setTitleVisible(boolean visible) {
             titleVisible = visible;
             return this;
         }
 
-        public CommonBuilder setLeftTextVisible(boolean visible) {
-            leftTextVisible = visible;
-            return this;
-        }
-
-        public CommonBuilder setRightTextVisible(boolean visible) {
-            rightTextVisible = visible;
-            return this;
-        }
-
-        public CommonBuilder setTitleText(String titleText) {
+        public Builder setTitleText(String titleText) {
             this.titleText = titleText;
             return this;
         }
 
-        public CommonBuilder setTitleText(@StringRes int titleTextRes) {
+        public Builder setTitleText(@StringRes int titleTextRes) {
             setTitleText(mContext.getString(titleTextRes));
             return this;
         }
 
-        public CommonBuilder setLeftText(String leftText) {
+        public Builder setLeftText(String leftText) {
             this.leftText = leftText;
             return this;
         }
 
-        public CommonBuilder setLeftText(@StringRes int leftTextRes) {
+        public Builder setLeftText(@StringRes int leftTextRes) {
             setLeftText(mContext.getString(leftTextRes));
             return this;
         }
 
-        public CommonBuilder setRightText(String rightText) {
+        public Builder setRightText(String rightText) {
             this.rightText = rightText;
             return this;
         }
 
-        public CommonBuilder setRightText(@StringRes int rightTextRes) {
+        public Builder setRightText(@StringRes int rightTextRes) {
             setRightText(mContext.getString(rightTextRes));
             return this;
         }
 
-        public CommonBuilder setContentText(String contentText) {
+        public Builder setContentText(String contentText) {
             this.contentText = contentText;
             return this;
         }
 
         @SuppressWarnings("unused")
-        public CommonBuilder setContentText(@StringRes int contentTextRes) {
+        public Builder setContentText(@StringRes int contentTextRes) {
             setContentText(mContext.getString(contentTextRes));
             return this;
         }
 
-        public CommonBuilder setContent(View content) {
+        public Builder setContent(View content) {
             this.content = content;
             return this;
         }
 
-        public CommonBuilder setCancelable(boolean cancelable) {
+        public Builder setCancelable(boolean cancelable) {
             this.cancelable = cancelable;
             return this;
         }
 
-        public CommonBuilder setLeftListener(View.OnClickListener leftListener) {
+        public Builder setLeftListener(OnClickListener leftListener) {
             this.leftListener = leftListener;
             return this;
         }
 
-        public CommonBuilder setRightListener(View.OnClickListener rightListener) {
+        public Builder setRightListener(OnClickListener rightListener) {
             this.rightListener = rightListener;
             return this;
         }
+
+        public void show(FragmentManager manager) {
+            CommonDialog dialog = new CommonDialog();
+            dialog.setBuilder(this);
+            dialog.show(manager, TextUtils.isEmpty(titleText) ? "commonDialog" : titleText);
+        }
+
+        @SuppressWarnings("unused")
+        public CommonDialog create() {
+            CommonDialog dialog = new CommonDialog();
+            dialog.setBuilder(this);
+            return dialog;
+        }
+    }
+
+    public interface OnClickListener {
+        void onClick(CommonDialog dialog);
     }
 }

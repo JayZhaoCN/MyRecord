@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -97,22 +98,20 @@ public class RecoveryActivity extends AppCompatActivity {
         }
 
         private void showDeleteConfirmDialog(final int position) {
-            CommonDialog dialog = new CommonDialog();
-            CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(RecoveryActivity.this);
-            builder.setTitleText("确认删除该备份文件吗？")
+            new CommonDialog.Builder(RecoveryActivity.this)
+                    .setTitleText("确认删除该备份文件吗？")
                     .setLeftText(getString(R.string.cancel))
-                    .setLeftListener(v -> dialog.dismiss())
+                    .setLeftListener(DialogFragment::dismiss)
                     .setRightText(getString(R.string.confirm))
-                    .setRightListener(v -> {
+                    .setRightListener(dialog -> {
                         if (mRecoveryItem.get(position).delete()) {
                             mRecoveryItem.remove(position);
                             ToastUtil.showToast(getString(R.string.file_delete_success), Toast.LENGTH_SHORT);
                             notifyDataSetChanged();
                         }
                         dialog.dismiss();
-                    });
-            dialog.setBuilder(builder);
-            dialog.show(getSupportFragmentManager(), "deleteConfirmDialog");
+                    })
+                    .show(getSupportFragmentManager());
         }
 
         @Override

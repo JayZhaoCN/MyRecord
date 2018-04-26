@@ -1,6 +1,7 @@
 package com.hfut.zhaojiabao.myrecord.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,28 +69,25 @@ public class ManageCategoryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ManageViewHolder holder, int position) {
             holder.titleTv.setText(mCategories.get(position).getCategory());
-            holder.deleteImg.setOnClickListener(v -> {
-                CommonDialog dialog = new CommonDialog();
-                CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(ManageCategoryActivity.this);
-                builder.setTitleText(getString(R.string.confirm_delete))
-                        .setRightText(getString(R.string.confirm))
-                        .setLeftText(getString(R.string.cancel))
-                        .setContentText(getString(R.string.delete_category_tips))
-                        .setRightListener(v1 -> {
-                            if (!checkCanDelete()) {
-                                ToastUtil.showToast(getString(R.string.at_least_one), Toast.LENGTH_SHORT);
-                                return;
-                            }
-                            JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
-                            updateCategories();
-                            notifyDataSetChanged();
-                            EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
-                            dialog.dismiss();
-                        })
-                        .setLeftListener(v12 -> dialog.dismiss());
-                dialog.setBuilder(builder);
-                dialog.show(getSupportFragmentManager(), "confirmDeleteCategoryDialog");
-            });
+            holder.deleteImg.setOnClickListener(v ->
+                    new CommonDialog.Builder(ManageCategoryActivity.this)
+                            .setTitleText(getString(R.string.confirm_delete))
+                            .setRightText(getString(R.string.confirm))
+                            .setLeftText(getString(R.string.cancel))
+                            .setContentText(getString(R.string.delete_category_tips))
+                            .setRightListener(dialog -> {
+                                if (!checkCanDelete()) {
+                                    ToastUtil.showToast(getString(R.string.at_least_one), Toast.LENGTH_SHORT);
+                                    return;
+                                }
+                                JayDaoManager.getInstance().getDaoSession().getCategoryDao().delete(mCategories.get(holder.getAdapterPosition()));
+                                updateCategories();
+                                notifyDataSetChanged();
+                                EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_DELETE));
+                                dialog.dismiss();
+                            })
+                            .setLeftListener(DialogFragment::dismiss)
+                            .show(getSupportFragmentManager()));
         }
 
         @Override
@@ -110,19 +108,15 @@ public class ManageCategoryActivity extends AppCompatActivity {
     }
 
     private void showAddCategoryDialog() {
-        final CommonDialog dialog = new CommonDialog();
-
         View content = View.inflate(this, R.layout.edit_dialog, null);
         final EditText addEdit = (EditText) content.findViewById(R.id.add_edit);
 
-        CommonDialog.CommonBuilder builder = new CommonDialog.CommonBuilder(this);
-        builder.setTitleText(R.string.add_category)
-                .setLeftTextVisible(true)
+        new CommonDialog.Builder(this)
+                .setTitleText(R.string.add_category)
                 .setLeftText(R.string.cancel)
-                .setLeftListener(v -> dialog.dismiss())
-                .setRightTextVisible(true)
+                .setLeftListener(DialogFragment::dismiss)
                 .setRightText(R.string.confirm)
-                .setRightListener(v -> {
+                .setRightListener(dialog -> {
                     Category category = new Category();
                     category.setCategory(addEdit.getText().toString());
                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
@@ -131,8 +125,7 @@ public class ManageCategoryActivity extends AppCompatActivity {
                     mAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 })
-                .setContent(content);
-        dialog.setBuilder(builder);
-        dialog.show(getSupportFragmentManager(), "addCategoryDialog");
+                .setContent(content)
+                .show(getSupportFragmentManager());
     }
 }
