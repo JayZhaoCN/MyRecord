@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Record;
 import com.hfut.zhaojiabao.database.User;
+import com.hfut.zhaojiabao.myrecord.JayApp;
 import com.hfut.zhaojiabao.myrecord.JayDialogManager;
 import com.hfut.zhaojiabao.myrecord.JayRecordAdapter;
 import com.hfut.zhaojiabao.myrecord.R;
@@ -47,6 +48,7 @@ import com.hfut.zhaojiabao.myrecord.greendao.UserDao;
 import com.hfut.zhaojiabao.myrecord.network.WeatherApi;
 import com.hfut.zhaojiabao.myrecord.network.weather_entities.RealTimeWeatherEntity;
 import com.hfut.zhaojiabao.myrecord.utils.CityDBManager;
+import com.hfut.zhaojiabao.myrecord.utils.FileUtil;
 import com.hfut.zhaojiabao.myrecord.utils.JayKeeper;
 import com.hfut.zhaojiabao.myrecord.utils.NumberUtils;
 import com.hfut.zhaojiabao.myrecord.utils.RxUtil;
@@ -563,6 +565,10 @@ public class JayActivity extends PermissionBaseActivity implements NavigationVie
                 break;
             case R.id.nav_about:
                 showAboutDialog();
+                break;
+            case R.id.nav_tools:
+                Log.i("JayLog", "nav_tools clicked!");
+                FileUtil.openWeixinDownloadDir(JayApp.getInstance());
                 break;
             default:
                 break;

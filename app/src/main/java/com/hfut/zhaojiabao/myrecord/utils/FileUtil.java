@@ -1,6 +1,8 @@
 package com.hfut.zhaojiabao.myrecord.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
 
@@ -159,5 +161,23 @@ public class FileUtil {
             return availableCount * size / 1024 / 1024;
         }
         return -1;
+    }
+
+    /**
+     * 打开微信下载目录
+     */
+    public static void openWeixinDownloadDir(Context context) {
+        StringBuilder sb = new StringBuilder(getExternalRootDir().getPath());
+        sb.append("tencent")
+                .append(File.separator)
+                .append("MicroMsg")
+                .append(File.separator)
+                .append("Download");
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(new File(sb.toString())), "file/*");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        context.startActivity(intent);
+
     }
 }

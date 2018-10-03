@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jay的账本</string>
+    <string name="app_name">Jay的工具</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -99,6 +99,7 @@
     <string name="delete_category_tips">删除类别后, 对应的记录类别将变成\"无类别\"。</string>
     <string name="confirm_delete">确认删除？</string>
     <string name="about">关于</string>
+    <string name="tools">工具</string>
     <string name="more">更多</string>
     <string name="select_from_store">从图库选择</string>
     <string name="photo">拍照</string>
