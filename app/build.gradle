@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            String keystore = System.getenv("my_record_key_store")
+            storeFile file(keystore == null ? "/dev/null" : keystore)
+            storePassword System.getenv("my_record_key_store_password")
+            keyAlias System.getenv("my_record_key_alias")
+            keyPassword System.getenv("my_record_key_password")
+        }
+    }
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
@@ -17,9 +26,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
-
     flavorDimensions "default"
     productFlavors {
         internal {
@@ -29,12 +38,10 @@ android {
             dimension "default"
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     /** Rename output file names */
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
@@ -50,7 +57,6 @@ android {
             }*/
         }
     }
-
     applicationVariants.all { variant ->
         rootProject.ext.dft.each {
             variant.buildConfigField(it[0], it[1], it[2])
@@ -73,26 +79,21 @@ static def generateOutputApkFileName(String buildType, String flavorName, String
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(path: ':database')
-
-
     compile rootProject.ext.dependencies.appcompat
     compile rootProject.ext.dependencies.design
     compile rootProject.ext.dependencies.cardview
     compile rootProject.ext.dependencies.glide
     compile rootProject.ext.dependencies.crop
     compile rootProject.ext.dependencies.eventbus
-
     compile rootProject.ext.dependencies.rxjava
     compile rootProject.ext.dependencies.rxandroid
-
     compile rootProject.ext.dependencies.okhttp
     compile rootProject.ext.dependencies.gson
-
     compile rootProject.ext.dependencies.butterknife
     annotationProcessor rootProject.ext.dependencies.butterknife_compiler
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
