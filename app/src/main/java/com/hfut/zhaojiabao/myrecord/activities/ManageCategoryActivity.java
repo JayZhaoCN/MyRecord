@@ -18,6 +18,7 @@ import com.hfut.zhaojiabao.JayDaoManager;
 import com.hfut.zhaojiabao.database.Category;
 import com.hfut.zhaojiabao.myrecord.R;
 import com.hfut.zhaojiabao.myrecord.events.CategoryUpdateEvent;
+import com.hfut.zhaojiabao.myrecord.greendao.CategoryDao;
 import com.hfut.zhaojiabao.myrecord.utils.ToastUtil;
 import com.zhaojiabao.android.baseui.CommonDialog;
 
@@ -117,8 +118,13 @@ public class ManageCategoryActivity extends AppCompatActivity {
                 .setLeftListener(DialogFragment::dismiss)
                 .setRightText(R.string.confirm)
                 .setRightListener(dialog -> {
+                    final String categoryName = addEdit.getText().toString();
+                    if (!checkCategoryNameValid(categoryName)) {
+                        ToastUtil.showToast(R.string.category_exsit, Toast.LENGTH_SHORT);
+                        return;
+                    }
                     Category category = new Category();
-                    category.setCategory(addEdit.getText().toString());
+                    category.setCategory(categoryName);
                     JayDaoManager.getInstance().getDaoSession().getCategoryDao().insert(category);
                     updateCategories();
                     EventBus.getDefault().post(new CategoryUpdateEvent(CategoryUpdateEvent.STATE_ADD));
@@ -127,5 +133,11 @@ public class ManageCategoryActivity extends AppCompatActivity {
                 })
                 .setContent(content)
                 .show(getSupportFragmentManager());
+    }
+
+    private boolean checkCategoryNameValid(String name) {
+        List<Category> categories =
+                JayDaoManager.getInstance().getDaoSession().getCategoryDao().queryBuilder().where(CategoryDao.Properties.Category.eq(name)).list();
+        return categories == null || categories.size() == 0;
     }
 }
